@@ -1,0 +1,73 @@
+# =========================================================================
+# SCIENCE CUP - MONOREPO GITIGNORE
+# =========================================================================
+
+# -------------------------------------------------------------------------
+# Flutter & Dart (Målrettet /science_cup_app og andre Dart-pakker)
+# -------------------------------------------------------------------------
+**/build/
+**/.dart_tool/
+**/.packages
+**/.pub-cache/
+**/.pub/
+**/.flutter-plugins
+**/.flutter-plugins-dependencies
+**/.web_plugins/
+
+# -------------------------------------------------------------------------
+# Android-specifikke build-filer og cacher
+# -------------------------------------------------------------------------
+**/.gradle/
+**/local.properties
+**/android/**/GeneratedPluginRegistrant.java
+**/android/.bundle/
+**/android/app/src/main/res/values/strings.xml
+
+# -------------------------------------------------------------------------
+# iOS & macOS (Cocoapods, Xcode cacher og indstillinger)
+# -------------------------------------------------------------------------
+**/Pods/
+**/Podfile.lock
+**/DerivedData/
+**/.ios/Flutter/.flutter-plugins
+**/.ios/Flutter/.flutter-plugins-dependencies
+**/ios/**/GeneratedPluginRegistrant.h
+**/ios/**/GeneratedPluginRegistrant.m
+**/ios/Flutter/Flutter.podspec
+**/ios/.symlinks/
+*.moved-aside
+
+# -------------------------------------------------------------------------
+# Værktøjer, IDEs & Editorer (VS Code, Cursor, Android Studio)
+# -------------------------------------------------------------------------
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+.history/
+
+# -------------------------------------------------------------------------
+# Operativsystemer (Undgå macOS/Windows junk i dit repo)
+# -------------------------------------------------------------------------
+.DS_Store
+.DS_Store?
+Thumbs.db
+ehthumbs.db
+
+# -------------------------------------------------------------------------
+# Lokale databaser og logs (Supabase & Docker cacher)
+# -------------------------------------------------------------------------
+**/supabase/.branches/
+**/supabase/.temp/
+**/.supabase/functions/.env
+**/.docker/
+*.log
+
+# -------------------------------------------------------------------------
+# Følsomme filer og miljøvariabler (Sikkerhed)
+# -------------------------------------------------------------------------
+.env
+.env.*
+**/ios/Flutter/Development.xcconfig
+**/ios/Flutter/Release.xcconfig
