@@ -5,11 +5,12 @@ part 'contact.g.dart';
 
 @freezed
 abstract class Contact with _$Contact {
+  @JsonSerializable(fieldRename: FieldRename.snake)
   const factory Contact({
     required int id,
     String? name,
     String? phoneNumber,
-
+    DateTime? createdAt,
   }) = _Contact;
 
   factory Contact.fromJson(Map<String, dynamic> json) =>
