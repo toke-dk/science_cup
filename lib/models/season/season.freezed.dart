@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Season {
 
- int get id; String? get name; DateTime? get startDate; DateTime? get endDate; DateTime? get createdAt;
+ int? get id; String? get name; DateTime? get startDate; DateTime? get endDate; DateTime? get createdAt;
 /// Create a copy of Season
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $SeasonCopyWith<$Res>  {
   factory $SeasonCopyWith(Season value, $Res Function(Season) _then) = _$SeasonCopyWithImpl;
 @useResult
 $Res call({
- int id, String? name, DateTime? startDate, DateTime? endDate, DateTime? createdAt
+ int? id, String? name, DateTime? startDate, DateTime? endDate, DateTime? createdAt
 });
 
 
@@ -65,10 +65,10 @@ class _$SeasonCopyWithImpl<$Res>
 
 /// Create a copy of Season
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = freezed,Object? startDate = freezed,Object? endDate = freezed,Object? createdAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? name = freezed,Object? startDate = freezed,Object? endDate = freezed,Object? createdAt = freezed,}) {
   return _then(_self.copyWith(
-id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as int,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as int?,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String?,startDate: freezed == startDate ? _self.startDate : startDate // ignore: cast_nullable_to_non_nullable
 as DateTime?,endDate: freezed == endDate ? _self.endDate : endDate // ignore: cast_nullable_to_non_nullable
 as DateTime?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
@@ -157,7 +157,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String? name,  DateTime? startDate,  DateTime? endDate,  DateTime? createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  String? name,  DateTime? startDate,  DateTime? endDate,  DateTime? createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Season() when $default != null:
 return $default(_that.id,_that.name,_that.startDate,_that.endDate,_that.createdAt);case _:
@@ -178,7 +178,7 @@ return $default(_that.id,_that.name,_that.startDate,_that.endDate,_that.createdA
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String? name,  DateTime? startDate,  DateTime? endDate,  DateTime? createdAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  String? name,  DateTime? startDate,  DateTime? endDate,  DateTime? createdAt)  $default,) {final _that = this;
 switch (_that) {
 case _Season():
 return $default(_that.id,_that.name,_that.startDate,_that.endDate,_that.createdAt);case _:
@@ -198,7 +198,7 @@ return $default(_that.id,_that.name,_that.startDate,_that.endDate,_that.createdA
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String? name,  DateTime? startDate,  DateTime? endDate,  DateTime? createdAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  String? name,  DateTime? startDate,  DateTime? endDate,  DateTime? createdAt)?  $default,) {final _that = this;
 switch (_that) {
 case _Season() when $default != null:
 return $default(_that.id,_that.name,_that.startDate,_that.endDate,_that.createdAt);case _:
@@ -211,12 +211,12 @@ return $default(_that.id,_that.name,_that.startDate,_that.endDate,_that.createdA
 
 /// @nodoc
 
-@JsonSerializable(fieldRename: FieldRename.snake)
+@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class _Season implements Season {
-  const _Season({required this.id, this.name, this.startDate, this.endDate, this.createdAt});
+  const _Season({this.id, this.name, this.startDate, this.endDate, this.createdAt});
   factory _Season.fromJson(Map<String, dynamic> json) => _$SeasonFromJson(json);
 
-@override final  int id;
+@override final  int? id;
 @override final  String? name;
 @override final  DateTime? startDate;
 @override final  DateTime? endDate;
@@ -255,7 +255,7 @@ abstract mixin class _$SeasonCopyWith<$Res> implements $SeasonCopyWith<$Res> {
   factory _$SeasonCopyWith(_Season value, $Res Function(_Season) _then) = __$SeasonCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String? name, DateTime? startDate, DateTime? endDate, DateTime? createdAt
+ int? id, String? name, DateTime? startDate, DateTime? endDate, DateTime? createdAt
 });
 
 
@@ -272,10 +272,10 @@ class __$SeasonCopyWithImpl<$Res>
 
 /// Create a copy of Season
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = freezed,Object? startDate = freezed,Object? endDate = freezed,Object? createdAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? name = freezed,Object? startDate = freezed,Object? endDate = freezed,Object? createdAt = freezed,}) {
   return _then(_Season(
-id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as int,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as int?,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String?,startDate: freezed == startDate ? _self.startDate : startDate // ignore: cast_nullable_to_non_nullable
 as DateTime?,endDate: freezed == endDate ? _self.endDate : endDate // ignore: cast_nullable_to_non_nullable
 as DateTime?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable

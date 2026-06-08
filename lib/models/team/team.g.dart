@@ -7,7 +7,7 @@ part of 'team.dart';
 // **************************************************************************
 
 _Team _$TeamFromJson(Map<String, dynamic> json) => _Team(
-  id: (json['id'] as num).toInt(),
+  id: (json['id'] as num?)?.toInt(),
   name: json['name'] as String?,
   createdAt: json['created_at'] == null
       ? null
@@ -27,11 +27,11 @@ _Team _$TeamFromJson(Map<String, dynamic> json) => _Team(
 );
 
 Map<String, dynamic> _$TeamToJson(_Team instance) => <String, dynamic>{
-  'id': instance.id,
-  'name': instance.name,
-  'created_at': instance.createdAt?.toIso8601String(),
-  'season': instance.season,
-  'primary_contact': instance.primaryContact,
-  'secondary_contact': instance.secondaryContact,
-  'program': instance.program,
+  'id': ?instance.id,
+  'name': ?instance.name,
+  'created_at': ?instance.createdAt?.toIso8601String(),
+  'season': ?instance.season,
+  'primary_contact': ?instance.primaryContact,
+  'secondary_contact': ?instance.secondaryContact,
+  'program': ?instance.program,
 };

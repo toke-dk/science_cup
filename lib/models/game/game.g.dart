@@ -7,7 +7,7 @@ part of 'game.dart';
 // **************************************************************************
 
 _Game _$GameFromJson(Map<String, dynamic> json) => _Game(
-  id: (json['id'] as num).toInt(),
+  id: (json['id'] as num?)?.toInt(),
   season: json['season'] == null
       ? null
       : Season.fromJson(json['season'] as Map<String, dynamic>),
@@ -36,16 +36,16 @@ _Game _$GameFromJson(Map<String, dynamic> json) => _Game(
 );
 
 Map<String, dynamic> _$GameToJson(_Game instance) => <String, dynamic>{
-  'id': instance.id,
-  'season': instance.season,
-  'home_team': instance.homeTeam,
-  'away_team': instance.awayTeam,
-  'home_score': instance.homeScore,
-  'away_score': instance.awayScore,
-  'group': instance.group,
-  'referee_absent': instance.refereeAbsent,
-  'comment': instance.comment,
-  'created_at': instance.createdAt?.toIso8601String(),
-  'start_date': instance.startDate?.toIso8601String(),
-  'referee_team': instance.refereeTeam,
+  'id': ?instance.id,
+  'season': ?instance.season,
+  'home_team': ?instance.homeTeam,
+  'away_team': ?instance.awayTeam,
+  'home_score': ?instance.homeScore,
+  'away_score': ?instance.awayScore,
+  'group': ?instance.group,
+  'referee_absent': ?instance.refereeAbsent,
+  'comment': ?instance.comment,
+  'created_at': ?instance.createdAt?.toIso8601String(),
+  'start_date': ?instance.startDate?.toIso8601String(),
+  'referee_team': ?instance.refereeTeam,
 };

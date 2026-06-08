@@ -5,9 +5,9 @@ part 'contact.g.dart';
 
 @freezed
 abstract class Contact with _$Contact {
-  @JsonSerializable(fieldRename: FieldRename.snake)
+  @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
   const factory Contact({
-    required int id,
+    int? id,
     String? name,
     String? phoneNumber,
     DateTime? createdAt,

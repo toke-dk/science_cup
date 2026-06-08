@@ -7,7 +7,7 @@ part of 'season.dart';
 // **************************************************************************
 
 _Season _$SeasonFromJson(Map<String, dynamic> json) => _Season(
-  id: (json['id'] as num).toInt(),
+  id: (json['id'] as num?)?.toInt(),
   name: json['name'] as String?,
   startDate: json['start_date'] == null
       ? null
@@ -21,9 +21,9 @@ _Season _$SeasonFromJson(Map<String, dynamic> json) => _Season(
 );
 
 Map<String, dynamic> _$SeasonToJson(_Season instance) => <String, dynamic>{
-  'id': instance.id,
-  'name': instance.name,
-  'start_date': instance.startDate?.toIso8601String(),
-  'end_date': instance.endDate?.toIso8601String(),
-  'created_at': instance.createdAt?.toIso8601String(),
+  'id': ?instance.id,
+  'name': ?instance.name,
+  'start_date': ?instance.startDate?.toIso8601String(),
+  'end_date': ?instance.endDate?.toIso8601String(),
+  'created_at': ?instance.createdAt?.toIso8601String(),
 };

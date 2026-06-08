@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Team {
 
- int get id; String? get name; DateTime? get createdAt; Season? get season; Contact? get primaryContact; Contact? get secondaryContact; Program? get program;
+ int? get id; String? get name; DateTime? get createdAt; Season? get season; Contact? get primaryContact; Contact? get secondaryContact; Program? get program;
 /// Create a copy of Team
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $TeamCopyWith<$Res>  {
   factory $TeamCopyWith(Team value, $Res Function(Team) _then) = _$TeamCopyWithImpl;
 @useResult
 $Res call({
- int id, String? name, DateTime? createdAt, Season? season, Contact? primaryContact, Contact? secondaryContact, Program? program
+ int? id, String? name, DateTime? createdAt, Season? season, Contact? primaryContact, Contact? secondaryContact, Program? program
 });
 
 
@@ -65,10 +65,10 @@ class _$TeamCopyWithImpl<$Res>
 
 /// Create a copy of Team
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = freezed,Object? createdAt = freezed,Object? season = freezed,Object? primaryContact = freezed,Object? secondaryContact = freezed,Object? program = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? name = freezed,Object? createdAt = freezed,Object? season = freezed,Object? primaryContact = freezed,Object? secondaryContact = freezed,Object? program = freezed,}) {
   return _then(_self.copyWith(
-id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as int,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as int?,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,season: freezed == season ? _self.season : season // ignore: cast_nullable_to_non_nullable
 as Season?,primaryContact: freezed == primaryContact ? _self.primaryContact : primaryContact // ignore: cast_nullable_to_non_nullable
@@ -207,7 +207,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String? name,  DateTime? createdAt,  Season? season,  Contact? primaryContact,  Contact? secondaryContact,  Program? program)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  String? name,  DateTime? createdAt,  Season? season,  Contact? primaryContact,  Contact? secondaryContact,  Program? program)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Team() when $default != null:
 return $default(_that.id,_that.name,_that.createdAt,_that.season,_that.primaryContact,_that.secondaryContact,_that.program);case _:
@@ -228,7 +228,7 @@ return $default(_that.id,_that.name,_that.createdAt,_that.season,_that.primaryCo
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String? name,  DateTime? createdAt,  Season? season,  Contact? primaryContact,  Contact? secondaryContact,  Program? program)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  String? name,  DateTime? createdAt,  Season? season,  Contact? primaryContact,  Contact? secondaryContact,  Program? program)  $default,) {final _that = this;
 switch (_that) {
 case _Team():
 return $default(_that.id,_that.name,_that.createdAt,_that.season,_that.primaryContact,_that.secondaryContact,_that.program);case _:
@@ -248,7 +248,7 @@ return $default(_that.id,_that.name,_that.createdAt,_that.season,_that.primaryCo
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String? name,  DateTime? createdAt,  Season? season,  Contact? primaryContact,  Contact? secondaryContact,  Program? program)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  String? name,  DateTime? createdAt,  Season? season,  Contact? primaryContact,  Contact? secondaryContact,  Program? program)?  $default,) {final _that = this;
 switch (_that) {
 case _Team() when $default != null:
 return $default(_that.id,_that.name,_that.createdAt,_that.season,_that.primaryContact,_that.secondaryContact,_that.program);case _:
@@ -261,12 +261,12 @@ return $default(_that.id,_that.name,_that.createdAt,_that.season,_that.primaryCo
 
 /// @nodoc
 
-@JsonSerializable(fieldRename: FieldRename.snake)
+@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class _Team implements Team {
-  const _Team({required this.id, this.name, this.createdAt, this.season, this.primaryContact, this.secondaryContact, this.program});
+  const _Team({this.id, this.name, this.createdAt, this.season, this.primaryContact, this.secondaryContact, this.program});
   factory _Team.fromJson(Map<String, dynamic> json) => _$TeamFromJson(json);
 
-@override final  int id;
+@override final  int? id;
 @override final  String? name;
 @override final  DateTime? createdAt;
 @override final  Season? season;
@@ -307,7 +307,7 @@ abstract mixin class _$TeamCopyWith<$Res> implements $TeamCopyWith<$Res> {
   factory _$TeamCopyWith(_Team value, $Res Function(_Team) _then) = __$TeamCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String? name, DateTime? createdAt, Season? season, Contact? primaryContact, Contact? secondaryContact, Program? program
+ int? id, String? name, DateTime? createdAt, Season? season, Contact? primaryContact, Contact? secondaryContact, Program? program
 });
 
 
@@ -324,10 +324,10 @@ class __$TeamCopyWithImpl<$Res>
 
 /// Create a copy of Team
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = freezed,Object? createdAt = freezed,Object? season = freezed,Object? primaryContact = freezed,Object? secondaryContact = freezed,Object? program = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? name = freezed,Object? createdAt = freezed,Object? season = freezed,Object? primaryContact = freezed,Object? secondaryContact = freezed,Object? program = freezed,}) {
   return _then(_Team(
-id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as int,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as int?,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,season: freezed == season ? _self.season : season // ignore: cast_nullable_to_non_nullable
 as Season?,primaryContact: freezed == primaryContact ? _self.primaryContact : primaryContact // ignore: cast_nullable_to_non_nullable

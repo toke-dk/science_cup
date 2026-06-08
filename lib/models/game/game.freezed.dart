@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Game {
 
- int get id; Season? get season; Team? get homeTeam; Team? get awayTeam; int? get homeScore; int? get awayScore; Group? get group; bool? get refereeAbsent; String? get comment; DateTime? get createdAt; DateTime? get startDate; Team? get refereeTeam;
+ int? get id; Season? get season; Team? get homeTeam; Team? get awayTeam; int? get homeScore; int? get awayScore; Group? get group; bool? get refereeAbsent; String? get comment; DateTime? get createdAt; DateTime? get startDate; Team? get refereeTeam;
 /// Create a copy of Game
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $GameCopyWith<$Res>  {
   factory $GameCopyWith(Game value, $Res Function(Game) _then) = _$GameCopyWithImpl;
 @useResult
 $Res call({
- int id, Season? season, Team? homeTeam, Team? awayTeam, int? homeScore, int? awayScore, Group? group, bool? refereeAbsent, String? comment, DateTime? createdAt, DateTime? startDate, Team? refereeTeam
+ int? id, Season? season, Team? homeTeam, Team? awayTeam, int? homeScore, int? awayScore, Group? group, bool? refereeAbsent, String? comment, DateTime? createdAt, DateTime? startDate, Team? refereeTeam
 });
 
 
@@ -65,10 +65,10 @@ class _$GameCopyWithImpl<$Res>
 
 /// Create a copy of Game
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? season = freezed,Object? homeTeam = freezed,Object? awayTeam = freezed,Object? homeScore = freezed,Object? awayScore = freezed,Object? group = freezed,Object? refereeAbsent = freezed,Object? comment = freezed,Object? createdAt = freezed,Object? startDate = freezed,Object? refereeTeam = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? season = freezed,Object? homeTeam = freezed,Object? awayTeam = freezed,Object? homeScore = freezed,Object? awayScore = freezed,Object? group = freezed,Object? refereeAbsent = freezed,Object? comment = freezed,Object? createdAt = freezed,Object? startDate = freezed,Object? refereeTeam = freezed,}) {
   return _then(_self.copyWith(
-id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as int,season: freezed == season ? _self.season : season // ignore: cast_nullable_to_non_nullable
+id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as int?,season: freezed == season ? _self.season : season // ignore: cast_nullable_to_non_nullable
 as Season?,homeTeam: freezed == homeTeam ? _self.homeTeam : homeTeam // ignore: cast_nullable_to_non_nullable
 as Team?,awayTeam: freezed == awayTeam ? _self.awayTeam : awayTeam // ignore: cast_nullable_to_non_nullable
 as Team?,homeScore: freezed == homeScore ? _self.homeScore : homeScore // ignore: cast_nullable_to_non_nullable
@@ -224,7 +224,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  Season? season,  Team? homeTeam,  Team? awayTeam,  int? homeScore,  int? awayScore,  Group? group,  bool? refereeAbsent,  String? comment,  DateTime? createdAt,  DateTime? startDate,  Team? refereeTeam)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  Season? season,  Team? homeTeam,  Team? awayTeam,  int? homeScore,  int? awayScore,  Group? group,  bool? refereeAbsent,  String? comment,  DateTime? createdAt,  DateTime? startDate,  Team? refereeTeam)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Game() when $default != null:
 return $default(_that.id,_that.season,_that.homeTeam,_that.awayTeam,_that.homeScore,_that.awayScore,_that.group,_that.refereeAbsent,_that.comment,_that.createdAt,_that.startDate,_that.refereeTeam);case _:
@@ -245,7 +245,7 @@ return $default(_that.id,_that.season,_that.homeTeam,_that.awayTeam,_that.homeSc
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  Season? season,  Team? homeTeam,  Team? awayTeam,  int? homeScore,  int? awayScore,  Group? group,  bool? refereeAbsent,  String? comment,  DateTime? createdAt,  DateTime? startDate,  Team? refereeTeam)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  Season? season,  Team? homeTeam,  Team? awayTeam,  int? homeScore,  int? awayScore,  Group? group,  bool? refereeAbsent,  String? comment,  DateTime? createdAt,  DateTime? startDate,  Team? refereeTeam)  $default,) {final _that = this;
 switch (_that) {
 case _Game():
 return $default(_that.id,_that.season,_that.homeTeam,_that.awayTeam,_that.homeScore,_that.awayScore,_that.group,_that.refereeAbsent,_that.comment,_that.createdAt,_that.startDate,_that.refereeTeam);case _:
@@ -265,7 +265,7 @@ return $default(_that.id,_that.season,_that.homeTeam,_that.awayTeam,_that.homeSc
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  Season? season,  Team? homeTeam,  Team? awayTeam,  int? homeScore,  int? awayScore,  Group? group,  bool? refereeAbsent,  String? comment,  DateTime? createdAt,  DateTime? startDate,  Team? refereeTeam)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  Season? season,  Team? homeTeam,  Team? awayTeam,  int? homeScore,  int? awayScore,  Group? group,  bool? refereeAbsent,  String? comment,  DateTime? createdAt,  DateTime? startDate,  Team? refereeTeam)?  $default,) {final _that = this;
 switch (_that) {
 case _Game() when $default != null:
 return $default(_that.id,_that.season,_that.homeTeam,_that.awayTeam,_that.homeScore,_that.awayScore,_that.group,_that.refereeAbsent,_that.comment,_that.createdAt,_that.startDate,_that.refereeTeam);case _:
@@ -278,12 +278,12 @@ return $default(_that.id,_that.season,_that.homeTeam,_that.awayTeam,_that.homeSc
 
 /// @nodoc
 
-@JsonSerializable(fieldRename: FieldRename.snake)
+@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class _Game implements Game {
-  const _Game({required this.id, this.season, this.homeTeam, this.awayTeam, this.homeScore, this.awayScore, this.group, this.refereeAbsent, this.comment, this.createdAt, this.startDate, this.refereeTeam});
+  const _Game({this.id, this.season, this.homeTeam, this.awayTeam, this.homeScore, this.awayScore, this.group, this.refereeAbsent, this.comment, this.createdAt, this.startDate, this.refereeTeam});
   factory _Game.fromJson(Map<String, dynamic> json) => _$GameFromJson(json);
 
-@override final  int id;
+@override final  int? id;
 @override final  Season? season;
 @override final  Team? homeTeam;
 @override final  Team? awayTeam;
@@ -329,7 +329,7 @@ abstract mixin class _$GameCopyWith<$Res> implements $GameCopyWith<$Res> {
   factory _$GameCopyWith(_Game value, $Res Function(_Game) _then) = __$GameCopyWithImpl;
 @override @useResult
 $Res call({
- int id, Season? season, Team? homeTeam, Team? awayTeam, int? homeScore, int? awayScore, Group? group, bool? refereeAbsent, String? comment, DateTime? createdAt, DateTime? startDate, Team? refereeTeam
+ int? id, Season? season, Team? homeTeam, Team? awayTeam, int? homeScore, int? awayScore, Group? group, bool? refereeAbsent, String? comment, DateTime? createdAt, DateTime? startDate, Team? refereeTeam
 });
 
 
@@ -346,10 +346,10 @@ class __$GameCopyWithImpl<$Res>
 
 /// Create a copy of Game
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? season = freezed,Object? homeTeam = freezed,Object? awayTeam = freezed,Object? homeScore = freezed,Object? awayScore = freezed,Object? group = freezed,Object? refereeAbsent = freezed,Object? comment = freezed,Object? createdAt = freezed,Object? startDate = freezed,Object? refereeTeam = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? season = freezed,Object? homeTeam = freezed,Object? awayTeam = freezed,Object? homeScore = freezed,Object? awayScore = freezed,Object? group = freezed,Object? refereeAbsent = freezed,Object? comment = freezed,Object? createdAt = freezed,Object? startDate = freezed,Object? refereeTeam = freezed,}) {
   return _then(_Game(
-id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as int,season: freezed == season ? _self.season : season // ignore: cast_nullable_to_non_nullable
+id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as int?,season: freezed == season ? _self.season : season // ignore: cast_nullable_to_non_nullable
 as Season?,homeTeam: freezed == homeTeam ? _self.homeTeam : homeTeam // ignore: cast_nullable_to_non_nullable
 as Team?,awayTeam: freezed == awayTeam ? _self.awayTeam : awayTeam // ignore: cast_nullable_to_non_nullable
 as Team?,homeScore: freezed == homeScore ? _self.homeScore : homeScore // ignore: cast_nullable_to_non_nullable

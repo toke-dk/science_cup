@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:science_cup_app/models/season/season.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
   Supabase.initialize(
+    /// TODO: These should be set with env vars in a github action
     url: 'http://127.0.0.1:54321 ',
     publishableKey: "sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH",
   );
@@ -53,6 +55,26 @@ class HomePage extends StatelessWidget {
             },
             child: Text("Hent data"),
           ),
+          ElevatedButton(onPressed: () async  {
+            final season = Season(
+              name: "Sæson 2024/2025",
+              startDate: DateTime.now().toUtc(),
+              endDate: DateTime.now().add(Duration(days: 365)).toUtc(),
+            );
+
+            await supabase
+                .from('seasons')
+                .insert(
+              season.toJson()
+            );
+
+            final List<Map<String, dynamic>> data = await supabase
+                .from('seasons')
+                .select();
+            
+            final seasonRetrieved = data.map((e) => Season.fromJson(e)).toList();
+            print("seasonRetrieved: ${seasonRetrieved.map((s) => s.toJson())}");
+          }, child: Text("Tilføj sæson"))
         ],
       ),
     );

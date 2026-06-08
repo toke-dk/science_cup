@@ -5,9 +5,9 @@ part 'season.g.dart';
 
 @freezed
 abstract class Season with _$Season {
-  @JsonSerializable(fieldRename: FieldRename.snake)
+  @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
   const factory Season({
-    required int id,
+    int? id,
     String? name,
     DateTime? startDate,
     DateTime? endDate,

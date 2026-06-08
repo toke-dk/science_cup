@@ -8,9 +8,9 @@ part 'team.g.dart';
 
 @freezed
 abstract class Team with _$Team {
-  @JsonSerializable(fieldRename: FieldRename.snake)
+  @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
   const factory Team({
-    required int id,
+    int? id,
     String? name,
     DateTime? createdAt,
     Season? season,

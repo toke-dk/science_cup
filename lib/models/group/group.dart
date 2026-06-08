@@ -6,9 +6,9 @@ part 'group.g.dart';
 
 @freezed
 abstract class Group with _$Group {
-  @JsonSerializable(fieldRename: FieldRename.snake)
+  @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
   const factory Group({
-    required int id,
+    int? id,
     String? name,
     Season? season,
     DateTime? createdAt,

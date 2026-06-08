@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Contact {
 
- int get id; String? get name; String? get phoneNumber; DateTime? get createdAt;
+ int? get id; String? get name; String? get phoneNumber; DateTime? get createdAt;
 /// Create a copy of Contact
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $ContactCopyWith<$Res>  {
   factory $ContactCopyWith(Contact value, $Res Function(Contact) _then) = _$ContactCopyWithImpl;
 @useResult
 $Res call({
- int id, String? name, String? phoneNumber, DateTime? createdAt
+ int? id, String? name, String? phoneNumber, DateTime? createdAt
 });
 
 
@@ -65,10 +65,10 @@ class _$ContactCopyWithImpl<$Res>
 
 /// Create a copy of Contact
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = freezed,Object? phoneNumber = freezed,Object? createdAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? name = freezed,Object? phoneNumber = freezed,Object? createdAt = freezed,}) {
   return _then(_self.copyWith(
-id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as int,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as int?,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String?,phoneNumber: freezed == phoneNumber ? _self.phoneNumber : phoneNumber // ignore: cast_nullable_to_non_nullable
 as String?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,
@@ -156,7 +156,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String? name,  String? phoneNumber,  DateTime? createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  String? name,  String? phoneNumber,  DateTime? createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Contact() when $default != null:
 return $default(_that.id,_that.name,_that.phoneNumber,_that.createdAt);case _:
@@ -177,7 +177,7 @@ return $default(_that.id,_that.name,_that.phoneNumber,_that.createdAt);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String? name,  String? phoneNumber,  DateTime? createdAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  String? name,  String? phoneNumber,  DateTime? createdAt)  $default,) {final _that = this;
 switch (_that) {
 case _Contact():
 return $default(_that.id,_that.name,_that.phoneNumber,_that.createdAt);case _:
@@ -197,7 +197,7 @@ return $default(_that.id,_that.name,_that.phoneNumber,_that.createdAt);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String? name,  String? phoneNumber,  DateTime? createdAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  String? name,  String? phoneNumber,  DateTime? createdAt)?  $default,) {final _that = this;
 switch (_that) {
 case _Contact() when $default != null:
 return $default(_that.id,_that.name,_that.phoneNumber,_that.createdAt);case _:
@@ -210,12 +210,12 @@ return $default(_that.id,_that.name,_that.phoneNumber,_that.createdAt);case _:
 
 /// @nodoc
 
-@JsonSerializable(fieldRename: FieldRename.snake)
+@JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class _Contact implements Contact {
-  const _Contact({required this.id, this.name, this.phoneNumber, this.createdAt});
+  const _Contact({this.id, this.name, this.phoneNumber, this.createdAt});
   factory _Contact.fromJson(Map<String, dynamic> json) => _$ContactFromJson(json);
 
-@override final  int id;
+@override final  int? id;
 @override final  String? name;
 @override final  String? phoneNumber;
 @override final  DateTime? createdAt;
@@ -253,7 +253,7 @@ abstract mixin class _$ContactCopyWith<$Res> implements $ContactCopyWith<$Res> {
   factory _$ContactCopyWith(_Contact value, $Res Function(_Contact) _then) = __$ContactCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String? name, String? phoneNumber, DateTime? createdAt
+ int? id, String? name, String? phoneNumber, DateTime? createdAt
 });
 
 
@@ -270,10 +270,10 @@ class __$ContactCopyWithImpl<$Res>
 
 /// Create a copy of Contact
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = freezed,Object? phoneNumber = freezed,Object? createdAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? name = freezed,Object? phoneNumber = freezed,Object? createdAt = freezed,}) {
   return _then(_Contact(
-id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as int,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as int?,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String?,phoneNumber: freezed == phoneNumber ? _self.phoneNumber : phoneNumber // ignore: cast_nullable_to_non_nullable
 as String?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,

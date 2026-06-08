@@ -9,9 +9,9 @@ part 'game.g.dart';
 
 @freezed
 abstract class Game with _$Game {
-  @JsonSerializable(fieldRename: FieldRename.snake)
+  @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
   const factory Game({
-    required int id,
+    int? id,
     Season? season,
     Team? homeTeam,
     Team? awayTeam,

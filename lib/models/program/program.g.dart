@@ -7,7 +7,7 @@ part of 'program.dart';
 // **************************************************************************
 
 _Program _$ProgramFromJson(Map<String, dynamic> json) => _Program(
-  id: (json['id'] as num).toInt(),
+  id: (json['id'] as num?)?.toInt(),
   name: json['name'] as String?,
   createdAt: json['created_at'] == null
       ? null
@@ -15,7 +15,7 @@ _Program _$ProgramFromJson(Map<String, dynamic> json) => _Program(
 );
 
 Map<String, dynamic> _$ProgramToJson(_Program instance) => <String, dynamic>{
-  'id': instance.id,
-  'name': instance.name,
-  'created_at': instance.createdAt?.toIso8601String(),
+  'id': ?instance.id,
+  'name': ?instance.name,
+  'created_at': ?instance.createdAt?.toIso8601String(),
 };
