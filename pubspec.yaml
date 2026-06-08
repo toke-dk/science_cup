@@ -37,6 +37,7 @@ dependencies:
   supabase_flutter: ^2.14.0
   freezed: ^3.2.5
   json_annotation: ^4.12.0
+  uuid: ^4.5.3
 
 dev_dependencies:
   flutter_test:
