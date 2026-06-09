@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:science_cup_app/models/season/season.dart';
-import 'package:science_cup_app/models/season/season_repository.dart';
+import 'package:science_cup_app/features/season/data/season.dart';
+import 'package:science_cup_app/features/season/data/season_repository.dart';
 
-import '../../providers/data_state.dart';
+import '../../../providers/data_state.dart';
 
 class SeasonsNotifier extends ChangeNotifier {
   final SeasonRepository _repository;
@@ -27,7 +27,11 @@ class SeasonsNotifier extends ChangeNotifier {
   }
 
   // 2. CREATE
-  Future<void> addSeason({required String name, DateTime? start, DateTime? end}) async {
+  Future<void> addSeason({
+    required String name,
+    DateTime? start,
+    DateTime? end,
+  }) async {
     try {
       final newDraft = Season(name: name, startDate: start, endDate: end);
 

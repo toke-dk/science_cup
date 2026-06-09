@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:science_cup_app/models/season/season.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import 'models/season/season_notifier.dart';
-import 'models/season/season_repository.dart';
+import 'features/season/business_logic/season_notifier.dart';
+import 'features/season/data/season_repository.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -74,13 +73,19 @@ class HomePage extends StatelessWidget {
                 end: DateTime.now().add(Duration(days: 365)).toUtc(),
               );
 
-              if(!context.mounted) return;
+              if (!context.mounted) return;
 
-              context.read<SeasonRepository>().getAllSeasons().then((seasons) {
-                debugPrint("Sæsoner: ${seasons.map((s) => s.name).join(', ')}");
-              }).catchError((e) {
-                debugPrint("Fejl ved hentning af sæsoner: $e");
-              });
+              context
+                  .read<SeasonRepository>()
+                  .getAllSeasons()
+                  .then((seasons) {
+                    debugPrint(
+                      "Sæsoner: ${seasons.map((s) => s.name).join(', ')}",
+                    );
+                  })
+                  .catchError((e) {
+                    debugPrint("Fejl ved hentning af sæsoner: $e");
+                  });
             },
             child: Text("Tilføj sæson"),
           ),

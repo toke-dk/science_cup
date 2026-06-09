@@ -1,8 +1,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:science_cup_app/models/group/group.dart';
-import 'package:science_cup_app/models/team/team.dart';
+import 'package:science_cup_app/features/group/data/group.dart';
+import 'package:science_cup_app/features/team/team.dart';
 
-import '../season/season.dart';
+import '../../season/data/season.dart';
 
 part 'game.freezed.dart';
 part 'game.g.dart';
@@ -22,9 +22,8 @@ abstract class Game with _$Game {
     String? comment,
     DateTime? createdAt,
     DateTime? startDate,
-    Team? refereeTeam
+    Team? refereeTeam,
   }) = _Game;
 
-  factory Game.fromJson(Map<String, dynamic> json) =>
-      _$GameFromJson(json);
+  factory Game.fromJson(Map<String, dynamic> json) => _$GameFromJson(json);
 }

@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:science_cup_app/models/season/season.dart';
+import 'package:science_cup_app/features/season/data/season.dart';
 
 part 'group.freezed.dart';
 part 'group.g.dart';
@@ -14,6 +14,5 @@ abstract class Group with _$Group {
     DateTime? createdAt,
   }) = _Group;
 
-  factory Group.fromJson(Map<String, dynamic> json) =>
-      _$GroupFromJson(json);
+  factory Group.fromJson(Map<String, dynamic> json) => _$GroupFromJson(json);
 }

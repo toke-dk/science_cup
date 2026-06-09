@@ -1,11 +1,11 @@
-import 'package:science_cup_app/models/season/season.dart';
+import 'package:science_cup_app/features/season/data/season.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SeasonRepository {
   final SupabaseClient _supabase;
 
   SeasonRepository({SupabaseClient? supabase})
-      : _supabase = supabase ?? Supabase.instance.client;
+    : _supabase = supabase ?? Supabase.instance.client;
 
   // 1. CREATE (Opret Sæson)
   Future<Season> createSeason(Season season) async {

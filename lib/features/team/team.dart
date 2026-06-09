@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:science_cup_app/models/contact/contact.dart';
-import 'package:science_cup_app/models/program/program.dart';
-import 'package:science_cup_app/models/season/season.dart';
+import 'package:science_cup_app/features/contact/data/contact.dart';
+import 'package:science_cup_app/features/program/data/program.dart';
+import 'package:science_cup_app/features/season/data/season.dart';
 
 part 'team.freezed.dart';
 part 'team.g.dart';
@@ -19,6 +19,5 @@ abstract class Team with _$Team {
     Program? program,
   }) = _Team;
 
-  factory Team.fromJson(Map<String, dynamic> json) =>
-      _$TeamFromJson(json);
+  factory Team.fromJson(Map<String, dynamic> json) => _$TeamFromJson(json);
 }
