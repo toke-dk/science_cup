@@ -1,0 +1,33 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:science_cup_app/providers/data_state.dart';
+
+import '../business_logic/season_notifier.dart';
+
+class SeasonsScreen extends StatelessWidget {
+  const SeasonsScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final state = context.watch<SeasonsNotifier>().state;
+
+    return Scaffold(
+      appBar: AppBar(title: Text('Sæsoner')),
+      body: state.when(
+        initial: () => CircularProgressIndicator(),
+        loading: () => CircularProgressIndicator(),
+        error: (error) => Text('Der skete en fejl: $error'),
+        loaded: (seasons) => ListView.builder(
+          itemCount: seasons.length,
+          itemBuilder: (context, index) {
+            final season = seasons[index];
+            return ListTile(
+              title: Text(season.name ?? "Ingen navn"),
+              subtitle: Text('Start: ${season.startDate?.toLocal()} - Sl'),
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
