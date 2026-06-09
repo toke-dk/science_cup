@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:science_cup_app/models/season/season.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
+import 'models/season/season_notifier.dart';
+import 'models/season/season_repository.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -10,7 +14,19 @@ void main() {
     url: 'http://127.0.0.1:54321 ',
     publishableKey: "sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH",
   );
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        Provider<SeasonRepository>(create: (_) => SeasonRepository()),
+
+        ChangeNotifierProvider<SeasonsNotifier>(
+          create: (context) =>
+              SeasonsNotifier(context.read<SeasonRepository>())..loadSeasons(),
+        ),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -28,7 +44,6 @@ class MyApp extends StatelessWidget {
 }
 
 class HomePage extends StatelessWidget {
-
   const HomePage({super.key});
 
   @override
@@ -42,11 +57,7 @@ class HomePage extends StatelessWidget {
           Text("Velkommen til science cuppen"),
           ElevatedButton(
             onPressed: () async {
-              await supabase
-                  .from('teams')
-                  .insert({
-                'name': "De blå drenge",
-              });
+              await supabase.from('teams').insert({'name': "De blå drenge"});
 
               final List<Map<String, dynamic>> data = await supabase
                   .from('teams')
@@ -55,26 +66,24 @@ class HomePage extends StatelessWidget {
             },
             child: Text("Hent data"),
           ),
-          ElevatedButton(onPressed: () async  {
-            final season = Season(
-              name: "Sæson 2024/2025",
-              startDate: DateTime.now().toUtc(),
-              endDate: DateTime.now().add(Duration(days: 365)).toUtc(),
-            );
+          ElevatedButton(
+            onPressed: () async {
+              await context.read<SeasonsNotifier>().addSeason(
+                name: "Sæson 2024/2025",
+                start: DateTime.now().toUtc(),
+                end: DateTime.now().add(Duration(days: 365)).toUtc(),
+              );
 
-            await supabase
-                .from('seasons')
-                .insert(
-              season.toJson()
-            );
+              if(!context.mounted) return;
 
-            final List<Map<String, dynamic>> data = await supabase
-                .from('seasons')
-                .select();
-            
-            final seasonRetrieved = data.map((e) => Season.fromJson(e)).toList();
-            print("seasonRetrieved: ${seasonRetrieved.map((s) => s.toJson())}");
-          }, child: Text("Tilføj sæson"))
+              context.read<SeasonRepository>().getAllSeasons().then((seasons) {
+                debugPrint("Sæsoner: ${seasons.map((s) => s.name).join(', ')}");
+              }).catchError((e) {
+                debugPrint("Fejl ved hentning af sæsoner: $e");
+              });
+            },
+            child: Text("Tilføj sæson"),
+          ),
         ],
       ),
     );
