@@ -8,6 +8,12 @@ To start the backend, navigate to the `backend` directory and run the following 
 supabase start
 ```
 
+To see the active services currently running, you can run the following command in the `backend` directory:
+
+```bash
+supabase status
+```
+
 ## Migrating the database
 After making changes to the database schema, you can run the following command in the `backend` directory to apply the migrations:
 
@@ -16,6 +22,11 @@ supabase db diff -f name_your_change
 ```
 and a migration file will be created in the `backend/supabase/migrations` directory.
 
+To restore the database to a previous state, you can run the following command in the `backend` directory:
+
+```bash
+supabase db reset
+```
 
 ## Building models with freezed
 To build the models with freezed, run the following command in the root directory of the project:
