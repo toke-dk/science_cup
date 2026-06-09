@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../business_logic/auth_notifier.dart';
 
@@ -43,9 +44,9 @@ class _PhoneLoginFormState extends State<PhoneLoginForm> {
         ),
         const SizedBox(height: 16),
         ElevatedButton(
-          onPressed: () {
+          onPressed: () async {
             final fullNumber = '+45${_phoneController.text.trim()}';
-            context.read<AuthNotifier>().startPhoneAuth(fullNumber);
+            await context.read<AuthNotifier>().startPhoneAuth(fullNumber);
           },
           child: const Text('Send SMS Kode'),
         ),
@@ -71,8 +72,11 @@ class _PhoneLoginFormState extends State<PhoneLoginForm> {
         ),
         const SizedBox(height: 16),
         ElevatedButton(
-          onPressed: () {
-            context.read<AuthNotifier>().verifyCode(_codeController.text.trim());
+          onPressed: () async {
+            final success = await context.read<AuthNotifier>().verifyCode(_codeController.text.trim());
+            if (success && context.mounted) {
+              context.go('/seasons');
+            }
           },
           child: const Text('Log ind'),
         ),

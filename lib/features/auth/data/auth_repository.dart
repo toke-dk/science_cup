@@ -22,4 +22,21 @@ class AuthRepository {
     );
     return response;
   }
+
+  // Sender koden til e-mail
+  Future<void> sendEmailOtp(String email) async {
+    await _supabase.auth.signInWithOtp(
+      email: email,
+      emailRedirectTo: null,
+    );
+  }
+
+  // Verificerer koden
+  Future<void> verifyEmailOtp({required String email, required String token}) async {
+    await _supabase.auth.verifyOTP(
+      type: OtpType.email,
+      token: token,
+      email: email,
+    );
+  }
 }
