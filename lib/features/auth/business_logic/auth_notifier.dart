@@ -21,7 +21,7 @@ class AuthNotifier extends ChangeNotifier {
       _codeSent = true; // Nu ved UI'et, at vi skal vise kode-feltet
       notifyListeners();
     } catch (e) {
-      // Håndter fejl (f.eks. forkert nummerformat)
+      print("Fejl ved telefonnummer otp: $e");
     }
   }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class AuthProfileButton extends StatelessWidget {
   const AuthProfileButton({super.key});
@@ -6,7 +7,7 @@ class AuthProfileButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton(onPressed: () {
-      
+      context.go('/login');
     }, icon: Icon(Icons.person));
   }
 }

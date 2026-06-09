@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:science_cup_app/core/presentation/widgets/auth_profile_button.dart';
-import 'package:science_cup_app/features/season/presentation/seasons_view.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import 'core/navigation/app_router.dart';
+import 'features/auth/business_logic/auth_notifier.dart';
+import 'features/auth/data/auth_repository.dart';
 import 'features/season/business_logic/season_notifier.dart';
 import 'features/season/data/season_repository.dart';
 
@@ -24,6 +25,13 @@ void main() {
           create: (context) =>
               SeasonsNotifier(context.read<SeasonRepository>())..loadSeasons(),
         ),
+
+        Provider<AuthRepository>(create: (_) => AuthRepository()),
+
+        // AuthNotifier fødes her og lever i HELE appens levetid
+        ChangeNotifierProvider<AuthNotifier>(
+          create: (context) => AuthNotifier(context.read<AuthRepository>()),
+        ),
       ],
       child: const MyApp(),
     ),
@@ -36,28 +44,12 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
+      routerConfig: AppRouter.router,
       title: 'Science Cup\'en',
-      theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
-      home: const HomePage(),
-    );
-  }
-}
-
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final supabase = Supabase.instance.client;
-
-    return Scaffold(
-      appBar: AppBar(
-        actions: [
-          AuthProfileButton(),
-        ],
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      body: SeasonsView(),
     );
   }
 }
