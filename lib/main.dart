@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:science_cup_app/features/season/presentation/seasons_screen.dart';
+import 'package:science_cup_app/core/presentation/widgets/auth_profile_button.dart';
+import 'package:science_cup_app/features/season/presentation/seasons_view.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'features/season/business_logic/season_notifier.dart';
@@ -50,6 +51,13 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final supabase = Supabase.instance.client;
 
-    return SeasonsScreen();
+    return Scaffold(
+      appBar: AppBar(
+        actions: [
+          AuthProfileButton(),
+        ],
+      ),
+      body: SeasonsView(),
+    );
   }
 }
