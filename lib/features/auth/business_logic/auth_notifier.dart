@@ -13,9 +13,13 @@ class AuthNotifier extends ChangeNotifier {
     _isAuthenticated = Supabase.instance.client.auth.currentSession != null;
     _authStateSubscription = Supabase.instance.client.auth.onAuthStateChange.listen((event) {
       _isAuthenticated = event.session != null;
+      _user = event.session?.user;
       notifyListeners();
     });
   }
+
+  User? _user;
+  User? get user => _user;
 
   // Phone
   bool _codeSent = false;
