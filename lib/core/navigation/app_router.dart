@@ -12,7 +12,6 @@ import 'package:science_cup_app/core/navigation/app_page.dart';
 
 import '../../features/season/state/season_notifier.dart';
 
-
 class AppRouter {
   // Global key til at styre navigationen på øverste niveau
   static final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -36,6 +35,12 @@ class AppRouter {
         path: '/seasons/:id',
         redirect: (context, state) {
           final id = state.pathParameters['id']!;
+          final parsedId = int.tryParse(id);
+          if (parsedId == null) {
+            return '/';
+          }
+
+          context.read<SeasonsNotifier>().changeCurrentSeasonId(parsedId);
 
           return '/seasons/$id/${SeasonTabs.defaultTab.path}';
         },
@@ -64,12 +69,11 @@ class AppRouter {
 
           return SeasonPage(
             seasonId: seasonId,
-            activeTab: activeTab, // Nu modtager SeasonPage en ægte SeasonTab enum!
+            activeTab:
+                activeTab, // Nu modtager SeasonPage en ægte SeasonTab enum!
           );
         },
       ),
-
-
     ],
   );
 }

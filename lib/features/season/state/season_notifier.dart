@@ -10,14 +10,14 @@ class SeasonsNotifier extends ChangeNotifier {
   DataState<List<Season>> _state = const DataState.initial();
   DataState<List<Season>> get state => _state;
 
-  Season? _currentSeason;
-  Season? get currentSeason => _currentSeason;
+  int? _currentSeasonId;
+  int? get currentSeasonId => _currentSeasonId;
 
   SeasonsNotifier(this._repository);
 
-  void changeCurrentSeason(Season season) {
-    if (_currentSeason?.id == season.id) return; // Optimer: Gør intet hvis det er den samme
-    _currentSeason = season;
+  void changeCurrentSeasonId(int seasonId) {
+    if (_currentSeasonId == seasonId) return; // Optimer: Gør intet hvis det er den samme
+    _currentSeasonId = seasonId;
     notifyListeners();
   }
 

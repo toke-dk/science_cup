@@ -69,11 +69,7 @@ class SeasonPage extends StatelessWidget {
                       Text(season.name ?? "Ingen navn"),
                   onChanged: (newSeason) {
                     if (newSeason?.id != null) {
-                      context.read<SeasonsNotifier>().changeCurrentSeason(
-                        newSeason!,
-                      );
-
-                      context.go('/seasons/${newSeason.id}');
+                      context.go('/seasons/${newSeason?.id}');
                     }
                   },
                 ),

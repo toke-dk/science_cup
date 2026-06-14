@@ -52,8 +52,7 @@ void main() async {
 
         ChangeNotifierProxyProvider<SeasonsNotifier, GroupNotifier>(
           update: (context, seasonNotifier, groupNotifier) {
-            print("Updates");
-            groupNotifier!.updateActiveSeason(seasonNotifier.currentSeason?.id);
+            groupNotifier!.updateActiveSeason(seasonNotifier.currentSeasonId);
             return groupNotifier;
           },
           create: (context) => GroupNotifier(context.read<GroupRepository>())..loadGroupsForActiveSeason(),

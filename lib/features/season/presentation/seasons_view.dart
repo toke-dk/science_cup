@@ -50,8 +50,6 @@ class SeasonsView extends StatelessWidget {
                       );
                       return;
                     }
-                    context.read<SeasonsNotifier>().changeCurrentSeason(season);
-
                     context.go('/seasons/${season.id}');
                   },
                   title: Text(season.name ?? "Ingen navn"),
