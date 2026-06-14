@@ -64,7 +64,7 @@ class MyApp extends StatelessWidget {
       routerConfig: AppRouter.router,
       title: 'Science Cup\'en',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
       ),
     );
   }

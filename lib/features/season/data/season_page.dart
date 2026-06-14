@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:science_cup_app/core/navigation/app_tab.dart';
 import 'package:science_cup_app/core/navigation/season_tabs.dart';
+import 'package:science_cup_app/core/presentation/widgets/auth_profile_button.dart';
 import 'package:science_cup_app/features/season/data/season.dart';
 import 'package:science_cup_app/features/season/presentation/admin/admin_season_view.dart';
 import 'package:science_cup_app/providers/data_state.dart';
@@ -51,7 +52,10 @@ class SeasonPage extends StatelessWidget {
           initialIndex: selectedIndex,
           child: Scaffold(
             appBar: AppBar(
-              leading: Icon(Icons.sports_soccer),
+              leading: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CircleAvatar(child: Icon(Icons.sports_soccer)),
+              ),
               title: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: DropdownFlutter<Season>.search(
@@ -76,7 +80,7 @@ class SeasonPage extends StatelessWidget {
                 ),
               ),
               centerTitle: false,
-              actions: [Icon(Icons.person)],
+              actions: [AuthProfileButton()],
             ),
             body: SingleChildScrollView(
               child: Padding(
