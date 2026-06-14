@@ -1,67 +1,60 @@
 import 'package:flutter/material.dart';
+import 'package:science_cup_app/core/navigation/app_tab.dart';
 import 'package:science_cup_app/features/game/data/game.dart';
 
 import '../../../team/team.dart';
 
-class AdminGamesView extends StatelessWidget {
+class AdminGamesView extends StatefulWidget {
   const AdminGamesView({super.key});
 
-  Widget _buildGameCell(Game game) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          '${game.homeTeam?.name ?? "?"} vs ${game.awayTeam?.name ?? "?"}',
-          style: const TextStyle(fontWeight: FontWeight.w600, color: Color(0xFF1F2937)),
-        ),
-        const SizedBox(height: 2),
-        Text(
-          '${game.homeScore ?? ""} - ${game.awayScore ?? ""}',
-          style: const TextStyle(color: Colors.grey, fontSize: 13),
-        ),
-      ],
-    );
-  }
+  @override
+  State<AdminGamesView> createState() => _AdminGamesViewState();
+}
+
+class _AdminGamesViewState extends State<AdminGamesView> {
+  final List<ButtonSegment> _adminSegments = [
+    ButtonSegment(
+      value: "games",
+      label: Text("Kampe"),
+      icon: Icon(Icons.calendar_today_outlined),
+    ),
+    ButtonSegment(
+      value: "groups",
+      label: Text("Grupper"),
+      icon: Icon(Icons.people),
+    ),
+    ButtonSegment(
+      value: "teams",
+      label: Text("Hold"),
+      icon: Icon(Icons.person),
+    ),
+  ];
+
+  late ButtonSegment _selectedAdminSegment = _adminSegments.first;
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: DataTable(
-        dataRowMinHeight: 64, // Giver god luft til holdnavne og score
-        dataRowMaxHeight: 64,
-        horizontalMargin: 24,
-        columns: [
-          DataColumn(label: Text('')),
-
-          DataColumn(label: Text('FASE')),
-          DataColumn(label: Text('KAMP')),
-          DataColumn(label: Text('DATO')),
-          DataColumn(label: Text('TID')),
-          DataColumn(label: Text('DOMMER')),
-          DataColumn(label: Text('STATUS')),
-        ],
-        rows: List.generate(2, (index) =>
-          DataRow(cells: [
-            DataCell(IconButton(
-                icon: Icon(Icons.edit),
-                onPressed: () {}),),
-            DataCell(Text('Gruppe A')),
-            DataCell(_buildGameCell(Game(
-              homeTeam: Team(name: 'Holdfasdfasdfafasdfasd fasdfasdf 1'),
-              awayTeam: Team(name: 'Hold 2'),
-              homeScore: 3,
-              awayScore: 1,
-            ))),
-            DataCell(Text('2024-07-01')),
-            DataCell(Text('15:00')),
-            DataCell(Text('Dommer 1')),
-            DataCell(Text('Afsluttet')),
-
-          ]))
-
-      ),
+    return Column(
+      children: [
+        SegmentedButton(
+          showSelectedIcon: false,
+          segments: _adminSegments,
+          selected: {_selectedAdminSegment.value},
+          onSelectionChanged: (newValue) {
+            setState(() {
+              _selectedAdminSegment = _adminSegments.firstWhere(
+                (segment) => segment.value == newValue.first,
+              );
+            });
+          },
+        ),
+        switch (_selectedAdminSegment.value) {
+          "games" => Text("KampSegment"),
+          "groups" => Text("GruppeSegment"),
+          "teams" => Text("HoldSegment"),
+          _ => SizedBox.shrink(),
+        }
+      ],
     );
   }
 }
