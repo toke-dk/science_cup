@@ -18,7 +18,7 @@ class ProgramsView extends StatelessWidget {
                   return AddProgramModal();
                 });
               },
-              label: Text("Ny Gruppe"),
+              label: Text("Nyt Studie"),
               icon: Icon(Icons.add),
             ),
           ],

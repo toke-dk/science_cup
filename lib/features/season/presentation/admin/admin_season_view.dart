@@ -19,12 +19,12 @@ class _AdminSeasonViewState extends State<AdminSeasonView> {
     ButtonSegment(
       value: "groups",
       label: Text("Grupper"),
-      icon: Icon(Icons.people),
+      icon: Icon(Icons.grid_view_rounded),
     ),
     ButtonSegment(
       value: "teams",
       label: Text("Hold"),
-      icon: Icon(Icons.person),
+      icon: Icon(Icons.groups),
     ),
     ButtonSegment(
       value: "programs",
