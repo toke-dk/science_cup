@@ -7,13 +7,15 @@ class FieldConfig {
   final String key;
   final String label;
   final FieldType type;
-  final String? Function(String?)? validator;
+  final String? Function(dynamic)? validator;
 
   // Optional controller for text fields (if you want to reuse externally)
   final TextEditingController? controller;
 
   // For select fields
-  final List<String>? options;
+  final List<dynamic>? options;
+  // Builder to convert an option to display text
+  final String Function(dynamic)? optionLabel;
 
   // Group id: if multiple fields share same non-null group, they'll be
   // rendered inline in a single Row (useful for date+time).
@@ -26,7 +28,8 @@ class FieldConfig {
     this.controller,
     this.group,
   }) : type = FieldType.text,
-       options = null;
+       options = null,
+       optionLabel = null;
 
   FieldConfig.date({
     required this.key,
@@ -35,12 +38,14 @@ class FieldConfig {
     this.group,
   })  : type = FieldType.date,
         controller = null,
-        options = null;
+        options = null,
+        optionLabel = null;
 
   FieldConfig.select({
     required this.key,
     required this.label,
     required this.options,
+    required this.optionLabel,
     this.validator,
     this.group,
   })  : type = FieldType.select,
@@ -53,7 +58,8 @@ class FieldConfig {
     this.group,
   })  : type = FieldType.time,
         controller = null,
-        options = null;
+        options = null,
+        optionLabel = null;
 }
 
 typedef SubmitCallback = Future<void> Function(Map<String, dynamic> data);
@@ -79,7 +85,7 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
   final Map<String, TextEditingController> _textControllers = {};
   final Map<String, DateTime?> _dateValues = {};
   final Map<String, TimeOfDay?> _timeValues = {};
-  final Map<String, String?> _selectValues = {};
+  final Map<String, dynamic> _selectValues = {};
   bool _isLoading = false;
 
   @override
@@ -180,14 +186,17 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
           onTap: () => _selectTime(context, f.key),
         );
       case FieldType.select:
-        final options = f.options ?? <String>[];
-        return DropdownButtonFormField<String>(
+        final options = f.options ?? <dynamic>[];
+        final labeler = f.optionLabel ?? (o) => o?.toString() ?? '';
+        return DropdownButtonFormField<dynamic>(
           initialValue: _selectValues[f.key],
           decoration: InputDecoration(
             labelText: f.label,
             border: const OutlineInputBorder(),
           ),
-          items: options.map((o) => DropdownMenuItem(value: o, child: Text(o))).toList(),
+          items: options
+              .map((o) => DropdownMenuItem<dynamic>(value: o, child: Text(labeler(o))))
+              .toList(),
           onChanged: (v) => setState(() => _selectValues[f.key] = v),
           validator: f.validator,
         );
