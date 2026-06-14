@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -8,8 +10,10 @@ import 'features/auth/data/auth_repository.dart';
 import 'features/season/business_logic/season_notifier.dart';
 import 'features/season/data/season_repository.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await initializeDateFormatting('da_DK', null);
 
   Supabase.initialize(
     /// TODO: These should be set with env vars in a github action
@@ -28,7 +32,6 @@ void main() {
 
         Provider<AuthRepository>(create: (_) => AuthRepository()),
 
-        // AuthNotifier fødes her og lever i HELE appens levetid
         ChangeNotifierProvider<AuthNotifier>(
           create: (context) => AuthNotifier(context.read<AuthRepository>()),
         ),
@@ -45,6 +48,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
+      locale: const Locale("da", "DK"),
+      supportedLocales: const [
+        Locale('da', 'DK'), // Dansk
+        Locale('en', 'US'), // Engelsk (god at have som fallback)
+      ],
+
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
       routerConfig: AppRouter.router,
       title: 'Science Cup\'en',
       theme: ThemeData(
