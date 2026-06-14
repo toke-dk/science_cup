@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -17,7 +19,7 @@ void main() async {
 
   Supabase.initialize(
     /// TODO: These should be set with env vars in a github action
-    url: 'http://127.0.0.1:54321 ',
+    url: Platform.isAndroid ? 'http://10.0.2.2:54321' : 'http://127.0.0.1:54321 ',
     publishableKey: "sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH",
   );
   runApp(
