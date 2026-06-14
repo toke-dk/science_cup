@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:science_cup_app/core/navigation/app_tab.dart';
 import 'package:science_cup_app/core/navigation/season_tabs.dart';
 import 'package:science_cup_app/features/season/data/season.dart';
+import 'package:science_cup_app/features/season/presentation/admin/admin_season_view.dart';
 import 'package:science_cup_app/providers/data_state.dart';
 
 import '../../auth/business_logic/auth_notifier.dart';
@@ -83,7 +84,7 @@ class SeasonPage extends StatelessWidget {
             body: Column(
               children: switch (activeTab) {
                 SeasonTabs.games => [GamesView()],
-                SeasonTabs.admin => [Text("Admin panel kommer snart...")],
+                SeasonTabs.admin => [AdminSeasonView()],
               },
             ),
           ),
