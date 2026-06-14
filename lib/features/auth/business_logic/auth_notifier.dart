@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:science_cup_app/features/auth/data/profile.dart';
+import 'package:science_cup_app/features/auth/data/profile_role.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as supabase;
 import '../data/auth_repository.dart';
 
@@ -32,6 +33,8 @@ class AuthNotifier extends ChangeNotifier {
   String? get errorMessage => _errorMessage;
 
   String _currentPhoneNumber = '';
+
+  ProfileRole? get profileRole => _profile?.role;
 
   /// Initialiserer auth-tilstanden ved opstart og lytter på ændringer (f.eks. udløb af session)
   Future<void> _initializeAuth() async {

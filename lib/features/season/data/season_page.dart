@@ -7,6 +7,7 @@ import 'package:science_cup_app/core/navigation/season_tabs.dart';
 import 'package:science_cup_app/features/season/data/season.dart';
 import 'package:science_cup_app/providers/data_state.dart';
 
+import '../../auth/business_logic/auth_notifier.dart';
 import '../../game/presentation/games_view.dart';
 import '../business_logic/season_notifier.dart';
 
@@ -18,6 +19,10 @@ class SeasonPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final profileRole = context.read<AuthNotifier>().profileRole;
+
+    final availableTabs = SeasonTabs.availableTabsForRole(profileRole);
+
     final seasonsState = context.watch<SeasonsNotifier>().state;
     final selectedIndex = activeTab.index;
 
@@ -36,7 +41,7 @@ class SeasonPage extends StatelessWidget {
         );
 
         return DefaultTabController(
-          length: SeasonTabs.values.length,
+          length: availableTabs.length,
           initialIndex: selectedIndex,
           child: Scaffold(
             appBar: AppBar(
@@ -46,10 +51,12 @@ class SeasonPage extends StatelessWidget {
 
                   context.go(targetTab.getFullPath(seasonId));
                 },
-                tabs: SeasonTabs.values.map((tab) => Tab(
+                tabs: availableTabs.map((tab) {
+                  return Tab(
                   text: tab.title,
                   icon: Icon(tab.icon),
-                )).toList(),
+                );
+                }).toList(),
               ),
               leading: Icon(Icons.sports_soccer),
               title: Text(currentSeason.name ?? "Sæson $seasonId"),
@@ -76,6 +83,7 @@ class SeasonPage extends StatelessWidget {
             body: Column(
               children: switch (activeTab) {
                 SeasonTabs.games => [GamesView()],
+                SeasonTabs.admin => [Text("Admin panel kommer snart...")],
               },
             ),
           ),

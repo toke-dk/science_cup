@@ -45,7 +45,7 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
                   token: _codeController.text
               );
               if (success && context.mounted) {
-                context.go('/seasons');
+                context.go('/');
               }
             },
             child: const Text('Log ind'),

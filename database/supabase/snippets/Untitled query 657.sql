@@ -1,24 +1,12 @@
--- 1. Slet de gamle versioner helt, så vi er sikre på at starte på en frisk
-DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
-DROP FUNCTION IF EXISTS public.handle_new_user();
+-- 1. Tillad ALLE (også folk der ikke er logget ind) at læse sæsoner
+CREATE POLICY "Alle kan læse sæsoner" 
+ON public.seasons 
+FOR SELECT 
+USING ( true ); -- 'true' betyder bare: giv adgang til alle uden betingelser
 
--- 2. Genopret funktionen med korrekte indstillinger
-CREATE OR REPLACE FUNCTION public.handle_new_user()
-RETURNS TRIGGER AS $$
-BEGIN
-  INSERT INTO public.users (id, email)
-  VALUES (
-    new.id,
-    new.email
-  );
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql SECURITY DEFINER; -- <-- VIGTIGT: Kører funktionen med administrator-rettigheder
-
--- 3. Giv systemet lov til at eksekvere funktionen
-ALTER FUNCTION public.handle_new_user() OWNER TO postgres;
-
--- 4. Opret triggeren på ny
-CREATE OR REPLACE TRIGGER on_auth_user_created
-  AFTER INSERT ON auth.users
-  FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+-- 2. Tillad KUN brugere med admin-rollen at indsætte, opdatere eller slette
+CREATE POLICY "Kun admins kan ændre sæsoner" 
+ON public.seasons 
+FOR ALL -- Gælder INSERT, UPDATE og DELETE
+TO authenticated -- Kræver at man i det mindste er logget ind
+USING ( (auth.jwt() -> 'app_metadata' ->> 'role') = 'admin' );

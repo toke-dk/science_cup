@@ -8,7 +8,7 @@ class AuthProfileButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final profile = context.read<AuthNotifier>().profile;
+    final profile = context.watch<AuthNotifier>().profile;
 
     if (profile == null) {
       return IntrinsicWidth(

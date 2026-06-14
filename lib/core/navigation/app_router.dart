@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:science_cup_app/core/navigation/season_tabs.dart';
+import 'package:science_cup_app/features/auth/business_logic/auth_notifier.dart';
+import 'package:science_cup_app/features/auth/data/profile_role.dart';
+import 'package:science_cup_app/features/season/data/season.dart';
 import 'package:science_cup_app/features/season/data/season_page.dart';
 import 'package:science_cup_app/features/season/presentation/seasons_view.dart';
 import '../../../features/auth/presentation/login_page.dart';
@@ -37,6 +41,19 @@ class AppRouter {
 
       GoRoute(
         path: '/seasons/:id/:tab',
+        redirect: (context, state) {
+          final id = state.pathParameters['id']!;
+          final tabPath = state.pathParameters['tab'];
+          final activeTab = SeasonTabs.fromPath(tabPath);
+
+          final profileRole = context.read<AuthNotifier>().profileRole;
+
+          if (!SeasonTabs.canAccessTab(activeTab, profileRole)) {
+            return '/seasons/$id/${SeasonTabs.defaultTab.path}';
+          }
+
+          return null; // Returner null for at tillade navigationen at fortsætte
+        },
         builder: (context, state) {
           final seasonId = int.parse(state.pathParameters['id']!);
           final tabPath = state.pathParameters['tab'];
