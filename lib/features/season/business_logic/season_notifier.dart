@@ -27,7 +27,7 @@ class SeasonsNotifier extends ChangeNotifier {
   }
 
   // 2. CREATE
-  Future<void> addSeason({
+  Future<void> createSeason({
     required String name,
     DateTime? start,
     DateTime? end,

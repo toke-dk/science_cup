@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:science_cup_app/features/season/business_logic/season_notifier.dart';
 import 'package:science_cup_app/features/season/data/season.dart';
 
 import '../data/season_repository.dart';
@@ -15,7 +17,6 @@ class AddSeasonModal extends StatefulWidget {
 class _AddSeasonModalState extends State<AddSeasonModal> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
-  final _repository = SeasonRepository();
 
   DateTime? _startDate;
   DateTime? _endDate;
@@ -58,9 +59,7 @@ class _AddSeasonModalState extends State<AddSeasonModal> {
   }
 
   Future<void> _submitForm() async {
-    if (!_formKey.currentState!.validate() ||
-        _startDate == null ||
-        _endDate == null) {
+    if (!_formKey.currentState!.validate()) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Udfyld venligst alle felter og datoer')),
       );
@@ -70,13 +69,12 @@ class _AddSeasonModalState extends State<AddSeasonModal> {
     setState(() => _isLoading = true);
 
     try {
-      final newSeason = Season(
-        name: _nameController.text.trim(),
-        startDate: _startDate!,
-        endDate: _endDate!,
-      );
 
-      await _repository.createSeason(newSeason);
+      await context.read<SeasonsNotifier>().createSeason(
+        name: _nameController.text.trim(),
+        start: _startDate,
+        end: _endDate,
+      );
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
