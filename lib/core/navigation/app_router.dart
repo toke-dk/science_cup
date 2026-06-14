@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:science_cup_app/features/season/data/season_page.dart';
 import 'package:science_cup_app/features/season/presentation/seasons_view.dart';
 import '../../../features/auth/presentation/login_page.dart';
 import 'package:science_cup_app/core/navigation/app_shell.dart';
@@ -20,6 +21,11 @@ class AppRouter {
         parentNavigatorKey: _rootNavigatorKey,
         builder: (context, state) => const LoginPage(),
       ),
+      
+      GoRoute(path: "/seasons/:seasonId", builder: (context, state) {
+        final seasonId = state.pathParameters['seasonId']!;
+        return SeasonPage(seasonId: seasonId);
+      }),
 
       // 2. MAIN APP SHELL (Med global AppBar og Drawer)
       ShellRoute(

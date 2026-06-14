@@ -161,7 +161,7 @@ class _AddSeasonModalState extends State<AddSeasonModal> {
                     children: [
                       Expanded(
                         flex: 1,
-                        child: OutlinedButton(
+                        child: TextButton(
                           onPressed: () {
                             Navigator.of(context).pop();
                           },
