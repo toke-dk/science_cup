@@ -23,7 +23,7 @@ class AppRouter {
       ),
       
       GoRoute(path: "/seasons/:seasonId", builder: (context, state) {
-        final seasonId = state.pathParameters['seasonId']!;
+        final seasonId = int.parse(state.pathParameters['seasonId']!);
         return SeasonPage(seasonId: seasonId);
       }),
 

@@ -44,6 +44,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   gap: ^3.0.1
+  dropdown_flutter: ^1.0.3
 
 dev_dependencies:
   flutter_test:
