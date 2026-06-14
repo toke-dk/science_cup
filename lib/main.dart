@@ -6,6 +6,8 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
 import 'package:science_cup_app/features/group/data/group_repository.dart';
 import 'package:science_cup_app/features/group/state/group_notifier.dart';
+import 'package:science_cup_app/features/program/data/program_repository.dart';
+import 'package:science_cup_app/features/program/state/program_notifier.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'core/navigation/app_router.dart';
@@ -36,20 +38,17 @@ void main() async {
     MultiProvider(
       providers: [
         Provider<SeasonRepository>(create: (_) => SeasonRepository()),
-
         ChangeNotifierProvider<SeasonsNotifier>(
           create: (context) =>
               SeasonsNotifier(context.read<SeasonRepository>())..loadSeasons(),
         ),
 
         Provider<AuthRepository>(create: (_) => AuthRepository()),
-
         ChangeNotifierProvider<AuthNotifier>(
           create: (context) => AuthNotifier(context.read<AuthRepository>()),
         ),
 
         Provider<GroupRepository>(create: (_) => GroupRepository()),
-
         ChangeNotifierProxyProvider<SeasonsNotifier, GroupNotifier>(
           update: (context, seasonNotifier, groupNotifier) {
             groupNotifier!.updateActiveSeason(seasonNotifier.currentSeasonId);
@@ -57,6 +56,13 @@ void main() async {
           },
           create: (context) => GroupNotifier(context.read<GroupRepository>())..loadGroupsForActiveSeason(),
         ),
+
+        Provider<ProgramRepository>(create: (_) => ProgramRepository()),
+
+        ChangeNotifierProvider<ProgramNotifier>(
+          create: (context) => ProgramNotifier(context.read<ProgramRepository>())..loadPrograms(),
+        ),
+
       ],
       child: const MyApp(),
     ),

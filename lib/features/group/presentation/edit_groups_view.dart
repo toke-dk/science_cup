@@ -35,6 +35,12 @@ class EditGroupsView extends StatelessWidget {
               ),
             ],
           ),
+          ListView(
+            shrinkWrap: true,
+            children: groups.map((g) => ListTile(
+              title: Text(g.name ?? "Ingen navn"),
+            )).toList(),
+          ),
         ],
       ),
     );

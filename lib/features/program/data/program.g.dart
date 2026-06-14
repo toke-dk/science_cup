@@ -9,6 +9,7 @@ part of 'program.dart';
 _Program _$ProgramFromJson(Map<String, dynamic> json) => _Program(
   id: (json['id'] as num?)?.toInt(),
   name: json['name'] as String?,
+  nickname: json['nickname'] as String?,
   createdAt: json['created_at'] == null
       ? null
       : DateTime.parse(json['created_at'] as String),
@@ -17,5 +18,6 @@ _Program _$ProgramFromJson(Map<String, dynamic> json) => _Program(
 Map<String, dynamic> _$ProgramToJson(_Program instance) => <String, dynamic>{
   'id': ?instance.id,
   'name': ?instance.name,
+  'nickname': ?instance.nickname,
   'created_at': ?instance.createdAt?.toIso8601String(),
 };
