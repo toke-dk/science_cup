@@ -1,14 +1,67 @@
 import 'package:flutter/material.dart';
-import 'package:science_cup_app/features/season/presentation/admin/admin_matches_view.dart';
+import 'package:science_cup_app/features/group/presentation/edit_groups_view.dart';
+import 'package:science_cup_app/features/program/presentation/edit_programs_view.dart';
 
-class AdminSeasonView extends StatelessWidget {
+class AdminSeasonView extends StatefulWidget {
   const AdminSeasonView({super.key});
+
+  @override
+  State<AdminSeasonView> createState() => _AdminSeasonViewState();
+}
+
+class _AdminSeasonViewState extends State<AdminSeasonView> {
+  final List<ButtonSegment> _adminSegments = [
+    ButtonSegment(
+      value: "games",
+      label: Text("Kampe"),
+      icon: Icon(Icons.calendar_today_outlined),
+    ),
+    ButtonSegment(
+      value: "groups",
+      label: Text("Grupper"),
+      icon: Icon(Icons.people),
+    ),
+    ButtonSegment(
+      value: "teams",
+      label: Text("Hold"),
+      icon: Icon(Icons.person),
+    ),
+    ButtonSegment(
+      value: "programs",
+      label: Text("Studier"),
+      icon: Icon(Icons.school),
+    ),
+  ];
+
+  late ButtonSegment _selectedAdminSegment = _adminSegments.first;
 
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        AdminGamesView()
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: SegmentedButton(
+            showSelectedIcon: false,
+            segments: _adminSegments,
+            selected: {_selectedAdminSegment.value},
+            onSelectionChanged: (newValue) {
+              setState(() {
+                _selectedAdminSegment = _adminSegments.firstWhere(
+                  (segment) => segment.value == newValue.first,
+                );
+              });
+            },
+          ),
+        ),
+        switch (_selectedAdminSegment.value) {
+          "games" => Text("KampSegment"),
+          "groups" => EditGroupsView(),
+          "teams" => Text("HoldSegment"),
+          "programs" => ProgramsView(),
+          _ => SizedBox.shrink(),
+        },
       ],
     );
   }
