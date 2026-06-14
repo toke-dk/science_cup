@@ -13,7 +13,11 @@ import '../../game/presentation/games_view.dart';
 import '../business_logic/season_notifier.dart';
 
 class SeasonPage extends StatelessWidget {
-  const SeasonPage({super.key, required this.seasonId, required this.activeTab});
+  const SeasonPage({
+    super.key,
+    required this.seasonId,
+    required this.activeTab,
+  });
 
   final int seasonId;
   final SeasonTabs activeTab;
@@ -30,14 +34,15 @@ class SeasonPage extends StatelessWidget {
     // Vi pakker staten ud på øverste niveau for hele skærmen
     return seasonsState.when(
       initial: () => const Scaffold(body: SizedBox.shrink()),
-      loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
+      loading: () =>
+          const Scaffold(body: Center(child: CircularProgressIndicator())),
       error: (message) => Scaffold(body: Center(child: Text('Fejl: $message'))),
       loaded: (seasons) {
         // NU ved vi med 100% sikkerhed, at listen er klar og gyldig!
 
         // Find den aktive sæson ud fra URL'ens seasonId
         final currentSeason = seasons.firstWhere(
-              (s) => s.id == seasonId,
+          (s) => s.id == seasonId,
           orElse: () => seasons.first,
         );
 
@@ -46,19 +51,6 @@ class SeasonPage extends StatelessWidget {
           initialIndex: selectedIndex,
           child: Scaffold(
             appBar: AppBar(
-              bottom: TabBar(
-                onTap: (index) {
-                  final targetTab = SeasonTabs.values[index];
-
-                  context.go(targetTab.getFullPath(seasonId));
-                },
-                tabs: availableTabs.map((tab) {
-                  return Tab(
-                  text: tab.title,
-                  icon: Icon(tab.icon),
-                );
-                }).toList(),
-              ),
               leading: Icon(Icons.sports_soccer),
               title: Text(currentSeason.name ?? "Sæson $seasonId"),
               centerTitle: false,
@@ -68,11 +60,15 @@ class SeasonPage extends StatelessWidget {
                     child: DropdownFlutter<Season>.search(
                       initialItem: currentSeason,
                       items: seasons,
-                      listItemBuilder: (context, season, _, _) => Text(season.name ?? "Ingen navn"),
-                      headerBuilder: (context, season, _) => Text(season.name ?? "Ingen navn"),
+                      listItemBuilder: (context, season, _, _) =>
+                          Text(season.name ?? "Ingen navn"),
+                      headerBuilder: (context, season, _) =>
+                          Text(season.name ?? "Ingen navn"),
                       onChanged: (newSeason) {
                         if (newSeason?.id != null) {
-                          context.read<SeasonsNotifier>().changeCurrentSeason(newSeason!);
+                          context.read<SeasonsNotifier>().changeCurrentSeason(
+                            newSeason!,
+                          );
 
                           context.go('/seasons/${newSeason.id}');
                         }
@@ -81,11 +77,44 @@ class SeasonPage extends StatelessWidget {
                   ),
               ],
             ),
-            body: Column(
-              children: switch (activeTab) {
-                SeasonTabs.games => [GamesView()],
-                SeasonTabs.admin => [AdminSeasonView()],
-              },
+            body: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Wrap(
+                      spacing: 5,
+                      children: List.generate(availableTabs.length, (index) {
+                        final indexTab = availableTabs[index];
+                        return ChoiceChip(
+                          showCheckmark: false,
+                          avatar: switch (indexTab) {
+                            SeasonTabs.games => const Icon(Icons.calendar_today_outlined),
+                            SeasonTabs.standings => const Icon(Icons.leaderboard_outlined),
+                            SeasonTabs.admin => const Icon(Icons.admin_panel_settings_outlined),
+                          },
+                          label: Text(indexTab.title),
+                          selected: index == selectedIndex,
+                          onSelected: (selected) {
+                            if (selected) {
+                              context.go(
+                                '/seasons/${currentSeason.id}/${indexTab.path}',
+                              );
+                            }
+                          },
+                        );
+                      }),
+                    ),
+                    const SizedBox(height: 16),
+                    switch (activeTab) {
+                      SeasonTabs.games => const GamesView(),
+                      SeasonTabs.standings => const Center(child: Text('Stilling kommer snart!')),
+                      SeasonTabs.admin => const AdminSeasonView(),
+                    },
+                  ],
+                ),
+              ),
             ),
           ),
         );

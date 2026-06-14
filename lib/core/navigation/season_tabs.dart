@@ -5,6 +5,7 @@ import '../../features/auth/data/profile_role.dart';
 
 enum SeasonTabs implements AppTab {
   games(title: 'Kampe', icon: Icons.calendar_today_outlined, path: 'games'),
+  standings(title: 'Stilling', icon: Icons.leaderboard_outlined, path: 'standings'),
   admin(
     title: 'Admin',
     icon: Icons.admin_panel_settings_outlined,
