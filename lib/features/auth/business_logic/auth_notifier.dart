@@ -1,114 +1,161 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-
+import 'package:science_cup_app/features/auth/data/profile.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' as supabase;
 import '../data/auth_repository.dart';
 
 class AuthNotifier extends ChangeNotifier {
   final AuthRepository _repository;
-  late final StreamSubscription<AuthState> _authStateSubscription;
+  StreamSubscription<supabase.AuthState>? _authStateSubscription;
 
   AuthNotifier(this._repository) {
-    _isAuthenticated = Supabase.instance.client.auth.currentSession != null;
-    _authStateSubscription = Supabase.instance.client.auth.onAuthStateChange.listen((event) {
-      _isAuthenticated = event.session != null;
-      _user = event.session?.user;
-      notifyListeners();
+    _initializeAuth();
+  }
+
+  // --- GLOBALE AUTH TILSTANDE ---
+  Profile? _profile;
+  Profile? get profile => _profile;
+
+  bool get isAuthenticated => _profile != null;
+
+  // --- LOKALE UI/FORMULAR TILSTANDE ---
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+
+  bool _phoneCodeSent = false;
+  bool get phoneCodeSent => _phoneCodeSent;
+
+  bool _emailCodeSent = false;
+  bool get emailCodeSent => _emailCodeSent;
+
+  String? _errorMessage;
+  String? get errorMessage => _errorMessage;
+
+  String _currentPhoneNumber = '';
+
+  /// Initialiserer auth-tilstanden ved opstart og lytter på ændringer (f.eks. udløb af session)
+  Future<void> _initializeAuth() async {
+    _isLoading = true;
+    notifyListeners();
+
+    // Tjek om der allerede er en aktiv bruger i databasen ved app-start
+    _profile = await _repository.getLoggedInProfile();
+    _isLoading = false;
+    notifyListeners();
+
+    // Lyt til ændringer i baggrunden (f.eks. hvis brugeren bliver logget ud udefra)
+    _authStateSubscription = supabase.Supabase.instance.client.auth.onAuthStateChange.listen((event) async {
+      if (event.session == null) {
+        _profile = null;
+        _resetFormStates();
+        notifyListeners();
+      } else if (_profile == null) {
+        // Hvis sessionen pludselig opstår udefra, henter vi profilen
+        _profile = await _repository.getLoggedInProfile();
+        notifyListeners();
+      }
     });
   }
 
-  User? _user;
-  User? get user => _user;
+  // --- PHONE AUTH FLOW ---
 
-  // Phone
-  bool _codeSent = false;
-  bool get codeSent => _codeSent;
-
-  String _currentPhoneNumber = '';
-  bool _isAuthenticated = false;
-  bool get isAuthenticated => _isAuthenticated;
-
-
-  // Trin 1: Send SMS
+  /// Trin 1: Send SMS OTP
   Future<void> startPhoneAuth(String phoneNumber) async {
+    _setLoading(true);
     try {
       _currentPhoneNumber = phoneNumber;
       await _repository.sendOtpToPhone(phoneNumber);
-      _codeSent = true; // Nu ved UI'et, at vi skal vise kode-feltet
-      notifyListeners();
-    } catch (e) {
-      debugPrint("Fejl ved telefonnummer otp: $e");
-    }
-  }
-
-  // Trin 2: Verificer kode
-  Future<bool> verifyCode(String token) async {
-    try {
-      await _repository.verifyPhoneOtp(
-        phoneNumber: _currentPhoneNumber,
-        token: token,
-      );
-      _codeSent = false;
-      _isAuthenticated = Supabase.instance.client.auth.currentSession != null;
-      notifyListeners();
-      return _isAuthenticated;
-    } catch (e) {
-      // Håndter forkert kode-fejl
-      return false;
-    }
-  }
-
-  // Email
-  bool _isLoading = false;
-  bool _emailCodeSent = false;
-  String? _errorMessage;
-
-  bool get isLoading => _isLoading;
-  bool get emailCodeSent => _emailCodeSent;
-  String? get errorMessage => _errorMessage;
-
-  // 1. Send koden til mail
-  Future<void> sendEmailOtp(String email) async {
-    _isLoading = true;
-    _errorMessage = null;
-    notifyListeners();
-
-    try {
-      await _repository.sendEmailOtp(email);
-      _emailCodeSent = true;
-      debugPrint("successfully sent email otp to $email");
+      _phoneCodeSent = true;
     } catch (e) {
       _errorMessage = e.toString();
     } finally {
-      _isLoading = false;
-      notifyListeners();
+      _setLoading(false);
     }
   }
 
-  // 2. Verificer koden
-  Future<bool> verifyEmailOtp({required String email, required String token}) async {
-    _isLoading = true;
-    notifyListeners();
-
+  /// Trin 2: Verificer SMS-kode
+  Future<bool> verifyPhoneCode(String token) async {
+    _setLoading(true);
     try {
-      await _repository.verifyEmailOtp(email: email, token: token);
-      _isAuthenticated = Supabase.instance.client.auth.currentSession != null;
-      debugPrint("Sucess med verificering");
-      return _isAuthenticated;
+      // Dit repository returnerer nu din egen typesikre User model!
+      final newUser = await _repository.verifyPhoneOtp(
+        phoneNumber: _currentPhoneNumber,
+        token: token,
+      );
+      _profile = newUser;
+      _phoneCodeSent = false;
+      return true;
     } catch (e) {
-      _errorMessage = "Fejl: Kunne ikke logge ind. Tjek koden. ($e)";
-      debugPrint("Error: $e");
+      _errorMessage = "Forkert eller udløbet SMS-kode.";
       return false;
     } finally {
-      _isLoading = false;
-      notifyListeners();
+      _setLoading(false);
     }
+  }
+
+  // --- EMAIL AUTH FLOW ---
+
+  /// Trin 1: Send login-link/kode til mail
+  Future<void> sendEmailOtp(String email) async {
+    _setLoading(true);
+    try {
+      await _repository.sendEmailOtp(email);
+      _emailCodeSent = true;
+    } catch (e) {
+      _errorMessage = e.toString();
+    } finally {
+      _setLoading(false);
+    }
+  }
+
+  /// Trin 2: Verificer e-mail-kode
+  Future<bool> verifyEmailOtp({required String email, required String token}) async {
+    _setLoading(true);
+    try {
+      final newUser = await _repository.verifyEmailOtp(email: email, token: token);
+      _profile = newUser;
+      _emailCodeSent = false;
+      return true;
+    } catch (e) {
+      _errorMessage = "Kunne ikke logge ind. Tjek koden i din e-mail.";
+      return false;
+    } finally {
+      _setLoading(false);
+    }
+  }
+
+  // --- LOG UD ---
+  Future<void> signOut() async {
+    _setLoading(true);
+    try {
+      await _repository.signOut();
+      _profile = null;
+      _resetFormStates();
+    } catch (e) {
+      _errorMessage = e.toString();
+    } finally {
+      _setLoading(false);
+    }
+  }
+
+  // --- HJÆLPEFUNKTIONER ---
+
+  void _setLoading(bool value) {
+    _isLoading = value;
+    if (value) _errorMessage = null; // Nulstil fejlbesked, når vi starter en ny handling
+    notifyListeners();
+  }
+
+  void _resetFormStates() {
+    _phoneCodeSent = false;
+    _emailCodeSent = false;
+    _errorMessage = null;
+    _currentPhoneNumber = '';
   }
 
   @override
   void dispose() {
-    _authStateSubscription.cancel();
+    _authStateSubscription?.cancel();
     super.dispose();
   }
 }

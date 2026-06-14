@@ -8,9 +8,9 @@ class AuthProfileButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = context.read<AuthNotifier>().user;
+    final profile = context.read<AuthNotifier>().profile;
 
-    if (user == null) {
+    if (profile == null) {
       return IntrinsicWidth(
         child: ListTile(
           leading: IconButton(
@@ -26,12 +26,12 @@ class AuthProfileButton extends StatelessWidget {
       return IntrinsicWidth(
         child: ListTile(
           leading: IconButton(
-            onPressed: () {
-        
+            onPressed: () async {
+              await context.read<AuthNotifier>().signOut();
             },
             icon: Icon(Icons.person),
           ),
-          title: Text("${user.email}"),
+          title: Text("${profile.email}"),
         ),
       );
     }

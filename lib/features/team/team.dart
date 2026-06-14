@@ -14,8 +14,6 @@ abstract class Team with _$Team {
     String? name,
     DateTime? createdAt,
     Season? season,
-    Contact? primaryContact,
-    Contact? secondaryContact,
     Program? program,
   }) = _Team;
 

@@ -1,4 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:science_cup_app/features/auth/data/profile.dart';
+import 'package:science_cup_app/features/group/data/group.dart';
 
 part 'contact.freezed.dart';
 part 'contact.g.dart';
@@ -8,8 +10,9 @@ abstract class Contact with _$Contact {
   @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
   const factory Contact({
     int? id,
-    String? name,
-    String? phoneNumber,
+    Profile? profile,
+    Group? group,
+    bool? isPrimary,
     DateTime? createdAt,
   }) = _Contact;
 

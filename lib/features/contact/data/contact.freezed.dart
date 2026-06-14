@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Contact {
 
- int? get id; String? get name; String? get phoneNumber; DateTime? get createdAt;
+ int? get id; Profile? get profile; Group? get group; bool? get isPrimary; DateTime? get createdAt;
 /// Create a copy of Contact
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $ContactCopyWith<Contact> get copyWith => _$ContactCopyWithImpl<Contact>(this as
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Contact&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.phoneNumber, phoneNumber) || other.phoneNumber == phoneNumber)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Contact&&(identical(other.id, id) || other.id == id)&&(identical(other.profile, profile) || other.profile == profile)&&(identical(other.group, group) || other.group == group)&&(identical(other.isPrimary, isPrimary) || other.isPrimary == isPrimary)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,phoneNumber,createdAt);
+int get hashCode => Object.hash(runtimeType,id,profile,group,isPrimary,createdAt);
 
 @override
 String toString() {
-  return 'Contact(id: $id, name: $name, phoneNumber: $phoneNumber, createdAt: $createdAt)';
+  return 'Contact(id: $id, profile: $profile, group: $group, isPrimary: $isPrimary, createdAt: $createdAt)';
 }
 
 
@@ -48,11 +48,11 @@ abstract mixin class $ContactCopyWith<$Res>  {
   factory $ContactCopyWith(Contact value, $Res Function(Contact) _then) = _$ContactCopyWithImpl;
 @useResult
 $Res call({
- int? id, String? name, String? phoneNumber, DateTime? createdAt
+ int? id, Profile? profile, Group? group, bool? isPrimary, DateTime? createdAt
 });
 
 
-
+$ProfileCopyWith<$Res>? get profile;$GroupCopyWith<$Res>? get group;
 
 }
 /// @nodoc
@@ -65,16 +65,41 @@ class _$ContactCopyWithImpl<$Res>
 
 /// Create a copy of Contact
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? name = freezed,Object? phoneNumber = freezed,Object? createdAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? profile = freezed,Object? group = freezed,Object? isPrimary = freezed,Object? createdAt = freezed,}) {
   return _then(_self.copyWith(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as int?,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String?,phoneNumber: freezed == phoneNumber ? _self.phoneNumber : phoneNumber // ignore: cast_nullable_to_non_nullable
-as String?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as int?,profile: freezed == profile ? _self.profile : profile // ignore: cast_nullable_to_non_nullable
+as Profile?,group: freezed == group ? _self.group : group // ignore: cast_nullable_to_non_nullable
+as Group?,isPrimary: freezed == isPrimary ? _self.isPrimary : isPrimary // ignore: cast_nullable_to_non_nullable
+as bool?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,
   ));
 }
+/// Create a copy of Contact
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ProfileCopyWith<$Res>? get profile {
+    if (_self.profile == null) {
+    return null;
+  }
 
+  return $ProfileCopyWith<$Res>(_self.profile!, (value) {
+    return _then(_self.copyWith(profile: value));
+  });
+}/// Create a copy of Contact
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$GroupCopyWith<$Res>? get group {
+    if (_self.group == null) {
+    return null;
+  }
+
+  return $GroupCopyWith<$Res>(_self.group!, (value) {
+    return _then(_self.copyWith(group: value));
+  });
+}
 }
 
 
@@ -156,10 +181,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  String? name,  String? phoneNumber,  DateTime? createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  Profile? profile,  Group? group,  bool? isPrimary,  DateTime? createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Contact() when $default != null:
-return $default(_that.id,_that.name,_that.phoneNumber,_that.createdAt);case _:
+return $default(_that.id,_that.profile,_that.group,_that.isPrimary,_that.createdAt);case _:
   return orElse();
 
 }
@@ -177,10 +202,10 @@ return $default(_that.id,_that.name,_that.phoneNumber,_that.createdAt);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  String? name,  String? phoneNumber,  DateTime? createdAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  Profile? profile,  Group? group,  bool? isPrimary,  DateTime? createdAt)  $default,) {final _that = this;
 switch (_that) {
 case _Contact():
-return $default(_that.id,_that.name,_that.phoneNumber,_that.createdAt);case _:
+return $default(_that.id,_that.profile,_that.group,_that.isPrimary,_that.createdAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -197,10 +222,10 @@ return $default(_that.id,_that.name,_that.phoneNumber,_that.createdAt);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  String? name,  String? phoneNumber,  DateTime? createdAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  Profile? profile,  Group? group,  bool? isPrimary,  DateTime? createdAt)?  $default,) {final _that = this;
 switch (_that) {
 case _Contact() when $default != null:
-return $default(_that.id,_that.name,_that.phoneNumber,_that.createdAt);case _:
+return $default(_that.id,_that.profile,_that.group,_that.isPrimary,_that.createdAt);case _:
   return null;
 
 }
@@ -212,12 +237,13 @@ return $default(_that.id,_that.name,_that.phoneNumber,_that.createdAt);case _:
 
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class _Contact implements Contact {
-  const _Contact({this.id, this.name, this.phoneNumber, this.createdAt});
+  const _Contact({this.id, this.profile, this.group, this.isPrimary, this.createdAt});
   factory _Contact.fromJson(Map<String, dynamic> json) => _$ContactFromJson(json);
 
 @override final  int? id;
-@override final  String? name;
-@override final  String? phoneNumber;
+@override final  Profile? profile;
+@override final  Group? group;
+@override final  bool? isPrimary;
 @override final  DateTime? createdAt;
 
 /// Create a copy of Contact
@@ -233,16 +259,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Contact&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.phoneNumber, phoneNumber) || other.phoneNumber == phoneNumber)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Contact&&(identical(other.id, id) || other.id == id)&&(identical(other.profile, profile) || other.profile == profile)&&(identical(other.group, group) || other.group == group)&&(identical(other.isPrimary, isPrimary) || other.isPrimary == isPrimary)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,phoneNumber,createdAt);
+int get hashCode => Object.hash(runtimeType,id,profile,group,isPrimary,createdAt);
 
 @override
 String toString() {
-  return 'Contact(id: $id, name: $name, phoneNumber: $phoneNumber, createdAt: $createdAt)';
+  return 'Contact(id: $id, profile: $profile, group: $group, isPrimary: $isPrimary, createdAt: $createdAt)';
 }
 
 
@@ -253,11 +279,11 @@ abstract mixin class _$ContactCopyWith<$Res> implements $ContactCopyWith<$Res> {
   factory _$ContactCopyWith(_Contact value, $Res Function(_Contact) _then) = __$ContactCopyWithImpl;
 @override @useResult
 $Res call({
- int? id, String? name, String? phoneNumber, DateTime? createdAt
+ int? id, Profile? profile, Group? group, bool? isPrimary, DateTime? createdAt
 });
 
 
-
+@override $ProfileCopyWith<$Res>? get profile;@override $GroupCopyWith<$Res>? get group;
 
 }
 /// @nodoc
@@ -270,17 +296,42 @@ class __$ContactCopyWithImpl<$Res>
 
 /// Create a copy of Contact
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? name = freezed,Object? phoneNumber = freezed,Object? createdAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? profile = freezed,Object? group = freezed,Object? isPrimary = freezed,Object? createdAt = freezed,}) {
   return _then(_Contact(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as int?,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String?,phoneNumber: freezed == phoneNumber ? _self.phoneNumber : phoneNumber // ignore: cast_nullable_to_non_nullable
-as String?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as int?,profile: freezed == profile ? _self.profile : profile // ignore: cast_nullable_to_non_nullable
+as Profile?,group: freezed == group ? _self.group : group // ignore: cast_nullable_to_non_nullable
+as Group?,isPrimary: freezed == isPrimary ? _self.isPrimary : isPrimary // ignore: cast_nullable_to_non_nullable
+as bool?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,
   ));
 }
 
+/// Create a copy of Contact
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ProfileCopyWith<$Res>? get profile {
+    if (_self.profile == null) {
+    return null;
+  }
 
+  return $ProfileCopyWith<$Res>(_self.profile!, (value) {
+    return _then(_self.copyWith(profile: value));
+  });
+}/// Create a copy of Contact
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$GroupCopyWith<$Res>? get group {
+    if (_self.group == null) {
+    return null;
+  }
+
+  return $GroupCopyWith<$Res>(_self.group!, (value) {
+    return _then(_self.copyWith(group: value));
+  });
+}
 }
 
 // dart format on

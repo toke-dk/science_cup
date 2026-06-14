@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Team {
 
- int? get id; String? get name; DateTime? get createdAt; Season? get season; Contact? get primaryContact; Contact? get secondaryContact; Program? get program;
+ int? get id; String? get name; DateTime? get createdAt; Season? get season; Program? get program;
 /// Create a copy of Team
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $TeamCopyWith<Team> get copyWith => _$TeamCopyWithImpl<Team>(this as Team, _$ide
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Team&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.season, season) || other.season == season)&&(identical(other.primaryContact, primaryContact) || other.primaryContact == primaryContact)&&(identical(other.secondaryContact, secondaryContact) || other.secondaryContact == secondaryContact)&&(identical(other.program, program) || other.program == program));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Team&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.season, season) || other.season == season)&&(identical(other.program, program) || other.program == program));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,createdAt,season,primaryContact,secondaryContact,program);
+int get hashCode => Object.hash(runtimeType,id,name,createdAt,season,program);
 
 @override
 String toString() {
-  return 'Team(id: $id, name: $name, createdAt: $createdAt, season: $season, primaryContact: $primaryContact, secondaryContact: $secondaryContact, program: $program)';
+  return 'Team(id: $id, name: $name, createdAt: $createdAt, season: $season, program: $program)';
 }
 
 
@@ -48,11 +48,11 @@ abstract mixin class $TeamCopyWith<$Res>  {
   factory $TeamCopyWith(Team value, $Res Function(Team) _then) = _$TeamCopyWithImpl;
 @useResult
 $Res call({
- int? id, String? name, DateTime? createdAt, Season? season, Contact? primaryContact, Contact? secondaryContact, Program? program
+ int? id, String? name, DateTime? createdAt, Season? season, Program? program
 });
 
 
-$SeasonCopyWith<$Res>? get season;$ContactCopyWith<$Res>? get primaryContact;$ContactCopyWith<$Res>? get secondaryContact;$ProgramCopyWith<$Res>? get program;
+$SeasonCopyWith<$Res>? get season;$ProgramCopyWith<$Res>? get program;
 
 }
 /// @nodoc
@@ -65,15 +65,13 @@ class _$TeamCopyWithImpl<$Res>
 
 /// Create a copy of Team
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? name = freezed,Object? createdAt = freezed,Object? season = freezed,Object? primaryContact = freezed,Object? secondaryContact = freezed,Object? program = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? name = freezed,Object? createdAt = freezed,Object? season = freezed,Object? program = freezed,}) {
   return _then(_self.copyWith(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int?,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,season: freezed == season ? _self.season : season // ignore: cast_nullable_to_non_nullable
-as Season?,primaryContact: freezed == primaryContact ? _self.primaryContact : primaryContact // ignore: cast_nullable_to_non_nullable
-as Contact?,secondaryContact: freezed == secondaryContact ? _self.secondaryContact : secondaryContact // ignore: cast_nullable_to_non_nullable
-as Contact?,program: freezed == program ? _self.program : program // ignore: cast_nullable_to_non_nullable
+as Season?,program: freezed == program ? _self.program : program // ignore: cast_nullable_to_non_nullable
 as Program?,
   ));
 }
@@ -88,30 +86,6 @@ $SeasonCopyWith<$Res>? get season {
 
   return $SeasonCopyWith<$Res>(_self.season!, (value) {
     return _then(_self.copyWith(season: value));
-  });
-}/// Create a copy of Team
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$ContactCopyWith<$Res>? get primaryContact {
-    if (_self.primaryContact == null) {
-    return null;
-  }
-
-  return $ContactCopyWith<$Res>(_self.primaryContact!, (value) {
-    return _then(_self.copyWith(primaryContact: value));
-  });
-}/// Create a copy of Team
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$ContactCopyWith<$Res>? get secondaryContact {
-    if (_self.secondaryContact == null) {
-    return null;
-  }
-
-  return $ContactCopyWith<$Res>(_self.secondaryContact!, (value) {
-    return _then(_self.copyWith(secondaryContact: value));
   });
 }/// Create a copy of Team
 /// with the given fields replaced by the non-null parameter values.
@@ -207,10 +181,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  String? name,  DateTime? createdAt,  Season? season,  Contact? primaryContact,  Contact? secondaryContact,  Program? program)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  String? name,  DateTime? createdAt,  Season? season,  Program? program)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Team() when $default != null:
-return $default(_that.id,_that.name,_that.createdAt,_that.season,_that.primaryContact,_that.secondaryContact,_that.program);case _:
+return $default(_that.id,_that.name,_that.createdAt,_that.season,_that.program);case _:
   return orElse();
 
 }
@@ -228,10 +202,10 @@ return $default(_that.id,_that.name,_that.createdAt,_that.season,_that.primaryCo
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  String? name,  DateTime? createdAt,  Season? season,  Contact? primaryContact,  Contact? secondaryContact,  Program? program)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  String? name,  DateTime? createdAt,  Season? season,  Program? program)  $default,) {final _that = this;
 switch (_that) {
 case _Team():
-return $default(_that.id,_that.name,_that.createdAt,_that.season,_that.primaryContact,_that.secondaryContact,_that.program);case _:
+return $default(_that.id,_that.name,_that.createdAt,_that.season,_that.program);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -248,10 +222,10 @@ return $default(_that.id,_that.name,_that.createdAt,_that.season,_that.primaryCo
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  String? name,  DateTime? createdAt,  Season? season,  Contact? primaryContact,  Contact? secondaryContact,  Program? program)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  String? name,  DateTime? createdAt,  Season? season,  Program? program)?  $default,) {final _that = this;
 switch (_that) {
 case _Team() when $default != null:
-return $default(_that.id,_that.name,_that.createdAt,_that.season,_that.primaryContact,_that.secondaryContact,_that.program);case _:
+return $default(_that.id,_that.name,_that.createdAt,_that.season,_that.program);case _:
   return null;
 
 }
@@ -263,15 +237,13 @@ return $default(_that.id,_that.name,_that.createdAt,_that.season,_that.primaryCo
 
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class _Team implements Team {
-  const _Team({this.id, this.name, this.createdAt, this.season, this.primaryContact, this.secondaryContact, this.program});
+  const _Team({this.id, this.name, this.createdAt, this.season, this.program});
   factory _Team.fromJson(Map<String, dynamic> json) => _$TeamFromJson(json);
 
 @override final  int? id;
 @override final  String? name;
 @override final  DateTime? createdAt;
 @override final  Season? season;
-@override final  Contact? primaryContact;
-@override final  Contact? secondaryContact;
 @override final  Program? program;
 
 /// Create a copy of Team
@@ -287,16 +259,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Team&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.season, season) || other.season == season)&&(identical(other.primaryContact, primaryContact) || other.primaryContact == primaryContact)&&(identical(other.secondaryContact, secondaryContact) || other.secondaryContact == secondaryContact)&&(identical(other.program, program) || other.program == program));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Team&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.season, season) || other.season == season)&&(identical(other.program, program) || other.program == program));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,createdAt,season,primaryContact,secondaryContact,program);
+int get hashCode => Object.hash(runtimeType,id,name,createdAt,season,program);
 
 @override
 String toString() {
-  return 'Team(id: $id, name: $name, createdAt: $createdAt, season: $season, primaryContact: $primaryContact, secondaryContact: $secondaryContact, program: $program)';
+  return 'Team(id: $id, name: $name, createdAt: $createdAt, season: $season, program: $program)';
 }
 
 
@@ -307,11 +279,11 @@ abstract mixin class _$TeamCopyWith<$Res> implements $TeamCopyWith<$Res> {
   factory _$TeamCopyWith(_Team value, $Res Function(_Team) _then) = __$TeamCopyWithImpl;
 @override @useResult
 $Res call({
- int? id, String? name, DateTime? createdAt, Season? season, Contact? primaryContact, Contact? secondaryContact, Program? program
+ int? id, String? name, DateTime? createdAt, Season? season, Program? program
 });
 
 
-@override $SeasonCopyWith<$Res>? get season;@override $ContactCopyWith<$Res>? get primaryContact;@override $ContactCopyWith<$Res>? get secondaryContact;@override $ProgramCopyWith<$Res>? get program;
+@override $SeasonCopyWith<$Res>? get season;@override $ProgramCopyWith<$Res>? get program;
 
 }
 /// @nodoc
@@ -324,15 +296,13 @@ class __$TeamCopyWithImpl<$Res>
 
 /// Create a copy of Team
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? name = freezed,Object? createdAt = freezed,Object? season = freezed,Object? primaryContact = freezed,Object? secondaryContact = freezed,Object? program = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? name = freezed,Object? createdAt = freezed,Object? season = freezed,Object? program = freezed,}) {
   return _then(_Team(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int?,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,season: freezed == season ? _self.season : season // ignore: cast_nullable_to_non_nullable
-as Season?,primaryContact: freezed == primaryContact ? _self.primaryContact : primaryContact // ignore: cast_nullable_to_non_nullable
-as Contact?,secondaryContact: freezed == secondaryContact ? _self.secondaryContact : secondaryContact // ignore: cast_nullable_to_non_nullable
-as Contact?,program: freezed == program ? _self.program : program // ignore: cast_nullable_to_non_nullable
+as Season?,program: freezed == program ? _self.program : program // ignore: cast_nullable_to_non_nullable
 as Program?,
   ));
 }
@@ -348,30 +318,6 @@ $SeasonCopyWith<$Res>? get season {
 
   return $SeasonCopyWith<$Res>(_self.season!, (value) {
     return _then(_self.copyWith(season: value));
-  });
-}/// Create a copy of Team
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$ContactCopyWith<$Res>? get primaryContact {
-    if (_self.primaryContact == null) {
-    return null;
-  }
-
-  return $ContactCopyWith<$Res>(_self.primaryContact!, (value) {
-    return _then(_self.copyWith(primaryContact: value));
-  });
-}/// Create a copy of Team
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$ContactCopyWith<$Res>? get secondaryContact {
-    if (_self.secondaryContact == null) {
-    return null;
-  }
-
-  return $ContactCopyWith<$Res>(_self.secondaryContact!, (value) {
-    return _then(_self.copyWith(secondaryContact: value));
   });
 }/// Create a copy of Team
 /// with the given fields replaced by the non-null parameter values.
