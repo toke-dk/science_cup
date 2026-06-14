@@ -16,14 +16,17 @@ class SeasonsView extends StatelessWidget {
       initial: () => CircularProgressIndicator(),
       loading: () => CircularProgressIndicator(),
       error: (error) => Text('Der skete en fejl: $error'),
-      loaded: (seasons) => Column(
+      loaded: (seasons) {
+        final sortedSeasons = List.of(seasons)
+          ..sort((a, b) => b.startDate?.compareTo(a.startDate ?? DateTime(0)) ?? 0); // Nyeste først
+        return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ListView.builder(
             shrinkWrap: true,
             itemCount: seasons.length,
             itemBuilder: (context, index) {
-              final season = seasons[index];
+              final season = sortedSeasons[index];
               return ListTile(
                 title: Text(season.name ?? "Ingen navn"),
                 subtitle: Text('Start: ${season.startDate?.toLocal()} - Sl'),
@@ -32,7 +35,8 @@ class SeasonsView extends StatelessWidget {
           ),
           AddSeasonButton()
         ],
-      ),
+      );
+      },
     );
   }
 }

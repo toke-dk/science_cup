@@ -109,7 +109,7 @@ class _AddSeasonModalState extends State<AddSeasonModal> {
                   TextFormField(
                     controller: _nameController,
                     decoration: const InputDecoration(
-                      labelText: 'Sæsonnavn (f.eks. Sæson 2026/2027)',
+                      labelText: 'Sæsonnavn (f.eks. SCIENCEcup - Forår yyyy)',
                       border: OutlineInputBorder(),
                     ),
                     validator: (value) =>
