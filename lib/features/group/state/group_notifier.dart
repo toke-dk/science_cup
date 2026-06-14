@@ -45,10 +45,15 @@ class GroupNotifier extends ChangeNotifier {
   // CREATE
   Future<void> createGroup({
     required String name,
-    required int seasonId,
+    int? seasonId,
   }) async {
+    if (seasonId == null && _activeSeasonId == null) {
+      _state = const DataState.error('Ingen aktiv sæson valgt');
+      notifyListeners();
+      return;
+    }
     try {
-      final newDraft = Group(name: name, seasonId: seasonId);
+      final newDraft = Group(name: name, seasonId: seasonId ?? _activeSeasonId);
 
       await _repository.createGroup(newDraft);
 

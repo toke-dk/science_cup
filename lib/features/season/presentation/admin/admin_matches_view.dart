@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:science_cup_app/core/navigation/app_tab.dart';
-import 'package:science_cup_app/features/game/data/game.dart';
-import 'package:science_cup_app/features/season/presentation/admin/segments/groups_segment.dart';
-
-import '../../../team/team.dart';
+import 'package:science_cup_app/features/group/presentation/edit_groups_view.dart';
 
 class AdminGamesView extends StatefulWidget {
   const AdminGamesView({super.key});
@@ -54,10 +50,10 @@ class _AdminGamesViewState extends State<AdminGamesView> {
         ),
         switch (_selectedAdminSegment.value) {
           "games" => Text("KampSegment"),
-          "groups" => GroupsSegment(),
+          "groups" => EditGroupsView(),
           "teams" => Text("HoldSegment"),
           _ => SizedBox.shrink(),
-        }
+        },
       ],
     );
   }

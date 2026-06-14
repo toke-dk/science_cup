@@ -100,6 +100,7 @@ class _AddSeasonModalState extends State<AddSeasonModal> {
             child: Form(
               key: _formKey,
               child: ListView(
+                shrinkWrap: true,
                 children: [
                   // Sæsonnavn
                   TextFormField(
