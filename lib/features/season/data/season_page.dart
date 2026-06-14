@@ -52,30 +52,31 @@ class SeasonPage extends StatelessWidget {
           child: Scaffold(
             appBar: AppBar(
               leading: Icon(Icons.sports_soccer),
-              title: Text(currentSeason.name ?? "Sæson $seasonId"),
-              centerTitle: false,
-              actions: [
-                if (seasons.isNotEmpty)
-                  IntrinsicWidth(
-                    child: DropdownFlutter<Season>.search(
-                      initialItem: currentSeason,
-                      items: seasons,
-                      listItemBuilder: (context, season, _, _) =>
-                          Text(season.name ?? "Ingen navn"),
-                      headerBuilder: (context, season, _) =>
-                          Text(season.name ?? "Ingen navn"),
-                      onChanged: (newSeason) {
-                        if (newSeason?.id != null) {
-                          context.read<SeasonsNotifier>().changeCurrentSeason(
-                            newSeason!,
-                          );
-
-                          context.go('/seasons/${newSeason.id}');
-                        }
-                      },
-                    ),
+              title: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: DropdownFlutter<Season>.search(
+                  initialItem: currentSeason,
+                  items: seasons,
+                  decoration: CustomDropdownDecoration(
+                    closedFillColor: Colors.transparent,
                   ),
-              ],
+                  listItemBuilder: (context, season, _, _) =>
+                      Text(season.name ?? "Ingen navn"),
+                  headerBuilder: (context, season, _) =>
+                      Text(season.name ?? "Ingen navn"),
+                  onChanged: (newSeason) {
+                    if (newSeason?.id != null) {
+                      context.read<SeasonsNotifier>().changeCurrentSeason(
+                        newSeason!,
+                      );
+
+                      context.go('/seasons/${newSeason.id}');
+                    }
+                  },
+                ),
+              ),
+              centerTitle: false,
+              actions: [Icon(Icons.person)],
             ),
             body: SingleChildScrollView(
               child: Padding(
@@ -90,9 +91,15 @@ class SeasonPage extends StatelessWidget {
                         return ChoiceChip(
                           showCheckmark: false,
                           avatar: switch (indexTab) {
-                            SeasonTabs.games => const Icon(Icons.calendar_today_outlined),
-                            SeasonTabs.standings => const Icon(Icons.leaderboard_outlined),
-                            SeasonTabs.admin => const Icon(Icons.admin_panel_settings_outlined),
+                            SeasonTabs.games => const Icon(
+                              Icons.calendar_today_outlined,
+                            ),
+                            SeasonTabs.standings => const Icon(
+                              Icons.leaderboard_outlined,
+                            ),
+                            SeasonTabs.admin => const Icon(
+                              Icons.admin_panel_settings_outlined,
+                            ),
                           },
                           label: Text(indexTab.title),
                           selected: index == selectedIndex,
@@ -109,7 +116,9 @@ class SeasonPage extends StatelessWidget {
                     const SizedBox(height: 16),
                     switch (activeTab) {
                       SeasonTabs.games => const GamesView(),
-                      SeasonTabs.standings => const Center(child: Text('Stilling kommer snart!')),
+                      SeasonTabs.standings => const Center(
+                        child: Text('Stilling kommer snart!'),
+                      ),
                       SeasonTabs.admin => const AdminSeasonView(),
                     },
                   ],
