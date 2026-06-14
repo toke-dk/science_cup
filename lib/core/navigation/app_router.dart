@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:science_cup_app/features/season/data/season_page.dart';
 import 'package:science_cup_app/features/season/presentation/seasons_view.dart';
 import '../../../features/auth/presentation/login_page.dart';
-import 'package:science_cup_app/core/navigation/app_shell.dart';
+import 'package:science_cup_app/core/navigation/app_page.dart';
 
 
 class AppRouter {
@@ -12,7 +12,7 @@ class AppRouter {
   static final _shellNavigatorKey = GlobalKey<NavigatorState>();
 
   static final GoRouter router = GoRouter(
-    initialLocation: '/seasons',
+    initialLocation: '/',
     navigatorKey: _rootNavigatorKey,
     routes: [
       // 1. DEDIKERET LOGIN-SIDE (Uden om menuen)
@@ -27,19 +27,9 @@ class AppRouter {
         return SeasonPage(seasonId: seasonId);
       }),
 
-      // 2. MAIN APP SHELL (Med global AppBar og Drawer)
-      ShellRoute(
-        navigatorKey: _shellNavigatorKey,
-        builder: (context, state, child) {
-          return AppShell(child: child);
-        },
-        routes: [
-          GoRoute(
-            path: '/seasons',
-            builder: (context, state) => const SeasonsView(),
-          ),
-          // Du kan nemt tilføje flere ruter her, f.eks. /games, /teams osv.
-        ],
+      GoRoute(
+        path: '/',
+        builder: (context, state) => WelcomePage(child: const SeasonsView()),
       ),
     ],
   );

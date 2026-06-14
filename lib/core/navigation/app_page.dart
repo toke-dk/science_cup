@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:science_cup_app/core/presentation/widgets/auth_profile_button.dart';
 
-class AppShell extends StatelessWidget {
-  const AppShell({super.key, required this.child});
+class WelcomePage extends StatelessWidget {
+  const WelcomePage({super.key, required this.child});
 
   final Widget child;
 
@@ -10,6 +10,8 @@ class AppShell extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: Text("Velkommen til SCIENCEcup"),
+        centerTitle: false,
         actions: [
           AuthProfileButton()
         ],
