@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:science_cup_app/features/season/business_logic/season_notifier.dart';
-import 'package:science_cup_app/features/season/data/season.dart';
-
-import '../data/season_repository.dart';
+import 'package:science_cup_app/features/season/state/season_notifier.dart';
 
 class AddSeasonModal extends StatefulWidget {
   const AddSeasonModal({super.key});
@@ -69,7 +66,6 @@ class _AddSeasonModalState extends State<AddSeasonModal> {
     setState(() => _isLoading = true);
 
     try {
-
       await context.read<SeasonsNotifier>().createSeason(
         name: _nameController.text.trim(),
         start: _startDate,

@@ -10,7 +10,7 @@ abstract class Group with _$Group {
   const factory Group({
     int? id,
     String? name,
-    Season? season,
+    int? seasonId,
     DateTime? createdAt,
   }) = _Group;
 

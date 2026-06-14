@@ -4,13 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
+import 'package:science_cup_app/features/group/data/group_repository.dart';
+import 'package:science_cup_app/features/group/state/group_notifier.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'core/navigation/app_router.dart';
 import 'features/auth/business_logic/auth_notifier.dart';
 import 'features/auth/data/auth_repository.dart';
-import 'features/season/business_logic/season_notifier.dart';
 import 'features/season/data/season_repository.dart';
+import 'features/season/state/season_notifier.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,8 +21,16 @@ void main() async {
 
   Supabase.initialize(
     /// TODO: These should be set with env vars in a github action
-    url: Platform.isAndroid ? 'http://10.0.2.2:54321' : 'http://127.0.0.1:54321',
+    url: Platform.isAndroid
+        ? 'http://10.0.2.2:54321'
+        : 'http://127.0.0.1:54321',
     publishableKey: "sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH",
+    authOptions: FlutterAuthClientOptions(
+      // DETTE ER MAGIEN, DER GEMMER DIT LOGIN:
+      localStorage: SharedPreferencesLocalStorage(
+        persistSessionKey: "science_cup_app_session"
+      ),
+    ),
   );
   runApp(
     MultiProvider(
@@ -36,6 +46,17 @@ void main() async {
 
         ChangeNotifierProvider<AuthNotifier>(
           create: (context) => AuthNotifier(context.read<AuthRepository>()),
+        ),
+
+        Provider<GroupRepository>(create: (_) => GroupRepository()),
+
+        ChangeNotifierProxyProvider<SeasonsNotifier, GroupNotifier>(
+          update: (context, seasonNotifier, groupNotifier) {
+            print("Updates");
+            groupNotifier!.updateActiveSeason(seasonNotifier.currentSeason?.id);
+            return groupNotifier;
+          },
+          create: (context) => GroupNotifier(context.read<GroupRepository>())..loadGroupsForActiveSeason(),
         ),
       ],
       child: const MyApp(),

@@ -63,10 +63,7 @@ class SeasonRepository {
       await _supabase
           .from('seasons')
           .delete()
-          .eq('id', id); // <-- Matcher på UUID
-
-      // Bemærk: Takket være 'ON DELETE CASCADE' i din SQL,
-      // slettes alle tilhørende hold og kampe automatisk i databasen!
+          .eq('id', id);
     } catch (e) {
       throw Exception('Kunne ikke slette sæson: $e');
     }

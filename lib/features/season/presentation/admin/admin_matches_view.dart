@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:science_cup_app/core/navigation/app_tab.dart';
 import 'package:science_cup_app/features/game/data/game.dart';
+import 'package:science_cup_app/features/season/presentation/admin/segments/groups_segment.dart';
 
 import '../../../team/team.dart';
 
@@ -35,22 +36,25 @@ class _AdminGamesViewState extends State<AdminGamesView> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SegmentedButton(
-          showSelectedIcon: false,
-          segments: _adminSegments,
-          selected: {_selectedAdminSegment.value},
-          onSelectionChanged: (newValue) {
-            setState(() {
-              _selectedAdminSegment = _adminSegments.firstWhere(
-                (segment) => segment.value == newValue.first,
-              );
-            });
-          },
+        Center(
+          child: SegmentedButton(
+            showSelectedIcon: false,
+            segments: _adminSegments,
+            selected: {_selectedAdminSegment.value},
+            onSelectionChanged: (newValue) {
+              setState(() {
+                _selectedAdminSegment = _adminSegments.firstWhere(
+                  (segment) => segment.value == newValue.first,
+                );
+              });
+            },
+          ),
         ),
         switch (_selectedAdminSegment.value) {
           "games" => Text("KampSegment"),
-          "groups" => Text("GruppeSegment"),
+          "groups" => GroupsSegment(),
           "teams" => Text("HoldSegment"),
           _ => SizedBox.shrink(),
         }

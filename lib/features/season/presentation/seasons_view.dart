@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:science_cup_app/features/season/presentation/add_season_button.dart';
 import 'package:science_cup_app/providers/data_state.dart';
 
-import '../business_logic/season_notifier.dart';
+import '../state/season_notifier.dart';
 
 class SeasonsView extends StatelessWidget {
   const SeasonsView({super.key});
@@ -19,43 +19,49 @@ class SeasonsView extends StatelessWidget {
       error: (error) => Text('Der skete en fejl: $error'),
       loaded: (seasons) {
         final sortedSeasons = List.of(seasons)
-          ..sort((a, b) => b.startDate?.compareTo(a.startDate ?? DateTime(0)) ?? 0); // Nyeste først
+          ..sort(
+            (a, b) => b.startDate?.compareTo(a.startDate ?? DateTime(0)) ?? 0,
+          ); // Nyeste først
         return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ListView.builder(
-            shrinkWrap: true,
-            itemCount: seasons.length,
-            itemBuilder: (context, index) {
-              final season = sortedSeasons[index];
-              return ListTile(
-                onTap: (){
-                  if (season.id == null){
-                    showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        title: Text('Ingen ID'),
-                        content: Text('Denne sæson har ingen ID og kan ikke åbnes.'),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.of(context).pop(),
-                            child: Text('OK'),
-                          )
-                        ],
-                      )
-                    );
-                    return;
-                  }
-                  context.go('/seasons/${season.id}');
-                },
-                title: Text(season.name ?? "Ingen navn"),
-                subtitle: Text('Start: ${season.startDate?.toLocal()} - Sl'),
-              );
-            },
-          ),
-          AddSeasonButton()
-        ],
-      );
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ListView.builder(
+              shrinkWrap: true,
+              itemCount: seasons.length,
+              itemBuilder: (context, index) {
+                final season = sortedSeasons[index];
+                return ListTile(
+                  onTap: () {
+                    if (season.id == null) {
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: Text('Ingen ID'),
+                          content: Text(
+                            'Denne sæson har ingen ID og kan ikke åbnes.',
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(),
+                              child: Text('OK'),
+                            ),
+                          ],
+                        ),
+                      );
+                      return;
+                    }
+                    context.read<SeasonsNotifier>().changeCurrentSeason(season);
+
+                    context.go('/seasons/${season.id}');
+                  },
+                  title: Text(season.name ?? "Ingen navn"),
+                  subtitle: Text('Start: ${season.startDate?.toLocal()} - Sl'),
+                );
+              },
+            ),
+            AddSeasonButton(),
+          ],
+        );
       },
     );
   }

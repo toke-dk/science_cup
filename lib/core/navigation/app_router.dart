@@ -10,6 +10,8 @@ import 'package:science_cup_app/features/season/presentation/seasons_view.dart';
 import '../../../features/auth/presentation/login_page.dart';
 import 'package:science_cup_app/core/navigation/app_page.dart';
 
+import '../../features/season/state/season_notifier.dart';
+
 
 class AppRouter {
   // Global key til at styre navigationen på øverste niveau

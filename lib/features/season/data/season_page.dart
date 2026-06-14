@@ -2,7 +2,6 @@ import 'package:dropdown_flutter/custom_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:science_cup_app/core/navigation/app_tab.dart';
 import 'package:science_cup_app/core/navigation/season_tabs.dart';
 import 'package:science_cup_app/core/presentation/widgets/auth_profile_button.dart';
 import 'package:science_cup_app/features/season/data/season.dart';
@@ -11,7 +10,7 @@ import 'package:science_cup_app/providers/data_state.dart';
 
 import '../../auth/business_logic/auth_notifier.dart';
 import '../../game/presentation/games_view.dart';
-import '../business_logic/season_notifier.dart';
+import '../state/season_notifier.dart';
 
 class SeasonPage extends StatelessWidget {
   const SeasonPage({

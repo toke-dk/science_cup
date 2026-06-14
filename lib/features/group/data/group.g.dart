@@ -9,9 +9,7 @@ part of 'group.dart';
 _Group _$GroupFromJson(Map<String, dynamic> json) => _Group(
   id: (json['id'] as num?)?.toInt(),
   name: json['name'] as String?,
-  season: json['season'] == null
-      ? null
-      : Season.fromJson(json['season'] as Map<String, dynamic>),
+  seasonId: (json['season_id'] as num?)?.toInt(),
   createdAt: json['created_at'] == null
       ? null
       : DateTime.parse(json['created_at'] as String),
@@ -20,6 +18,6 @@ _Group _$GroupFromJson(Map<String, dynamic> json) => _Group(
 Map<String, dynamic> _$GroupToJson(_Group instance) => <String, dynamic>{
   'id': ?instance.id,
   'name': ?instance.name,
-  'season': ?instance.season,
+  'season_id': ?instance.seasonId,
   'created_at': ?instance.createdAt?.toIso8601String(),
 };
