@@ -13,7 +13,7 @@ abstract class Team with _$Team {
     int? id,
     String? name,
     DateTime? createdAt,
-    Season? season,
+    int? seasonId,
     Program? program,
   }) = _Team;
 
