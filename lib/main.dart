@@ -8,6 +8,8 @@ import 'package:science_cup_app/features/group/data/group_repository.dart';
 import 'package:science_cup_app/features/group/state/group_notifier.dart';
 import 'package:science_cup_app/features/program/data/program_repository.dart';
 import 'package:science_cup_app/features/program/state/program_notifier.dart';
+import 'package:science_cup_app/features/team/data/team_repository.dart';
+import 'package:science_cup_app/features/team/state/team_notifier.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'core/navigation/app_router.dart';
@@ -15,6 +17,8 @@ import 'features/auth/business_logic/auth_notifier.dart';
 import 'features/auth/data/auth_repository.dart';
 import 'features/season/data/season_repository.dart';
 import 'features/season/state/season_notifier.dart';
+import 'package:flutter/widgets.dart';
+import 'package:nested/nested.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,36 +38,42 @@ void main() async {
       ),
     ),
   );
+
+  List<SingleChildWidget> getAppProviders() {
+    return [
+      // === REPOSITORIES ===
+      Provider<SeasonRepository>(create: (_) => SeasonRepository()),
+      Provider<AuthRepository>(create: (_) => AuthRepository()),
+      Provider<GroupRepository>(create: (_) => GroupRepository()),
+      Provider<TeamRepository>(create: (_) => TeamRepository()),
+      Provider<ProgramRepository>(create: (_) => ProgramRepository()),
+
+      // === NOTIFIERS ===
+      ChangeNotifierProvider<SeasonsNotifier>(
+        create: (context) => SeasonsNotifier(context.read<SeasonRepository>())..loadSeasons(),
+      ),
+      ChangeNotifierProvider<AuthNotifier>(
+        create: (context) => AuthNotifier(context.read<AuthRepository>()),
+      ),
+      ChangeNotifierProxyProvider<SeasonsNotifier, GroupNotifier>(
+        create: (context) => GroupNotifier(context.read<GroupRepository>()),
+        update: (context, seasonNotifier, groupNotifier) =>
+        groupNotifier!..updateActiveSeason(seasonNotifier.currentSeasonId),
+      ),
+      ChangeNotifierProxyProvider<SeasonsNotifier, TeamNotifier>(
+        create: (context) => TeamNotifier(context.read<TeamRepository>()),
+        update: (context, seasonNotifier, teamNotifier) =>
+        teamNotifier!..updateActiveSeason(seasonNotifier.currentSeasonId),
+      ),
+      ChangeNotifierProvider<ProgramNotifier>(
+        create: (context) => ProgramNotifier(context.read<ProgramRepository>())..loadPrograms(),
+      ),
+    ];
+  }
+
   runApp(
     MultiProvider(
-      providers: [
-        Provider<SeasonRepository>(create: (_) => SeasonRepository()),
-        ChangeNotifierProvider<SeasonsNotifier>(
-          create: (context) =>
-              SeasonsNotifier(context.read<SeasonRepository>())..loadSeasons(),
-        ),
-
-        Provider<AuthRepository>(create: (_) => AuthRepository()),
-        ChangeNotifierProvider<AuthNotifier>(
-          create: (context) => AuthNotifier(context.read<AuthRepository>()),
-        ),
-
-        Provider<GroupRepository>(create: (_) => GroupRepository()),
-        ChangeNotifierProxyProvider<SeasonsNotifier, GroupNotifier>(
-          update: (context, seasonNotifier, groupNotifier) {
-            groupNotifier!.updateActiveSeason(seasonNotifier.currentSeasonId);
-            return groupNotifier;
-          },
-          create: (context) => GroupNotifier(context.read<GroupRepository>())..loadGroupsForActiveSeason(),
-        ),
-
-        Provider<ProgramRepository>(create: (_) => ProgramRepository()),
-
-        ChangeNotifierProvider<ProgramNotifier>(
-          create: (context) => ProgramNotifier(context.read<ProgramRepository>())..loadPrograms(),
-        ),
-
-      ],
+      providers: getAppProviders(),
       child: const MyApp(),
     ),
   );

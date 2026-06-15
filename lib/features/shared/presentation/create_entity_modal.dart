@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+/// TODO fieldvalue types to add: divider, text
 enum FieldType { text, date, select, time }
 
 class FieldConfig {

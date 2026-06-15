@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:science_cup_app/features/group/presentation/edit_groups_view.dart';
 import 'package:science_cup_app/features/program/presentation/edit_programs_view.dart';
+import 'package:science_cup_app/features/team/presentation/edit_teams_view.dart';
 
 class AdminSeasonView extends StatefulWidget {
   const AdminSeasonView({super.key});
@@ -58,7 +59,7 @@ class _AdminSeasonViewState extends State<AdminSeasonView> {
         switch (_selectedAdminSegment.value) {
           "games" => Text("KampSegment"),
           "groups" => EditGroupsView(),
-          "teams" => Text("HoldSegment"),
+          "teams" => EditTeamsView(),
           "programs" => ProgramsView(),
           _ => SizedBox.shrink(),
         },
