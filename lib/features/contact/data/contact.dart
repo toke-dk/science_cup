@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:science_cup_app/features/auth/data/profile.dart';
 import 'package:science_cup_app/features/group/data/group.dart';
+import 'package:science_cup_app/features/team/data/team.dart';
 
 part 'contact.freezed.dart';
 part 'contact.g.dart';
@@ -11,7 +12,7 @@ abstract class Contact with _$Contact {
   const factory Contact({
     int? id,
     Profile? profile,
-    Group? group,
+    Team? team,
     bool? isPrimary,
     DateTime? createdAt,
   }) = _Contact;

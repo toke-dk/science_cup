@@ -11,9 +11,9 @@ _Contact _$ContactFromJson(Map<String, dynamic> json) => _Contact(
   profile: json['profile'] == null
       ? null
       : Profile.fromJson(json['profile'] as Map<String, dynamic>),
-  group: json['group'] == null
+  team: json['team'] == null
       ? null
-      : Group.fromJson(json['group'] as Map<String, dynamic>),
+      : Team.fromJson(json['team'] as Map<String, dynamic>),
   isPrimary: json['is_primary'] as bool?,
   createdAt: json['created_at'] == null
       ? null
@@ -23,7 +23,7 @@ _Contact _$ContactFromJson(Map<String, dynamic> json) => _Contact(
 Map<String, dynamic> _$ContactToJson(_Contact instance) => <String, dynamic>{
   'id': ?instance.id,
   'profile': ?instance.profile,
-  'group': ?instance.group,
+  'team': ?instance.team,
   'is_primary': ?instance.isPrimary,
   'created_at': ?instance.createdAt?.toIso8601String(),
 };
