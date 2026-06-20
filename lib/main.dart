@@ -3,12 +3,13 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:nested/nested.dart';
 import 'package:provider/provider.dart';
 import 'package:science_cup_app/features/group/data/group_repository.dart';
 import 'package:science_cup_app/features/group/state/group_notifier.dart';
 import 'package:science_cup_app/features/program/data/program_repository.dart';
 import 'package:science_cup_app/features/program/state/program_notifier.dart';
-import 'package:science_cup_app/features/team/data/team_repository.dart';
+import 'package:science_cup_app/features/team/data/repository/team_repository.dart';
 import 'package:science_cup_app/features/team/state/team_notifier.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -17,8 +18,6 @@ import 'features/auth/business_logic/auth_notifier.dart';
 import 'features/auth/data/auth_repository.dart';
 import 'features/season/data/season_repository.dart';
 import 'features/season/state/season_notifier.dart';
-import 'package:flutter/widgets.dart';
-import 'package:nested/nested.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,7 +33,7 @@ void main() async {
     authOptions: FlutterAuthClientOptions(
       // DETTE ER MAGIEN, DER GEMMER DIT LOGIN:
       localStorage: SharedPreferencesLocalStorage(
-        persistSessionKey: "science_cup_app_session"
+        persistSessionKey: "science_cup_app_session",
       ),
     ),
   );
@@ -50,7 +49,8 @@ void main() async {
 
       // === NOTIFIERS ===
       ChangeNotifierProvider<SeasonsNotifier>(
-        create: (context) => SeasonsNotifier(context.read<SeasonRepository>())..loadSeasons(),
+        create: (context) =>
+            SeasonsNotifier(context.read<SeasonRepository>())..loadSeasons(),
       ),
       ChangeNotifierProvider<AuthNotifier>(
         create: (context) => AuthNotifier(context.read<AuthRepository>()),
@@ -58,25 +58,21 @@ void main() async {
       ChangeNotifierProxyProvider<SeasonsNotifier, GroupNotifier>(
         create: (context) => GroupNotifier(context.read<GroupRepository>()),
         update: (context, seasonNotifier, groupNotifier) =>
-        groupNotifier!..updateActiveSeason(seasonNotifier.currentSeasonId),
+            groupNotifier!..updateActiveSeason(seasonNotifier.currentSeasonId),
       ),
       ChangeNotifierProxyProvider<SeasonsNotifier, TeamNotifier>(
         create: (context) => TeamNotifier(context.read<TeamRepository>()),
         update: (context, seasonNotifier, teamNotifier) =>
-        teamNotifier!..updateActiveSeason(seasonNotifier.currentSeasonId),
+            teamNotifier!..updateActiveSeason(seasonNotifier.currentSeasonId),
       ),
       ChangeNotifierProvider<ProgramNotifier>(
-        create: (context) => ProgramNotifier(context.read<ProgramRepository>())..loadPrograms(),
+        create: (context) =>
+            ProgramNotifier(context.read<ProgramRepository>())..loadPrograms(),
       ),
     ];
   }
 
-  runApp(
-    MultiProvider(
-      providers: getAppProviders(),
-      child: const MyApp(),
-    ),
-  );
+  runApp(MultiProvider(providers: getAppProviders(), child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {

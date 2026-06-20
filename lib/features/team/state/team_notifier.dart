@@ -1,7 +1,6 @@
-
 import 'package:flutter/cupertino.dart';
-import 'package:science_cup_app/features/team/data/team.dart';
-import 'package:science_cup_app/features/team/data/team_repository.dart';
+import 'package:science_cup_app/features/team/data/models/team.dart';
+import 'package:science_cup_app/features/team/data/repository/team_repository.dart';
 
 import '../../../providers/data_state.dart';
 
@@ -40,12 +39,8 @@ class TeamNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-
   // CREATE
-  Future<void> createTeam({
-    required String name,
-    int? seasonId,
-  }) async {
+  Future<void> createTeam({required String name, int? seasonId}) async {
     if (seasonId == null && _activeSeasonId == null) {
       _state = const DataState.error('Ingen aktiv sæson valgt');
       notifyListeners();

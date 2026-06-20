@@ -1,14 +1,14 @@
-import 'package:science_cup_app/features/contact/data/contact.dart';
-import 'package:science_cup_app/features/contact/data/contact_update_request.dart';
+import 'package:science_cup_app/features/contact/data/models/contact.dart';
+import 'package:science_cup_app/features/contact/data/models/contact_update_request.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import 'contact_create_request.dart';
+import '../models/contact_create_request.dart';
 
 class ContactRepository {
   final SupabaseClient _supabase;
 
   ContactRepository({SupabaseClient? supabase})
-      : _supabase = supabase ?? Supabase.instance.client;
+    : _supabase = supabase ?? Supabase.instance.client;
 
   /// Opretter en ny kontakt
   Future<Contact> createContact(ContactCreateRequest request) async {
@@ -40,7 +40,10 @@ class ContactRepository {
   }
 
   /// Opdaterer en eksisterende kontakt
-  Future<Contact> updateContact(int id, ContactUpdateRequest updateRequest) async {
+  Future<Contact> updateContact(
+    int id,
+    ContactUpdateRequest updateRequest,
+  ) async {
     try {
       final response = await _supabase
           .from('contacts')

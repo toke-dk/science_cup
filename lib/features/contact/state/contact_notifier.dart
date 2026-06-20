@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:science_cup_app/features/contact/data/contact.dart';
-import 'package:science_cup_app/features/contact/data/contact_repository.dart';
+import 'package:science_cup_app/features/contact/data/models/contact.dart';
+import 'package:science_cup_app/features/contact/data/repositories/contact_repository.dart';
+
 import '../../../providers/data_state.dart';
-import '../data/contact_create_request.dart';
-import '../data/contact_update_request.dart';
+import '../data/models/contact_create_request.dart';
+import '../data/models/contact_update_request.dart';
 
 class ContactNotifier extends ChangeNotifier {
   final ContactRepository _repository;

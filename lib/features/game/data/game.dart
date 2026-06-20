@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:science_cup_app/features/group/data/group.dart';
-import 'package:science_cup_app/features/team/data/team.dart';
+import 'package:science_cup_app/features/team/data/models/team.dart';
 
 import '../../season/data/season.dart';
 

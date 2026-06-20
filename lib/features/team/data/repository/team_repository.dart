@@ -1,11 +1,11 @@
-import 'package:science_cup_app/features/team/data/team.dart';
+import 'package:science_cup_app/features/team/data/models/team.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class TeamRepository {
   final SupabaseClient _supabase;
 
   TeamRepository({SupabaseClient? supabase})
-      : _supabase = supabase ?? Supabase.instance.client;
+    : _supabase = supabase ?? Supabase.instance.client;
 
   Future<Team> createTeam(Team team) async {
     try {
