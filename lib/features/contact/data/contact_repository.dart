@@ -2,7 +2,7 @@ import 'package:science_cup_app/features/contact/data/contact.dart';
 import 'package:science_cup_app/features/contact/data/contact_update_request.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import 'contact_insert_request.dart';
+import 'contact_create_request.dart';
 
 class ContactRepository {
   final SupabaseClient _supabase;
