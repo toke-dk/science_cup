@@ -1,11 +1,10 @@
 import 'package:science_cup_app/features/group/data/group.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:supabase/supabase.dart';
 
 class GroupRepository {
   final SupabaseClient _supabase;
 
-  GroupRepository({SupabaseClient? supabase})
-    : _supabase = supabase ?? Supabase.instance.client;
+  GroupRepository({required SupabaseClient supabase}) : _supabase = supabase;
 
   Future<Group> createGroup(Group group) async {
     try {

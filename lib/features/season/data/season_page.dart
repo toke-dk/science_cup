@@ -8,7 +8,7 @@ import 'package:science_cup_app/features/season/data/season.dart';
 import 'package:science_cup_app/features/season/presentation/admin/admin_season_view.dart';
 import 'package:science_cup_app/providers/data_state.dart';
 
-import '../../auth/business_logic/auth_notifier.dart';
+import '../../auth/state/auth_notifier.dart';
 import '../../game/presentation/games_view.dart';
 import '../state/season_notifier.dart';
 

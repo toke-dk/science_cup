@@ -1,11 +1,10 @@
 import 'package:science_cup_app/features/program/data/program.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:supabase/supabase.dart';
 
 class ProgramRepository {
   final SupabaseClient _supabase;
 
-  ProgramRepository({SupabaseClient? supabase})
-      : _supabase = supabase ?? Supabase.instance.client;
+  ProgramRepository({required SupabaseClient supabase}) : _supabase = supabase;
 
   Future<Program> createProgram(Program program) async {
     try {

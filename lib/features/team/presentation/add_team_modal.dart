@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:science_cup_app/features/team/state/team_notifier.dart';
 
-import '../../program/data/program.dart';
 import '../../shared/presentation/create_entity_modal.dart';
 
 class AddTeamModal extends StatelessWidget {

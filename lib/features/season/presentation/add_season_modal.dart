@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:science_cup_app/features/season/state/season_notifier.dart';
 

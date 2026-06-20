@@ -1,11 +1,10 @@
 import 'package:science_cup_app/features/team/data/models/team.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:supabase/supabase.dart';
 
 class TeamRepository {
   final SupabaseClient _supabase;
 
-  TeamRepository({SupabaseClient? supabase})
-    : _supabase = supabase ?? Supabase.instance.client;
+  TeamRepository({required SupabaseClient supabase}) : _supabase = supabase;
 
   Future<Team> createTeam(Team team) async {
     try {
@@ -63,15 +62,36 @@ class TeamRepository {
     }
   }
 
+  Future<Team> getTeamWithContacts(int teamId) async {
+    final response = await _supabase
+        .from('teams')
+        .select('*, contacts(*), program:programs(*)')
+        .eq('id', teamId)
+        .single();
+
+    return Team.fromJson(response);
+  }
+
+  // Tilføj en kontakt til et team via team_contacts tabellen
   Future<void> addContactToTeam({
     required int teamId,
     required int contactId,
-    required bool isPrimary,
   }) async {
     await _supabase.from('team_contacts').insert({
       'team_id': teamId,
       'contact_id': contactId,
-      'is_primary': isPrimary,
     });
+  }
+
+  // Fjern kontakt fra team via team_contacts tabellen
+  Future<void> removeContactFromTeam({
+    required int teamId,
+    required int contactId,
+  }) async {
+    await _supabase
+        .from('team_contacts')
+        .delete()
+        .eq('team_id', teamId)
+        .eq('contact_id', contactId);
   }
 }

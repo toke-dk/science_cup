@@ -1,14 +1,13 @@
 import 'package:science_cup_app/features/contact/data/models/contact.dart';
 import 'package:science_cup_app/features/contact/data/models/contact_update_request.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:supabase/supabase.dart';
 
 import '../models/contact_create_request.dart';
 
 class ContactRepository {
   final SupabaseClient _supabase;
 
-  ContactRepository({SupabaseClient? supabase})
-    : _supabase = supabase ?? Supabase.instance.client;
+  ContactRepository({required SupabaseClient supabase}) : _supabase = supabase;
 
   /// Opretter en ny kontakt
   Future<Contact> createContact(ContactCreateRequest request) async {

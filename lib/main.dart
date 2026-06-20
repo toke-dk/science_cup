@@ -14,8 +14,8 @@ import 'package:science_cup_app/features/team/state/team_notifier.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'core/navigation/app_router.dart';
-import 'features/auth/business_logic/auth_notifier.dart';
 import 'features/auth/data/auth_repository.dart';
+import 'features/auth/state/auth_notifier.dart';
 import 'features/season/data/season_repository.dart';
 import 'features/season/state/season_notifier.dart';
 
@@ -38,14 +38,26 @@ void main() async {
     ),
   );
 
+  final supabaseClient = Supabase.instance.client;
+
   List<SingleChildWidget> getAppProviders() {
     return [
       // === REPOSITORIES ===
-      Provider<SeasonRepository>(create: (_) => SeasonRepository()),
-      Provider<AuthRepository>(create: (_) => AuthRepository()),
-      Provider<GroupRepository>(create: (_) => GroupRepository()),
-      Provider<TeamRepository>(create: (_) => TeamRepository()),
-      Provider<ProgramRepository>(create: (_) => ProgramRepository()),
+      Provider<SeasonRepository>(
+        create: (_) => SeasonRepository(supabase: supabaseClient),
+      ),
+      Provider<AuthRepository>(
+        create: (_) => AuthRepository(supabase: supabaseClient),
+      ),
+      Provider<GroupRepository>(
+        create: (_) => GroupRepository(supabase: supabaseClient),
+      ),
+      Provider<TeamRepository>(
+        create: (_) => TeamRepository(supabase: supabaseClient),
+      ),
+      Provider<ProgramRepository>(
+        create: (_) => ProgramRepository(supabase: supabaseClient),
+      ),
 
       // === NOTIFIERS ===
       ChangeNotifierProvider<SeasonsNotifier>(

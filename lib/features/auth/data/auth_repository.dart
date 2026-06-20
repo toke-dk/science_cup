@@ -1,9 +1,11 @@
 
 import 'package:science_cup_app/features/auth/data/profile.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:supabase/supabase.dart';
 
 class AuthRepository {
-  final _supabase = Supabase.instance.client;
+  final SupabaseClient _supabase;
+
+  AuthRepository({required SupabaseClient supabase}) : _supabase = supabase;
 
   /// Henter den nuværende indloggede bruger og dennes profil fra public.profiles.
   /// Returnerer [null], hvis der ikke er en aktiv session.

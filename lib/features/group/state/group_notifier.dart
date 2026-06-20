@@ -2,7 +2,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:science_cup_app/features/group/data/group.dart';
 import 'package:science_cup_app/features/group/data/group_repository.dart';
-import 'package:science_cup_app/features/season/data/season.dart';
 
 import '../../../providers/data_state.dart';
 

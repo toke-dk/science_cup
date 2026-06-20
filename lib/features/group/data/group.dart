@@ -1,5 +1,4 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:science_cup_app/features/season/data/season.dart';
 
 part 'group.freezed.dart';
 part 'group.g.dart';
