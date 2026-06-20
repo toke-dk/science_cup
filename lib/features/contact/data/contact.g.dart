@@ -11,19 +11,23 @@ _Contact _$ContactFromJson(Map<String, dynamic> json) => _Contact(
   profile: json['profile'] == null
       ? null
       : Profile.fromJson(json['profile'] as Map<String, dynamic>),
-  team: json['team'] == null
-      ? null
-      : Team.fromJson(json['team'] as Map<String, dynamic>),
   isPrimary: json['is_primary'] as bool?,
+  fallbackName: json['fallback_name'] as String?,
+  fallbackPhone: json['fallback_phone'] as String?,
   createdAt: json['created_at'] == null
       ? null
       : DateTime.parse(json['created_at'] as String),
+  teams: (json['teams'] as List<dynamic>?)
+      ?.map((e) => Team.fromJson(e as Map<String, dynamic>))
+      .toList(),
 );
 
 Map<String, dynamic> _$ContactToJson(_Contact instance) => <String, dynamic>{
   'id': ?instance.id,
   'profile': ?instance.profile,
-  'team': ?instance.team,
   'is_primary': ?instance.isPrimary,
+  'fallback_name': ?instance.fallbackName,
+  'fallback_phone': ?instance.fallbackPhone,
   'created_at': ?instance.createdAt?.toIso8601String(),
+  'teams': ?instance.teams,
 };

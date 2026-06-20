@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Team {
 
- int? get id; String? get name; DateTime? get createdAt; int? get seasonId; Program? get program;
+ int? get id; String? get name; DateTime? get createdAt; int? get seasonId; Program? get program; List<Contact>? get contacts;
 /// Create a copy of Team
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $TeamCopyWith<Team> get copyWith => _$TeamCopyWithImpl<Team>(this as Team, _$ide
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Team&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.seasonId, seasonId) || other.seasonId == seasonId)&&(identical(other.program, program) || other.program == program));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Team&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.seasonId, seasonId) || other.seasonId == seasonId)&&(identical(other.program, program) || other.program == program)&&const DeepCollectionEquality().equals(other.contacts, contacts));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,createdAt,seasonId,program);
+int get hashCode => Object.hash(runtimeType,id,name,createdAt,seasonId,program,const DeepCollectionEquality().hash(contacts));
 
 @override
 String toString() {
-  return 'Team(id: $id, name: $name, createdAt: $createdAt, seasonId: $seasonId, program: $program)';
+  return 'Team(id: $id, name: $name, createdAt: $createdAt, seasonId: $seasonId, program: $program, contacts: $contacts)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $TeamCopyWith<$Res>  {
   factory $TeamCopyWith(Team value, $Res Function(Team) _then) = _$TeamCopyWithImpl;
 @useResult
 $Res call({
- int? id, String? name, DateTime? createdAt, int? seasonId, Program? program
+ int? id, String? name, DateTime? createdAt, int? seasonId, Program? program, List<Contact>? contacts
 });
 
 
@@ -65,14 +65,15 @@ class _$TeamCopyWithImpl<$Res>
 
 /// Create a copy of Team
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? name = freezed,Object? createdAt = freezed,Object? seasonId = freezed,Object? program = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? name = freezed,Object? createdAt = freezed,Object? seasonId = freezed,Object? program = freezed,Object? contacts = freezed,}) {
   return _then(_self.copyWith(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int?,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,seasonId: freezed == seasonId ? _self.seasonId : seasonId // ignore: cast_nullable_to_non_nullable
 as int?,program: freezed == program ? _self.program : program // ignore: cast_nullable_to_non_nullable
-as Program?,
+as Program?,contacts: freezed == contacts ? _self.contacts : contacts // ignore: cast_nullable_to_non_nullable
+as List<Contact>?,
   ));
 }
 /// Create a copy of Team
@@ -169,10 +170,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  String? name,  DateTime? createdAt,  int? seasonId,  Program? program)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  String? name,  DateTime? createdAt,  int? seasonId,  Program? program,  List<Contact>? contacts)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Team() when $default != null:
-return $default(_that.id,_that.name,_that.createdAt,_that.seasonId,_that.program);case _:
+return $default(_that.id,_that.name,_that.createdAt,_that.seasonId,_that.program,_that.contacts);case _:
   return orElse();
 
 }
@@ -190,10 +191,10 @@ return $default(_that.id,_that.name,_that.createdAt,_that.seasonId,_that.program
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  String? name,  DateTime? createdAt,  int? seasonId,  Program? program)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  String? name,  DateTime? createdAt,  int? seasonId,  Program? program,  List<Contact>? contacts)  $default,) {final _that = this;
 switch (_that) {
 case _Team():
-return $default(_that.id,_that.name,_that.createdAt,_that.seasonId,_that.program);case _:
+return $default(_that.id,_that.name,_that.createdAt,_that.seasonId,_that.program,_that.contacts);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -210,10 +211,10 @@ return $default(_that.id,_that.name,_that.createdAt,_that.seasonId,_that.program
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  String? name,  DateTime? createdAt,  int? seasonId,  Program? program)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  String? name,  DateTime? createdAt,  int? seasonId,  Program? program,  List<Contact>? contacts)?  $default,) {final _that = this;
 switch (_that) {
 case _Team() when $default != null:
-return $default(_that.id,_that.name,_that.createdAt,_that.seasonId,_that.program);case _:
+return $default(_that.id,_that.name,_that.createdAt,_that.seasonId,_that.program,_that.contacts);case _:
   return null;
 
 }
@@ -225,7 +226,7 @@ return $default(_that.id,_that.name,_that.createdAt,_that.seasonId,_that.program
 
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class _Team implements Team {
-  const _Team({this.id, this.name, this.createdAt, this.seasonId, this.program});
+  const _Team({this.id, this.name, this.createdAt, this.seasonId, this.program, final  List<Contact>? contacts}): _contacts = contacts;
   factory _Team.fromJson(Map<String, dynamic> json) => _$TeamFromJson(json);
 
 @override final  int? id;
@@ -233,6 +234,15 @@ class _Team implements Team {
 @override final  DateTime? createdAt;
 @override final  int? seasonId;
 @override final  Program? program;
+ final  List<Contact>? _contacts;
+@override List<Contact>? get contacts {
+  final value = _contacts;
+  if (value == null) return null;
+  if (_contacts is EqualUnmodifiableListView) return _contacts;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
 
 /// Create a copy of Team
 /// with the given fields replaced by the non-null parameter values.
@@ -247,16 +257,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Team&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.seasonId, seasonId) || other.seasonId == seasonId)&&(identical(other.program, program) || other.program == program));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Team&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.seasonId, seasonId) || other.seasonId == seasonId)&&(identical(other.program, program) || other.program == program)&&const DeepCollectionEquality().equals(other._contacts, _contacts));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,createdAt,seasonId,program);
+int get hashCode => Object.hash(runtimeType,id,name,createdAt,seasonId,program,const DeepCollectionEquality().hash(_contacts));
 
 @override
 String toString() {
-  return 'Team(id: $id, name: $name, createdAt: $createdAt, seasonId: $seasonId, program: $program)';
+  return 'Team(id: $id, name: $name, createdAt: $createdAt, seasonId: $seasonId, program: $program, contacts: $contacts)';
 }
 
 
@@ -267,7 +277,7 @@ abstract mixin class _$TeamCopyWith<$Res> implements $TeamCopyWith<$Res> {
   factory _$TeamCopyWith(_Team value, $Res Function(_Team) _then) = __$TeamCopyWithImpl;
 @override @useResult
 $Res call({
- int? id, String? name, DateTime? createdAt, int? seasonId, Program? program
+ int? id, String? name, DateTime? createdAt, int? seasonId, Program? program, List<Contact>? contacts
 });
 
 
@@ -284,14 +294,15 @@ class __$TeamCopyWithImpl<$Res>
 
 /// Create a copy of Team
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? name = freezed,Object? createdAt = freezed,Object? seasonId = freezed,Object? program = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? name = freezed,Object? createdAt = freezed,Object? seasonId = freezed,Object? program = freezed,Object? contacts = freezed,}) {
   return _then(_Team(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int?,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,seasonId: freezed == seasonId ? _self.seasonId : seasonId // ignore: cast_nullable_to_non_nullable
 as int?,program: freezed == program ? _self.program : program // ignore: cast_nullable_to_non_nullable
-as Program?,
+as Program?,contacts: freezed == contacts ? _self._contacts : contacts // ignore: cast_nullable_to_non_nullable
+as List<Contact>?,
   ));
 }
 

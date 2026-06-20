@@ -12,9 +12,11 @@ abstract class Contact with _$Contact {
   const factory Contact({
     int? id,
     Profile? profile,
-    Team? team,
     bool? isPrimary,
+    String? fallbackName,
+    String? fallbackPhone,
     DateTime? createdAt,
+    final List<Team>? teams,
   }) = _Contact;
 
   factory Contact.fromJson(Map<String, dynamic> json) =>

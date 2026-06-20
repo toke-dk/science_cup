@@ -15,6 +15,7 @@ abstract class Team with _$Team {
     DateTime? createdAt,
     int? seasonId,
     Program? program,
+    List<Contact>? contacts,
   }) = _Team;
 
   factory Team.fromJson(Map<String, dynamic> json) => _$TeamFromJson(json);

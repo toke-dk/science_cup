@@ -16,6 +16,9 @@ _Team _$TeamFromJson(Map<String, dynamic> json) => _Team(
   program: json['program'] == null
       ? null
       : Program.fromJson(json['program'] as Map<String, dynamic>),
+  contacts: (json['contacts'] as List<dynamic>?)
+      ?.map((e) => Contact.fromJson(e as Map<String, dynamic>))
+      .toList(),
 );
 
 Map<String, dynamic> _$TeamToJson(_Team instance) => <String, dynamic>{
@@ -24,4 +27,5 @@ Map<String, dynamic> _$TeamToJson(_Team instance) => <String, dynamic>{
   'created_at': ?instance.createdAt?.toIso8601String(),
   'season_id': ?instance.seasonId,
   'program': ?instance.program,
+  'contacts': ?instance.contacts,
 };

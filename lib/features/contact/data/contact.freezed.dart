@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Contact {
 
- int? get id; Profile? get profile; Team? get team; bool? get isPrimary; DateTime? get createdAt;
+ int? get id; Profile? get profile; bool? get isPrimary; String? get fallbackName; String? get fallbackPhone; DateTime? get createdAt; List<Team>? get teams;
 /// Create a copy of Contact
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $ContactCopyWith<Contact> get copyWith => _$ContactCopyWithImpl<Contact>(this as
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Contact&&(identical(other.id, id) || other.id == id)&&(identical(other.profile, profile) || other.profile == profile)&&(identical(other.team, team) || other.team == team)&&(identical(other.isPrimary, isPrimary) || other.isPrimary == isPrimary)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Contact&&(identical(other.id, id) || other.id == id)&&(identical(other.profile, profile) || other.profile == profile)&&(identical(other.isPrimary, isPrimary) || other.isPrimary == isPrimary)&&(identical(other.fallbackName, fallbackName) || other.fallbackName == fallbackName)&&(identical(other.fallbackPhone, fallbackPhone) || other.fallbackPhone == fallbackPhone)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&const DeepCollectionEquality().equals(other.teams, teams));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,profile,team,isPrimary,createdAt);
+int get hashCode => Object.hash(runtimeType,id,profile,isPrimary,fallbackName,fallbackPhone,createdAt,const DeepCollectionEquality().hash(teams));
 
 @override
 String toString() {
-  return 'Contact(id: $id, profile: $profile, team: $team, isPrimary: $isPrimary, createdAt: $createdAt)';
+  return 'Contact(id: $id, profile: $profile, isPrimary: $isPrimary, fallbackName: $fallbackName, fallbackPhone: $fallbackPhone, createdAt: $createdAt, teams: $teams)';
 }
 
 
@@ -48,11 +48,11 @@ abstract mixin class $ContactCopyWith<$Res>  {
   factory $ContactCopyWith(Contact value, $Res Function(Contact) _then) = _$ContactCopyWithImpl;
 @useResult
 $Res call({
- int? id, Profile? profile, Team? team, bool? isPrimary, DateTime? createdAt
+ int? id, Profile? profile, bool? isPrimary, String? fallbackName, String? fallbackPhone, DateTime? createdAt, List<Team>? teams
 });
 
 
-$ProfileCopyWith<$Res>? get profile;$TeamCopyWith<$Res>? get team;
+$ProfileCopyWith<$Res>? get profile;
 
 }
 /// @nodoc
@@ -65,14 +65,16 @@ class _$ContactCopyWithImpl<$Res>
 
 /// Create a copy of Contact
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? profile = freezed,Object? team = freezed,Object? isPrimary = freezed,Object? createdAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? profile = freezed,Object? isPrimary = freezed,Object? fallbackName = freezed,Object? fallbackPhone = freezed,Object? createdAt = freezed,Object? teams = freezed,}) {
   return _then(_self.copyWith(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int?,profile: freezed == profile ? _self.profile : profile // ignore: cast_nullable_to_non_nullable
-as Profile?,team: freezed == team ? _self.team : team // ignore: cast_nullable_to_non_nullable
-as Team?,isPrimary: freezed == isPrimary ? _self.isPrimary : isPrimary // ignore: cast_nullable_to_non_nullable
-as bool?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,
+as Profile?,isPrimary: freezed == isPrimary ? _self.isPrimary : isPrimary // ignore: cast_nullable_to_non_nullable
+as bool?,fallbackName: freezed == fallbackName ? _self.fallbackName : fallbackName // ignore: cast_nullable_to_non_nullable
+as String?,fallbackPhone: freezed == fallbackPhone ? _self.fallbackPhone : fallbackPhone // ignore: cast_nullable_to_non_nullable
+as String?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,teams: freezed == teams ? _self.teams : teams // ignore: cast_nullable_to_non_nullable
+as List<Team>?,
   ));
 }
 /// Create a copy of Contact
@@ -86,18 +88,6 @@ $ProfileCopyWith<$Res>? get profile {
 
   return $ProfileCopyWith<$Res>(_self.profile!, (value) {
     return _then(_self.copyWith(profile: value));
-  });
-}/// Create a copy of Contact
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$TeamCopyWith<$Res>? get team {
-    if (_self.team == null) {
-    return null;
-  }
-
-  return $TeamCopyWith<$Res>(_self.team!, (value) {
-    return _then(_self.copyWith(team: value));
   });
 }
 }
@@ -181,10 +171,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  Profile? profile,  Team? team,  bool? isPrimary,  DateTime? createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  Profile? profile,  bool? isPrimary,  String? fallbackName,  String? fallbackPhone,  DateTime? createdAt,  List<Team>? teams)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Contact() when $default != null:
-return $default(_that.id,_that.profile,_that.team,_that.isPrimary,_that.createdAt);case _:
+return $default(_that.id,_that.profile,_that.isPrimary,_that.fallbackName,_that.fallbackPhone,_that.createdAt,_that.teams);case _:
   return orElse();
 
 }
@@ -202,10 +192,10 @@ return $default(_that.id,_that.profile,_that.team,_that.isPrimary,_that.createdA
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  Profile? profile,  Team? team,  bool? isPrimary,  DateTime? createdAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  Profile? profile,  bool? isPrimary,  String? fallbackName,  String? fallbackPhone,  DateTime? createdAt,  List<Team>? teams)  $default,) {final _that = this;
 switch (_that) {
 case _Contact():
-return $default(_that.id,_that.profile,_that.team,_that.isPrimary,_that.createdAt);case _:
+return $default(_that.id,_that.profile,_that.isPrimary,_that.fallbackName,_that.fallbackPhone,_that.createdAt,_that.teams);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -222,10 +212,10 @@ return $default(_that.id,_that.profile,_that.team,_that.isPrimary,_that.createdA
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  Profile? profile,  Team? team,  bool? isPrimary,  DateTime? createdAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  Profile? profile,  bool? isPrimary,  String? fallbackName,  String? fallbackPhone,  DateTime? createdAt,  List<Team>? teams)?  $default,) {final _that = this;
 switch (_that) {
 case _Contact() when $default != null:
-return $default(_that.id,_that.profile,_that.team,_that.isPrimary,_that.createdAt);case _:
+return $default(_that.id,_that.profile,_that.isPrimary,_that.fallbackName,_that.fallbackPhone,_that.createdAt,_that.teams);case _:
   return null;
 
 }
@@ -237,14 +227,24 @@ return $default(_that.id,_that.profile,_that.team,_that.isPrimary,_that.createdA
 
 @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
 class _Contact implements Contact {
-  const _Contact({this.id, this.profile, this.team, this.isPrimary, this.createdAt});
+  const _Contact({this.id, this.profile, this.isPrimary, this.fallbackName, this.fallbackPhone, this.createdAt, final  List<Team>? teams}): _teams = teams;
   factory _Contact.fromJson(Map<String, dynamic> json) => _$ContactFromJson(json);
 
 @override final  int? id;
 @override final  Profile? profile;
-@override final  Team? team;
 @override final  bool? isPrimary;
+@override final  String? fallbackName;
+@override final  String? fallbackPhone;
 @override final  DateTime? createdAt;
+ final  List<Team>? _teams;
+@override List<Team>? get teams {
+  final value = _teams;
+  if (value == null) return null;
+  if (_teams is EqualUnmodifiableListView) return _teams;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
 
 /// Create a copy of Contact
 /// with the given fields replaced by the non-null parameter values.
@@ -259,16 +259,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Contact&&(identical(other.id, id) || other.id == id)&&(identical(other.profile, profile) || other.profile == profile)&&(identical(other.team, team) || other.team == team)&&(identical(other.isPrimary, isPrimary) || other.isPrimary == isPrimary)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Contact&&(identical(other.id, id) || other.id == id)&&(identical(other.profile, profile) || other.profile == profile)&&(identical(other.isPrimary, isPrimary) || other.isPrimary == isPrimary)&&(identical(other.fallbackName, fallbackName) || other.fallbackName == fallbackName)&&(identical(other.fallbackPhone, fallbackPhone) || other.fallbackPhone == fallbackPhone)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&const DeepCollectionEquality().equals(other._teams, _teams));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,profile,team,isPrimary,createdAt);
+int get hashCode => Object.hash(runtimeType,id,profile,isPrimary,fallbackName,fallbackPhone,createdAt,const DeepCollectionEquality().hash(_teams));
 
 @override
 String toString() {
-  return 'Contact(id: $id, profile: $profile, team: $team, isPrimary: $isPrimary, createdAt: $createdAt)';
+  return 'Contact(id: $id, profile: $profile, isPrimary: $isPrimary, fallbackName: $fallbackName, fallbackPhone: $fallbackPhone, createdAt: $createdAt, teams: $teams)';
 }
 
 
@@ -279,11 +279,11 @@ abstract mixin class _$ContactCopyWith<$Res> implements $ContactCopyWith<$Res> {
   factory _$ContactCopyWith(_Contact value, $Res Function(_Contact) _then) = __$ContactCopyWithImpl;
 @override @useResult
 $Res call({
- int? id, Profile? profile, Team? team, bool? isPrimary, DateTime? createdAt
+ int? id, Profile? profile, bool? isPrimary, String? fallbackName, String? fallbackPhone, DateTime? createdAt, List<Team>? teams
 });
 
 
-@override $ProfileCopyWith<$Res>? get profile;@override $TeamCopyWith<$Res>? get team;
+@override $ProfileCopyWith<$Res>? get profile;
 
 }
 /// @nodoc
@@ -296,14 +296,16 @@ class __$ContactCopyWithImpl<$Res>
 
 /// Create a copy of Contact
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? profile = freezed,Object? team = freezed,Object? isPrimary = freezed,Object? createdAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? profile = freezed,Object? isPrimary = freezed,Object? fallbackName = freezed,Object? fallbackPhone = freezed,Object? createdAt = freezed,Object? teams = freezed,}) {
   return _then(_Contact(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int?,profile: freezed == profile ? _self.profile : profile // ignore: cast_nullable_to_non_nullable
-as Profile?,team: freezed == team ? _self.team : team // ignore: cast_nullable_to_non_nullable
-as Team?,isPrimary: freezed == isPrimary ? _self.isPrimary : isPrimary // ignore: cast_nullable_to_non_nullable
-as bool?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,
+as Profile?,isPrimary: freezed == isPrimary ? _self.isPrimary : isPrimary // ignore: cast_nullable_to_non_nullable
+as bool?,fallbackName: freezed == fallbackName ? _self.fallbackName : fallbackName // ignore: cast_nullable_to_non_nullable
+as String?,fallbackPhone: freezed == fallbackPhone ? _self.fallbackPhone : fallbackPhone // ignore: cast_nullable_to_non_nullable
+as String?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,teams: freezed == teams ? _self._teams : teams // ignore: cast_nullable_to_non_nullable
+as List<Team>?,
   ));
 }
 
@@ -318,18 +320,6 @@ $ProfileCopyWith<$Res>? get profile {
 
   return $ProfileCopyWith<$Res>(_self.profile!, (value) {
     return _then(_self.copyWith(profile: value));
-  });
-}/// Create a copy of Contact
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$TeamCopyWith<$Res>? get team {
-    if (_self.team == null) {
-    return null;
-  }
-
-  return $TeamCopyWith<$Res>(_self.team!, (value) {
-    return _then(_self.copyWith(team: value));
   });
 }
 }
