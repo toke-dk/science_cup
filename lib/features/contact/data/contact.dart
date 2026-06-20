@@ -11,7 +11,7 @@ abstract class Contact with _$Contact {
   @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
   const factory Contact({
     int? id,
-    Profile? profile,
+    int? profileId,
     String? fallbackName,
     String? fallbackPhone,
     DateTime? createdAt,
