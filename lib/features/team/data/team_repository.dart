@@ -62,4 +62,16 @@ class TeamRepository {
       throw Exception('Kunne ikke slette hold: $e');
     }
   }
+
+  Future<void> addContactToTeam({
+    required int teamId,
+    required int contactId,
+    required bool isPrimary,
+  }) async {
+    await _supabase.from('team_contacts').insert({
+      'team_id': teamId,
+      'contact_id': contactId,
+      'is_primary': isPrimary,
+    });
+  }
 }

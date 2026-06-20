@@ -12,7 +12,6 @@ abstract class Contact with _$Contact {
   const factory Contact({
     int? id,
     Profile? profile,
-    bool? isPrimary,
     String? fallbackName,
     String? fallbackPhone,
     DateTime? createdAt,
