@@ -68,7 +68,7 @@ ehthumbs.db
 # -------------------------------------------------------------------------
 # Følsomme filer og miljøvariabler (Sikkerhed)
 # -------------------------------------------------------------------------
-.env
+.env.dev
 .env.*
 **/ios/Flutter/Development.xcconfig
 **/ios/Flutter/Release.xcconfig

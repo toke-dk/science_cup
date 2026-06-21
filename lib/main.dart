@@ -18,18 +18,19 @@ import 'features/auth/data/auth_repository.dart';
 import 'features/auth/state/auth_notifier.dart';
 import 'features/season/data/season_repository.dart';
 import 'features/season/state/season_notifier.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await initializeDateFormatting('da_DK', null);
 
+  await dotenv.load(fileName: ".env.dev");
+
   Supabase.initialize(
     /// TODO: These should be set with env vars in a github action
-    url: Platform.isAndroid
-        ? 'http://10.0.2.2:54321'
-        : 'http://127.0.0.1:54321',
-    publishableKey: "sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH",
+    url: dotenv.env['SUPABASE_URL']!,
+    publishableKey: dotenv.env['SUPABASE_PUBLIC_KEY']!,
     authOptions: FlutterAuthClientOptions(
       // DETTE ER MAGIEN, DER GEMMER DIT LOGIN:
       localStorage: SharedPreferencesLocalStorage(
