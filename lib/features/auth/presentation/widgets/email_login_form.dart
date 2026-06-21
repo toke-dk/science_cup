@@ -47,7 +47,7 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
                 token: _codeController.text,
               );
               if (success && context.mounted) {
-                context.go('/');
+                context.pop();
               }
             },
             child: const Text('Log ind'),
