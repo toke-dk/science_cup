@@ -30,6 +30,7 @@ class AddSeasonButton extends StatelessWidget {
 
   void _showAddSeasonDialog(BuildContext context) {
     showModalBottomSheet(
+      isScrollControlled: true,
       context: context,
       builder: (context) => AddSeasonModal(),
     );

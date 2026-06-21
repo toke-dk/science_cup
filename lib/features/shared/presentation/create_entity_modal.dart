@@ -37,10 +37,10 @@ class FieldConfig {
     required this.label,
     this.validator,
     this.group,
-  })  : type = FieldType.date,
-        controller = null,
-        options = null,
-        optionLabel = null;
+  }) : type = FieldType.date,
+       controller = null,
+       options = null,
+       optionLabel = null;
 
   FieldConfig.select({
     required this.key,
@@ -49,18 +49,18 @@ class FieldConfig {
     required this.optionLabel,
     this.validator,
     this.group,
-  })  : type = FieldType.select,
-        controller = null;
+  }) : type = FieldType.select,
+       controller = null;
 
   FieldConfig.time({
     required this.key,
     required this.label,
     this.validator,
     this.group,
-  })  : type = FieldType.time,
-        controller = null,
-        options = null,
-        optionLabel = null;
+  }) : type = FieldType.time,
+       controller = null,
+       options = null,
+       optionLabel = null;
 }
 
 typedef SubmitCallback = Future<void> Function(Map<String, dynamic> data);
@@ -121,28 +121,32 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
           j++;
         }
 
-        widgets.add(Padding(
-          padding: const EdgeInsets.only(bottom: 12.0),
-          child: Row(
-            children: groupItems.map((gf) {
-              return Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 6.0),
-                  child: _buildSingleFieldWidget(gf, dateFormatter),
-                ),
-              );
-            }).toList(),
+        widgets.add(
+          Padding(
+            padding: const EdgeInsets.only(bottom: 12.0),
+            child: Row(
+              children: groupItems.map((gf) {
+                return Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                    child: _buildSingleFieldWidget(gf, dateFormatter),
+                  ),
+                );
+              }).toList(),
+            ),
           ),
-        ));
+        );
         i = j;
         continue;
       }
 
       // single full-width field
-      widgets.add(Padding(
-        padding: const EdgeInsets.only(bottom: 12.0),
-        child: _buildSingleFieldWidget(f, dateFormatter),
-      ));
+      widgets.add(
+        Padding(
+          padding: const EdgeInsets.only(bottom: 12.0),
+          child: _buildSingleFieldWidget(f, dateFormatter),
+        ),
+      );
       i += 1;
     }
 
@@ -196,7 +200,12 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
             border: const OutlineInputBorder(),
           ),
           items: options
-              .map((o) => DropdownMenuItem<dynamic>(value: o, child: Text(labeler(o))))
+              .map(
+                (o) => DropdownMenuItem<dynamic>(
+                  value: o,
+                  child: Text(labeler(o)),
+                ),
+              )
               .toList(),
           onChanged: (v) => setState(() => _selectValues[f.key] = v),
           validator: f.validator,
@@ -267,16 +276,17 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
     try {
       await widget.onSubmit(data);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Oprettet succesfuldt!')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Oprettet succesfuldt!')));
         Navigator.of(context).pop();
       }
     } catch (e) {
       setState(() => _isLoading = false);
       if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Fejl: $e')));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Fejl: $e')));
       }
     }
   }
@@ -288,47 +298,63 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
     return _isLoading
         ? const Center(child: CircularProgressIndicator())
         : Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Form(
-              key: _formKey,
-              child: ListView(
-                shrinkWrap: true,
-                children: [
-                  Text(widget.title, style: Theme.of(context).textTheme.headlineSmall),
-                  const SizedBox(height: 20),
-                  ..._buildFieldWidgets(dateFormatter),
-                  const SizedBox(height: 20),
-                  Row(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+            ),
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Form(
+                  key: _formKey,
+                  child: ListView(
+                    shrinkWrap: true,
                     children: [
-                      Expanded(
-                        flex: 1,
-                        child: TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                          ),
-                          child: const Text('Annuler'),
-                        ),
+                      Text(
+                        widget.title,
+                        style: Theme.of(context).textTheme.headlineSmall,
                       ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        flex: 3,
-                        child: FilledButton(
-                          onPressed: _submitForm,
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 16),
+                      const SizedBox(height: 20),
+                      ..._buildFieldWidgets(dateFormatter),
+                      const SizedBox(height: 20),
+                      Row(
+                        children: [
+                          Expanded(
+                            flex: 1,
+                            child: TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              style: ElevatedButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 16,
+                                ),
+                              ),
+                              child: const Text('Annuler'),
+                            ),
                           ),
-                          child: const Text('Gem', style: TextStyle(fontSize: 16)),
-                        ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            flex: 3,
+                            child: FilledButton(
+                              onPressed: _submitForm,
+                              style: ElevatedButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 16,
+                                ),
+                              ),
+                              child: const Text(
+                                'Gem',
+                                style: TextStyle(fontSize: 16),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                ],
+                ),
               ),
             ),
           );
   }
 }
-

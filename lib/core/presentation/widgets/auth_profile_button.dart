@@ -15,7 +15,7 @@ class AuthProfileButton extends StatelessWidget {
       child: InkWell(
         onTap: () async {
           if (profile == null) {
-            context.go('/login');
+            context.push('/login');
             return;
           }
           await context.read<AuthNotifier>().signOut();

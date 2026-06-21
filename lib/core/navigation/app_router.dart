@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:science_cup_app/core/navigation/app_page.dart';
@@ -11,23 +10,15 @@ import '../../../features/auth/presentation/login_page.dart';
 import '../../features/season/state/season_notifier.dart';
 
 class AppRouter {
-  // Global key til at styre navigationen på øverste niveau
-  static final _rootNavigatorKey = GlobalKey<NavigatorState>();
-
   static final GoRouter router = GoRouter(
     initialLocation: '/',
-    navigatorKey: _rootNavigatorKey,
     routes: [
       GoRoute(
         path: '/',
         builder: (context, state) => WelcomePage(child: const SeasonsView()),
       ),
 
-      GoRoute(
-        path: '/login',
-        parentNavigatorKey: _rootNavigatorKey,
-        builder: (context, state) => const LoginPage(),
-      ),
+      GoRoute(path: '/login', builder: (context, state) => const LoginPage()),
 
       GoRoute(
         path: '/seasons/:id',

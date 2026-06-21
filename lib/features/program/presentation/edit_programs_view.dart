@@ -24,6 +24,7 @@ class ProgramsView extends StatelessWidget {
                 FilledButton.icon(
                   onPressed: () {
                     showModalBottomSheet(
+                      isScrollControlled: true,
                       context: context,
                       builder: (context) {
                         return AddProgramModal();

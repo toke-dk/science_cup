@@ -4,7 +4,6 @@ import 'package:science_cup_app/features/team/presentation/add_team_modal.dart';
 import 'package:science_cup_app/features/team/state/team_notifier.dart';
 import 'package:science_cup_app/providers/data_state.dart';
 
-
 class EditTeamsView extends StatelessWidget {
   const EditTeamsView({super.key});
 
@@ -13,8 +12,7 @@ class EditTeamsView extends StatelessWidget {
     final teamsState = context.watch<TeamNotifier>().state;
 
     return teamsState.when(
-      initial: () =>
-      const Center(child: Text("Vælg en sæson for at se hlold")),
+      initial: () => const Center(child: Text("Vælg en sæson for at se hlold")),
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (message) =>
           Center(child: Text("Fejl ved indlæsning af hold: $message")),
@@ -26,9 +24,13 @@ class EditTeamsView extends StatelessWidget {
               Spacer(),
               FilledButton.icon(
                 onPressed: () {
-                  showModalBottomSheet(context: context, builder: (context){
-                    return AddTeamModal();
-                  });
+                  showModalBottomSheet(
+                    isScrollControlled: true,
+                    context: context,
+                    builder: (context) {
+                      return AddTeamModal();
+                    },
+                  );
                 },
                 label: Text("Nyt Hold"),
                 icon: Icon(Icons.add),
@@ -37,9 +39,9 @@ class EditTeamsView extends StatelessWidget {
           ),
           ListView(
             shrinkWrap: true,
-            children: groups.map((g) => ListTile(
-              title: Text(g.name ?? "Ingen navn"),
-            )).toList(),
+            children: groups
+                .map((g) => ListTile(title: Text(g.name ?? "Ingen navn")))
+                .toList(),
           ),
         ],
       ),

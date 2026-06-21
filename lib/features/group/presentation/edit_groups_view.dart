@@ -26,9 +26,13 @@ class EditGroupsView extends StatelessWidget {
               Spacer(),
               FilledButton.icon(
                 onPressed: () {
-                  showModalBottomSheet(context: context, builder: (context){
-                    return AddGroupModal();
-                  });
+                  showModalBottomSheet(
+                    isScrollControlled: true,
+                    context: context,
+                    builder: (context) {
+                      return AddGroupModal();
+                    },
+                  );
                 },
                 label: Text("Ny Gruppe"),
                 icon: Icon(Icons.add),
@@ -37,9 +41,9 @@ class EditGroupsView extends StatelessWidget {
           ),
           ListView(
             shrinkWrap: true,
-            children: groups.map((g) => ListTile(
-              title: Text(g.name ?? "Ingen navn"),
-            )).toList(),
+            children: groups
+                .map((g) => ListTile(title: Text(g.name ?? "Ingen navn")))
+                .toList(),
           ),
         ],
       ),
