@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:science_cup_app/features/group/data/group.dart';
 import 'package:science_cup_app/features/group/data/group_repository.dart';
@@ -36,16 +35,12 @@ class GroupNotifier extends ChangeNotifier {
     } catch (e) {
       _state = DataState.error(e.toString());
     }
-    print("groups loaded for season $_activeSeasonId: groups");
+    debugPrint("groups loaded for season $_activeSeasonId: groups");
     notifyListeners();
   }
 
-
   // CREATE
-  Future<void> createGroup({
-    required String name,
-    int? seasonId,
-  }) async {
+  Future<void> createGroup({required String name, int? seasonId}) async {
     if (seasonId == null && _activeSeasonId == null) {
       _state = const DataState.error('Ingen aktiv sæson valgt');
       notifyListeners();

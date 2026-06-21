@@ -296,7 +296,13 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
     final dateFormatter = DateFormat.yMMMd('da_DK');
 
     return _isLoading
-        ? const Center(child: CircularProgressIndicator())
+        ? Padding(
+            padding: const EdgeInsets.all(32.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [Center(child: CircularProgressIndicator())],
+            ),
+          )
         : Padding(
             padding: EdgeInsets.only(
               bottom: MediaQuery.of(context).viewInsets.bottom,

@@ -35,7 +35,7 @@ class TeamNotifier extends ChangeNotifier {
     } catch (e) {
       _state = DataState.error(e.toString());
     }
-    print("teams loaded for season $_activeSeasonId: teams");
+    debugPrint("teams loaded for season $_activeSeasonId: teams");
     notifyListeners();
   }
 
