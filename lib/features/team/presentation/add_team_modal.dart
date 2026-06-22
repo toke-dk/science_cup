@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart';
+import 'package:science_cup_app/core/providers/data_state.dart';
 import 'package:science_cup_app/features/program/state/program_notifier.dart';
-import 'package:science_cup_app/providers/data_state.dart';
+import 'package:science_cup_app/features/season/state/season_notifier.dart';
+import 'package:science_cup_app/features/team/state/team_notifier.dart';
 
 import '../../shared/presentation/create_entity_modal.dart';
 
-class AddTeamModal extends StatelessWidget {
+class AddTeamModal extends ConsumerWidget {
   const AddTeamModal({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final programState = context.read<ProgramNotifier>().state;
 
     return programState.when(
@@ -29,8 +32,16 @@ class AddTeamModal extends StatelessWidget {
             ),
           ],
           onSubmit: (data) async {
-            // data['name'] er en trimmed String
-            // await context.read<TeamNotifier>().createTeam(name: data['name']);
+            final seasonId = context.read<SeasonsNotifier>().currentSeasonId;
+            if (seasonId == null) {
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text("Ingen sæson valgt")));
+              return;
+            }
+            ref
+                .read(teamProvider(seasonId).notifier)
+                .createTeam(name: "Nyt Hold");
           },
         );
       },

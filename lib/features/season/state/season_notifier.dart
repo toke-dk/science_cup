@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:science_cup_app/features/season/data/season.dart';
 import 'package:science_cup_app/features/season/data/season_repository.dart';
 
-import '../../../providers/data_state.dart';
+import '../../../core/providers/data_state.dart';
 
 class SeasonsNotifier extends ChangeNotifier {
   final SeasonRepository _repository;
@@ -16,7 +16,8 @@ class SeasonsNotifier extends ChangeNotifier {
   SeasonsNotifier(this._repository);
 
   void changeCurrentSeasonId(int seasonId) {
-    if (_currentSeasonId == seasonId) return; // Optimer: Gør intet hvis det er den samme
+    if (_currentSeasonId == seasonId)
+      return; // Optimer: Gør intet hvis det er den samme
     _currentSeasonId = seasonId;
     notifyListeners();
   }

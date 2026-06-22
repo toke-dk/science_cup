@@ -1,7 +1,7 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart' hide Provider;
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:nested/nested.dart';
 import 'package:provider/provider.dart';
@@ -10,7 +10,6 @@ import 'package:science_cup_app/features/group/state/group_notifier.dart';
 import 'package:science_cup_app/features/program/data/program_repository.dart';
 import 'package:science_cup_app/features/program/state/program_notifier.dart';
 import 'package:science_cup_app/features/team/data/repository/team_repository.dart';
-import 'package:science_cup_app/features/team/state/team_notifier.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'core/navigation/app_router.dart';
@@ -18,7 +17,6 @@ import 'features/auth/data/auth_repository.dart';
 import 'features/auth/state/auth_notifier.dart';
 import 'features/season/data/season_repository.dart';
 import 'features/season/state/season_notifier.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -73,11 +71,6 @@ void main() async {
         update: (context, seasonNotifier, groupNotifier) =>
             groupNotifier!..updateActiveSeason(seasonNotifier.currentSeasonId),
       ),
-      ChangeNotifierProxyProvider<SeasonsNotifier, TeamNotifier>(
-        create: (context) => TeamNotifier(context.read<TeamRepository>()),
-        update: (context, seasonNotifier, teamNotifier) =>
-            teamNotifier!..updateActiveSeason(seasonNotifier.currentSeasonId),
-      ),
       ChangeNotifierProvider<ProgramNotifier>(
         create: (context) =>
             ProgramNotifier(context.read<ProgramRepository>())..loadPrograms(),
@@ -85,7 +78,11 @@ void main() async {
     ];
   }
 
-  runApp(MultiProvider(providers: getAppProviders(), child: const MyApp()));
+  runApp(
+    ProviderScope(
+      child: MultiProvider(providers: getAppProviders(), child: const MyApp()),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

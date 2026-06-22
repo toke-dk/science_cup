@@ -1,8 +1,7 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:science_cup_app/features/program/data/program_repository.dart';
 
-import '../../../providers/data_state.dart';
+import '../../../core/providers/data_state.dart';
 import '../data/program.dart';
 
 class ProgramNotifier extends ChangeNotifier {
@@ -27,17 +26,10 @@ class ProgramNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-
   // CREATE
-  Future<void> createProgram({
-    required String name,
-    String? nickname,
-  }) async {
+  Future<void> createProgram({required String name, String? nickname}) async {
     try {
-      final newDraft = Program(
-        name: name,
-        nickname: nickname,
-      );
+      final newDraft = Program(name: name, nickname: nickname);
 
       await _repository.createProgram(newDraft);
 

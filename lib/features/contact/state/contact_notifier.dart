@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:science_cup_app/features/contact/data/models/contact.dart';
 import 'package:science_cup_app/features/contact/data/repositories/contact_repository.dart';
 
-import '../../../providers/data_state.dart';
+import '../../../core/providers/data_state.dart';
 import '../data/models/contact_create_request.dart';
 import '../data/models/contact_update_request.dart';
 

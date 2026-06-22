@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:science_cup_app/core/providers/data_state.dart';
 import 'package:science_cup_app/features/season/presentation/add_season_button.dart';
-import 'package:science_cup_app/providers/data_state.dart';
 
 import '../state/season_notifier.dart';
 

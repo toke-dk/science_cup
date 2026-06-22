@@ -1,84 +1,67 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:async';
+
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:science_cup_app/features/team/data/models/team.dart';
 import 'package:science_cup_app/features/team/data/repository/team_repository.dart';
+import 'package:science_cup_app/features/team/providers/team_repository_provider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../../../providers/data_state.dart';
+part 'team_notifier.g.dart';
 
-class TeamNotifier extends ChangeNotifier {
-  final TeamRepository _repository;
-  int? _activeSeasonId;
+@riverpod
+class TeamNotifier extends _$TeamNotifier {
+  @override
+  FutureOr<List<Team>> build(int? activeSeasonId) async {
+    // Hvis ingen sæson, returnér tom liste
+    if (activeSeasonId == null) return const [];
 
-  DataState<List<Team>> _state = const DataState.initial();
-  DataState<List<Team>> get state => _state;
-
-  TeamNotifier(this._repository);
-
-  void updateActiveSeason(int? seasonId) {
-    if (_activeSeasonId != seasonId) {
-      _activeSeasonId = seasonId;
-      if (seasonId != null) {
-        loadTeamsForActiveSeason();
-      }
-    }
+    // Hent repository via provider - det er det mest korrekte
+    final repository = ref.watch(teamRepositoryProvider);
+    return repository.getTeamsForSeason(activeSeasonId);
   }
 
-  // READ
-  Future<void> loadTeamsForActiveSeason() async {
-    if (_activeSeasonId == null) return;
+  TeamRepository get _repository =>
+      TeamRepository(supabase: Supabase.instance.client);
 
-    _state = const DataState.loading();
-    notifyListeners();
-
-    try {
-      final teams = await _repository.getTeamsForSeason(_activeSeasonId!);
-      _state = DataState.loaded(teams);
-    } catch (e) {
-      _state = DataState.error(e.toString());
-    }
-    debugPrint("teams loaded for season $_activeSeasonId: teams");
-    notifyListeners();
-  }
-
-  // CREATE
-  Future<void> createTeam({required String name, int? seasonId}) async {
-    if (seasonId == null && _activeSeasonId == null) {
-      _state = const DataState.error('Ingen aktiv sæson valgt');
-      notifyListeners();
+  Future<void> createTeam({required String name}) async {
+    // Da activeSeasonId allerede er kendt i build(), kan vi bruge det
+    if (activeSeasonId == null) {
+      state = AsyncError('Ingen aktiv sæson valgt', StackTrace.current);
       return;
     }
-    try {
-      final newDraft = Team(name: name, seasonId: seasonId ?? _activeSeasonId);
 
-      await _repository.createTeam(newDraft);
+    state = const AsyncValue.loading();
 
-      await loadTeamsForActiveSeason();
-    } catch (e) {
-      _state = DataState.error('Kunne ikke oprette hold: $e');
-      notifyListeners();
-    }
+    // Brug AsyncValue.guard til at håndtere try-catch automatisk
+    state = await AsyncValue.guard(() async {
+      final repository = ref.read(teamRepositoryProvider);
+      await repository.createTeam(Team(name: name, seasonId: activeSeasonId!));
+
+      // Når vi invaliderer, kaldes build() igen, og UI opdateres automatisk
+      ref.invalidateSelf();
+
+      // Vi returnerer den nye liste (eller lader build gøre arbejdet)
+      return future;
+    });
   }
 
-  // UPDATE
   Future<void> updateTeam({required Team updatedTeam}) async {
     try {
       await _repository.updateTeam(updatedTeam);
 
-      await loadTeamsForActiveSeason();
-    } catch (e) {
-      _state = DataState.error('Kunne ikke opdatere hold: $e');
-      notifyListeners();
+      ref.invalidateSelf();
+    } catch (e, stackTrace) {
+      state = AsyncError('Kunne ikke opdatere hold: $e', stackTrace);
     }
   }
 
-  // DELETE
   Future<void> deleteTeam(String id) async {
     try {
       await _repository.deleteTeam(id);
 
-      await loadTeamsForActiveSeason();
-    } catch (e) {
-      _state = DataState.error('Kunne ikke slette hold: $e');
-      notifyListeners();
+      ref.invalidateSelf();
+    } catch (e, stackTrace) {
+      state = AsyncError('Kunne ikke slette hold: $e', stackTrace);
     }
   }
 }

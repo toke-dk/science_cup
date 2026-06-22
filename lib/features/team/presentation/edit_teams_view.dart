@@ -1,22 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart';
+import 'package:science_cup_app/features/season/state/season_notifier.dart';
 import 'package:science_cup_app/features/team/presentation/add_team_modal.dart';
 import 'package:science_cup_app/features/team/state/team_notifier.dart';
-import 'package:science_cup_app/providers/data_state.dart';
 
-class EditTeamsView extends StatelessWidget {
+class EditTeamsView extends ConsumerWidget {
   const EditTeamsView({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final teamsState = context.watch<TeamNotifier>().state;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final seasonId = context.watch<SeasonsNotifier>().currentSeasonId;
+    final teamsState = ref.watch(teamProvider(seasonId));
+
+    if (seasonId == null) {
+      return const Center(child: Text("Vælg en sæson for at se hold"));
+    }
 
     return teamsState.when(
-      initial: () => const Center(child: Text("Vælg en sæson for at se hlold")),
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (message) =>
-          Center(child: Text("Fejl ved indlæsning af hold: $message")),
-      loaded: (groups) => Column(
+      error: (error, _) =>
+          Center(child: Text("Fejl ved indlæsning af hold: $error")),
+      data: (groups) => Column(
         children: [
           Row(
             children: [

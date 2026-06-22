@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:science_cup_app/core/providers/data_state.dart';
 import 'package:science_cup_app/features/group/presentation/add_group_modal.dart';
-import 'package:science_cup_app/providers/data_state.dart';
 
 import '../state/group_notifier.dart';
 
