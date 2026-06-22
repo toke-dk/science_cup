@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:science_cup_app/features/team/application/team_repository_provider.dart';
 import 'package:science_cup_app/features/team/data/models/team.dart';
 import 'package:science_cup_app/features/team/data/repository/team_repository.dart';
-import 'package:science_cup_app/features/team/providers/team_repository_provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 part 'team_notifier.g.dart';
