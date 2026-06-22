@@ -6,7 +6,7 @@ import 'package:science_cup_app/features/season/data/season.dart';
 part 'active_season_provider.g.dart';
 
 @riverpod
-class ActiveSeason extends _$ActiveSeason {
+class ActiveSeasonNotifier extends _$ActiveSeason {
   late final ActiveSeasonRepository _repo = ref.read(
     activeSeasonRepositoryProvider,
   );
