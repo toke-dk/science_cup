@@ -5,11 +5,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart' hide Provider;
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:nested/nested.dart';
 import 'package:provider/provider.dart';
+import 'package:science_cup_app/core/storage/shared_preferences_provider.dart';
 import 'package:science_cup_app/features/group/application/group_notifier.dart';
 import 'package:science_cup_app/features/group/data/group_repository.dart';
 import 'package:science_cup_app/features/program/application/program_notifier.dart';
 import 'package:science_cup_app/features/program/data/program_repository.dart';
 import 'package:science_cup_app/features/team/data/repository/team_repository.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'core/navigation/app_router.dart';
@@ -20,6 +22,8 @@ import 'features/season/data/season_repository.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  final prefs = await SharedPreferences.getInstance();
 
   await initializeDateFormatting('da_DK', null);
 
@@ -80,6 +84,7 @@ void main() async {
 
   runApp(
     ProviderScope(
+      overrides: [sharedPreferencesProvider.overrideWithValue(prefs)],
       child: MultiProvider(providers: getAppProviders(), child: const MyApp()),
     ),
   );
