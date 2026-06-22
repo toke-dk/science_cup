@@ -3,22 +3,11 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' hide Provider;
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:nested/nested.dart';
-import 'package:provider/provider.dart';
 import 'package:science_cup_app/core/storage/shared_preferences_provider.dart';
-import 'package:science_cup_app/features/group/application/group_notifier.dart';
-import 'package:science_cup_app/features/group/data/group_repository.dart';
-import 'package:science_cup_app/features/program/application/program_notifier.dart';
-import 'package:science_cup_app/features/program/data/program_repository.dart';
-import 'package:science_cup_app/features/team/data/repository/team_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'core/navigation/app_router.dart';
-import 'features/auth/application/auth_notifier.dart';
-import 'features/auth/data/auth_repository.dart';
-import 'features/season/application/season_notifier.dart';
-import 'features/season/data/season_repository.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -41,61 +30,20 @@ void main() async {
     ),
   );
 
-  final supabaseClient = Supabase.instance.client;
-
-  List<SingleChildWidget> getAppProviders() {
-    return [
-      // === REPOSITORIES ===
-      Provider<SeasonRepository>(
-        create: (_) => SeasonRepository(supabase: supabaseClient),
-      ),
-      Provider<AuthRepository>(
-        create: (_) => AuthRepository(supabase: supabaseClient),
-      ),
-      Provider<GroupRepository>(
-        create: (_) => GroupRepository(supabase: supabaseClient),
-      ),
-      Provider<TeamRepository>(
-        create: (_) => TeamRepository(supabase: supabaseClient),
-      ),
-      Provider<ProgramRepository>(
-        create: (_) => ProgramRepository(supabase: supabaseClient),
-      ),
-
-      // === NOTIFIERS ===
-      ChangeNotifierProvider<SeasonsNotifier>(
-        create: (context) =>
-            SeasonsNotifier(context.read<SeasonRepository>())..loadSeasons(),
-      ),
-      ChangeNotifierProvider<AuthNotifier>(
-        create: (context) => AuthNotifier(context.read<AuthRepository>()),
-      ),
-      ChangeNotifierProxyProvider<SeasonsNotifier, GroupNotifier>(
-        create: (context) => GroupNotifier(context.read<GroupRepository>()),
-        update: (context, seasonNotifier, groupNotifier) =>
-            groupNotifier!..updateActiveSeason(seasonNotifier.currentSeasonId),
-      ),
-      ChangeNotifierProvider<ProgramNotifier>(
-        create: (context) =>
-            ProgramNotifier(context.read<ProgramRepository>())..loadPrograms(),
-      ),
-    ];
-  }
-
   runApp(
     ProviderScope(
       overrides: [sharedPreferencesProvider.overrideWithValue(prefs)],
-      child: MultiProvider(providers: getAppProviders(), child: const MyApp()),
+      child: const MyApp(),
     ),
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp.router(
       locale: const Locale("da", "DK"),
       supportedLocales: const [
@@ -108,7 +56,7 @@ class MyApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      routerConfig: AppRouter.router,
+      routerConfig: ref.watch(appRouterProvider),
       title: 'Science Cup\'en',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),

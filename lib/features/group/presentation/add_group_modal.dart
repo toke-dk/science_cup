@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../shared/presentation/create_entity_modal.dart';
 import '../application/group_notifier.dart';
 
-class AddGroupModal extends StatelessWidget {
+class AddGroupModal extends ConsumerWidget {
   const AddGroupModal({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return CreateEntityModal(
       title: 'Opret gruppe',
       fields: [
@@ -20,7 +20,7 @@ class AddGroupModal extends StatelessWidget {
       ],
       onSubmit: (data) async {
         // data['name'] er en trimmed String
-        await context.read<GroupNotifier>().createGroup(name: data['name']);
+        await ref.read(groupProvider.notifier).createGroup(name: data['name']);
       },
     );
   }

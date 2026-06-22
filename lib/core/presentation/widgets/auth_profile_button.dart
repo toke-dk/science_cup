@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 import 'package:science_cup_app/features/auth/application/auth_notifier.dart';
 
-class AuthProfileButton extends StatelessWidget {
+class AuthProfileButton extends ConsumerWidget {
   const AuthProfileButton({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final profile = context.watch<AuthNotifier>().profile;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final profile = ref.watch(authProvider).profile;
 
     return Padding(
       padding: const EdgeInsets.all(4.0),
@@ -18,7 +18,7 @@ class AuthProfileButton extends StatelessWidget {
             context.push('/login');
             return;
           }
-          await context.read<AuthNotifier>().signOut();
+          await ref.read(authProvider.notifier).signOut();
         },
         child: CircleAvatar(
           radius: 32,

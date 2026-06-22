@@ -1,23 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
-import 'package:science_cup_app/core/providers/data_state.dart';
 import 'package:science_cup_app/features/season/presentation/add_season_button.dart';
 
-import '../application/season_notifier.dart';
+import '../application/season/season_notifier.dart';
 
-class SeasonsView extends StatelessWidget {
+class SeasonsView extends ConsumerWidget {
   const SeasonsView({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final state = context.watch<SeasonsNotifier>().state;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(seasonsProvider);
 
     return state.when(
-      initial: () => CircularProgressIndicator(),
       loading: () => CircularProgressIndicator(),
-      error: (error) => Text('Der skete en fejl: $error'),
-      loaded: (seasons) {
+      error: (_, error) => Text('Der skete en fejl: $error'),
+      data: (seasons) {
         final sortedSeasons = List.of(seasons)
           ..sort(
             (a, b) => b.startDate?.compareTo(a.startDate ?? DateTime(0)) ?? 0,

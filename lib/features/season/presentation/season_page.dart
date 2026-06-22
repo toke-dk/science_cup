@@ -2,17 +2,15 @@ import 'package:dropdown_flutter/custom_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 import 'package:science_cup_app/core/navigation/season_tabs.dart';
 import 'package:science_cup_app/core/presentation/widgets/auth_profile_button.dart';
-import 'package:science_cup_app/core/providers/data_state.dart';
-import 'package:science_cup_app/features/season/data/season.dart';
+import 'package:science_cup_app/features/season/data/models/season.dart';
 import 'package:science_cup_app/features/season/presentation/admin/admin_season_view.dart';
 import 'package:science_cup_app/features/team/application/team_notifier.dart';
 
 import '../../auth/application/auth_notifier.dart';
 import '../../game/presentation/games_view.dart';
-import '../application/season_notifier.dart';
+import '../application/season/season_notifier.dart';
 
 class SeasonPage extends ConsumerWidget {
   const SeasonPage({
@@ -26,20 +24,17 @@ class SeasonPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final profileRole = context.read<AuthNotifier>().profileRole;
-
+    final profileRole = ref.read(authProvider).profileRole;
     final availableTabs = SeasonTabs.availableTabsForRole(profileRole);
-
-    final seasonsState = context.watch<SeasonsNotifier>().state;
+    final seasonsState = ref.watch(seasonsProvider);
     final selectedIndex = activeTab.index;
 
     // Vi pakker staten ud på øverste niveau for hele skærmen
     return seasonsState.when(
-      initial: () => const Scaffold(body: SizedBox.shrink()),
       loading: () =>
           const Scaffold(body: Center(child: CircularProgressIndicator())),
-      error: (message) => Scaffold(body: Center(child: Text('Fejl: $message'))),
-      loaded: (seasons) {
+      error: (_, error) => Center(child: Text('Der skete en fejl: $error')),
+      data: (seasons) {
         // NU ved vi med 100% sikkerhed, at listen er klar og gyldig!
 
         // Find den aktive sæson ud fra URL'ens seasonId

@@ -1,16 +1,21 @@
+// lib/app_router.dart
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:science_cup_app/core/navigation/app_page.dart';
 import 'package:science_cup_app/core/navigation/season_tabs.dart';
 import 'package:science_cup_app/features/auth/application/auth_notifier.dart';
-import 'package:science_cup_app/features/season/data/season_page.dart';
+import 'package:science_cup_app/features/auth/presentation/login_page.dart';
+import 'package:science_cup_app/features/season/presentation/season_page.dart';
 import 'package:science_cup_app/features/season/presentation/seasons_view.dart';
 
-import '../../../features/auth/presentation/login_page.dart';
-import '../../features/season/application/season_notifier.dart';
+part 'app_router.g.dart';
 
-class AppRouter {
-  static final GoRouter router = GoRouter(
+@riverpod
+GoRouter appRouter(Ref ref) {
+  // Lyt til auth-state for at kunne kontrollere adgang
+  final authState = ref.watch(authProvider);
+
+  return GoRouter(
     initialLocation: '/',
     routes: [
       GoRoute(
@@ -20,6 +25,7 @@ class AppRouter {
 
       GoRoute(path: '/login', builder: (context, state) => const LoginPage()),
 
+      // Validerer kun ID og omdirigerer til default tab
       GoRoute(
         path: '/seasons/:id',
         redirect: (context, state) {
@@ -28,13 +34,12 @@ class AppRouter {
           if (parsedId == null) {
             return '/';
           }
-
-          context.read<SeasonsNotifier>().changeCurrentSeasonId(parsedId);
-
+          // Omdirigér til default tab – ingen stateændring her
           return '/seasons/$id/${SeasonTabs.defaultTab.path}';
         },
       ),
 
+      // Selve sæsonsiden med tabs
       GoRoute(
         path: '/seasons/:id/:tab',
         redirect: (context, state) {
@@ -42,25 +47,22 @@ class AppRouter {
           final tabPath = state.pathParameters['tab'];
           final activeTab = SeasonTabs.fromPath(tabPath);
 
-          final profileRole = context.read<AuthNotifier>().profileRole;
+          // Læs profil-rolle fra den allerede watched authState
+          final profileRole = authState.profileRole;
 
           if (!SeasonTabs.canAccessTab(activeTab, profileRole)) {
             return '/seasons/$id/${SeasonTabs.defaultTab.path}';
           }
 
-          return null; // Returner null for at tillade navigationen at fortsætte
+          return null; // Tillad navigation
         },
         builder: (context, state) {
           final seasonId = int.parse(state.pathParameters['id']!);
           final tabPath = state.pathParameters['tab'];
-
           final activeTab = SeasonTabs.fromPath(tabPath);
 
-          return SeasonPage(
-            seasonId: seasonId,
-            activeTab:
-                activeTab, // Nu modtager SeasonPage en ægte SeasonTab enum!
-          );
+          // Returner siden; den vil selv opdatere det aktive seasonId
+          return SeasonPage(seasonId: seasonId, activeTab: activeTab);
         },
       ),
     ],

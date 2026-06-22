@@ -1,66 +1,36 @@
-import 'package:flutter/cupertino.dart';
-import 'package:science_cup_app/features/program/data/program_repository.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:science_cup_app/features/program/application/program_repository_provider.dart';
+import 'package:science_cup_app/features/program/data/program.dart';
 
-import '../../../core/providers/data_state.dart';
-import '../data/program.dart';
+part 'program_notifier.g.dart';
 
-class ProgramNotifier extends ChangeNotifier {
-  final ProgramRepository _repository;
-
-  DataState<List<Program>> _state = const DataState.initial();
-  DataState<List<Program>> get state => _state;
-
-  ProgramNotifier(this._repository);
-
-  // READ
-  Future<void> loadPrograms() async {
-    _state = const DataState.loading();
-    notifyListeners();
-
-    try {
-      final programs = await _repository.getPrograms();
-      _state = DataState.loaded(programs);
-    } catch (e) {
-      _state = DataState.error(e.toString());
-    }
-    notifyListeners();
+@riverpod
+class ProgramNotifier extends _$ProgramNotifier {
+  @override
+  Future<List<Program>> build() async {
+    final repository = ref.read(programRepositoryProvider);
+    return repository.getPrograms();
   }
 
   // CREATE
   Future<void> createProgram({required String name, String? nickname}) async {
-    try {
-      final newDraft = Program(name: name, nickname: nickname);
-
-      await _repository.createProgram(newDraft);
-
-      await loadPrograms();
-    } catch (e) {
-      _state = DataState.error('Kunne ikke oprette program: $e');
-      notifyListeners();
-    }
+    final repository = ref.read(programRepositoryProvider);
+    final newProgram = Program(name: name, nickname: nickname);
+    await repository.createProgram(newProgram);
+    ref.invalidateSelf(); // genindlæs listen
   }
 
   // UPDATE
   Future<void> updateProgram({required Program updatedProgram}) async {
-    try {
-      await _repository.updateProgram(updatedProgram);
-
-      await loadPrograms();
-    } catch (e) {
-      _state = DataState.error('Kunne ikke opdatere program: $e');
-      notifyListeners();
-    }
+    final repository = ref.read(programRepositoryProvider);
+    await repository.updateProgram(updatedProgram);
+    ref.invalidateSelf();
   }
 
-  // 4. DELETE
+  // DELETE
   Future<void> deleteProgram(String id) async {
-    try {
-      await _repository.deleteProgram(id);
-
-      await loadPrograms();
-    } catch (e) {
-      _state = DataState.error('Kunne ikke slette program: $e');
-      notifyListeners();
-    }
+    final repository = ref.read(programRepositoryProvider);
+    await repository.deleteProgram(id);
+    ref.invalidateSelf();
   }
 }

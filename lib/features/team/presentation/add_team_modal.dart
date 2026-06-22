@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:provider/provider.dart';
-import 'package:science_cup_app/core/providers/data_state.dart';
 import 'package:science_cup_app/features/program/application/program_notifier.dart';
-import 'package:science_cup_app/features/season/application/season_notifier.dart';
+import 'package:science_cup_app/features/season/application/active_season/active_season_id_notifier.dart';
 import 'package:science_cup_app/features/team/application/team_notifier.dart';
 
 import '../../shared/presentation/create_entity_modal.dart';
@@ -13,13 +11,13 @@ class AddTeamModal extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final programState = context.read<ProgramNotifier>().state;
+    final programState = ref.read(programProvider);
 
     return programState.when(
-      initial: () => CircularProgressIndicator(),
       loading: () => CircularProgressIndicator(),
-      error: (e) => Text("Fejl ved indlæsning af programmer: $e"),
-      loaded: (programs) {
+      error: (error, stacktrace) =>
+          Text("Fejl ved indlæsning af programmer: $error"),
+      data: (programs) {
         return CreateEntityModal(
           title: 'Opret gruppe',
           fields: [
@@ -32,7 +30,7 @@ class AddTeamModal extends ConsumerWidget {
             ),
           ],
           onSubmit: (data) async {
-            final seasonId = context.read<SeasonsNotifier>().currentSeasonId;
+            final seasonId = ref.read(activeSeasonIdProvider).value;
             if (seasonId == null) {
               ScaffoldMessenger.of(
                 context,

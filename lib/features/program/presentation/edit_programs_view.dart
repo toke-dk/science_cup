@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:science_cup_app/core/providers/data_state.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:science_cup_app/features/program/application/program_notifier.dart';
 import 'package:science_cup_app/features/program/presentation/add_program_modal.dart';
 
-class ProgramsView extends StatelessWidget {
+class ProgramsView extends ConsumerWidget {
   const ProgramsView({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final programsState = context.watch<ProgramNotifier>().state;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final programsState = ref.watch(programProvider);
 
     return programsState.when(
-      initial: () => CircularProgressIndicator(),
       loading: () => CircularProgressIndicator(),
-      loaded: (programs) {
+      data: (programs) {
         return Column(
           children: [
             Row(
@@ -43,7 +41,8 @@ class ProgramsView extends StatelessWidget {
           ],
         );
       },
-      error: (e) => Text("Fejl ved indlæsning af programmer: $e"),
+      error: (error, stacktrace) =>
+          Text("Fejl ved indlæsning af programmer: $error"),
     );
   }
 }

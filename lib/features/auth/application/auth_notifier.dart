@@ -1,129 +1,132 @@
+// features/auth/application/auth_notifier.dart
 import 'dart:async';
-import 'package:flutter/material.dart';
-import 'package:science_cup_app/features/auth/data/profile.dart';
-import 'package:science_cup_app/features/auth/data/profile_role.dart';
-import 'package:supabase_flutter/supabase_flutter.dart' as supabase;
-import '../data/auth_repository.dart';
 
-class AuthNotifier extends ChangeNotifier {
-  final AuthRepository _repository;
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:science_cup_app/features/auth/application/auth_repository_provider.dart';
+import 'package:science_cup_app/features/auth/data/auth_repository.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' as supabase;
+
+import 'auth_state.dart';
+
+part 'auth_notifier.g.dart';
+
+@riverpod
+class AuthNotifier extends _$AuthNotifier {
   StreamSubscription<supabase.AuthState>? _authStateSubscription;
 
-  AuthNotifier(this._repository) {
-    _initializeAuth();
+  @override
+  AuthState build() {
+    // Start initial loading
+    final repo = ref.read(authRepositoryProvider);
+    final initialState = AuthState(isLoading: true);
+
+    // Udfør asynkron initialisering
+    _initialize(repo);
+
+    // Ryd op når provideren lukkes
+    ref.onDispose(() {
+      _authStateSubscription?.cancel();
+    });
+
+    return initialState;
   }
 
-  // --- GLOBALE AUTH TILSTANDE ---
-  Profile? _profile;
-  Profile? get profile => _profile;
+  Future<void> _initialize(AuthRepository repo) async {
+    try {
+      final profile = await repo.getLoggedInProfile();
+      state = state.copyWith(profile: profile, isLoading: false);
+    } catch (e) {
+      state = state.copyWith(isLoading: false, errorMessage: e.toString());
+    }
 
-  bool get isAuthenticated => _profile != null;
+    // Lyt på auth‑ændringer fra Supabase i baggrunden
+    _authStateSubscription = supabase
+        .Supabase
+        .instance
+        .client
+        .auth
+        .onAuthStateChange
+        .listen((event) async {
+          if (event.session == null) {
+            // Bruger logget ud
+            state = AuthState(); // reset alt
+          } else if (state.profile == null) {
+            // Session opstået eksternt – hent profil
+            try {
+              final profile = await ref
+                  .read(authRepositoryProvider)
+                  .getLoggedInProfile();
+              state = state.copyWith(profile: profile);
+            } catch (_) {}
+          }
+        });
+  }
 
-  // --- LOKALE UI/FORMULAR TILSTANDE ---
-  bool _isLoading = false;
-  bool get isLoading => _isLoading;
-
-  bool _phoneCodeSent = false;
-  bool get phoneCodeSent => _phoneCodeSent;
-
-  bool _emailCodeSent = false;
-  bool get emailCodeSent => _emailCodeSent;
-
-  String? _errorMessage;
-  String? get errorMessage => _errorMessage;
-
-  String _currentPhoneNumber = '';
-
-  ProfileRole? get profileRole => _profile?.role;
-
-  /// Initialiserer auth-tilstanden ved opstart og lytter på ændringer (f.eks. udløb af session)
-  Future<void> _initializeAuth() async {
-    _isLoading = true;
-    notifyListeners();
-
-    // Tjek om der allerede er en aktiv bruger i databasen ved app-start
-    _profile = await _repository.getLoggedInProfile();
-    _isLoading = false;
-    notifyListeners();
-
-    // Lyt til ændringer i baggrunden (f.eks. hvis brugeren bliver logget ud udefra)
-    _authStateSubscription = supabase.Supabase.instance.client.auth.onAuthStateChange.listen((event) async {
-      if (event.session == null) {
-        _profile = null;
-        _resetFormStates();
-        notifyListeners();
-      } else if (_profile == null) {
-        // Hvis sessionen pludselig opstår udefra, henter vi profilen
-        _profile = await _repository.getLoggedInProfile();
-        notifyListeners();
-      }
-    });
+  // --- HJÆLPEMETODER ---
+  void _setLoading(bool value) {
+    state = state.copyWith(isLoading: value, clearError: value);
   }
 
   // --- PHONE AUTH FLOW ---
-
-  /// Trin 1: Send SMS OTP
   Future<void> startPhoneAuth(String phoneNumber) async {
     _setLoading(true);
     try {
-      _currentPhoneNumber = phoneNumber;
-      await _repository.sendOtpToPhone(phoneNumber);
-      _phoneCodeSent = true;
+      await ref.read(authRepositoryProvider).sendOtpToPhone(phoneNumber);
+      state = state.copyWith(
+        phoneCodeSent: true,
+        currentPhoneNumber: phoneNumber,
+        isLoading: false,
+      );
     } catch (e) {
-      _errorMessage = e.toString();
-    } finally {
-      _setLoading(false);
+      state = state.copyWith(isLoading: false, errorMessage: e.toString());
     }
   }
 
-  /// Trin 2: Verificer SMS-kode
   Future<bool> verifyPhoneCode(String token) async {
     _setLoading(true);
     try {
-      // Dit repository returnerer nu din egen typesikre User model!
-      final newUser = await _repository.verifyPhoneOtp(
-        phoneNumber: _currentPhoneNumber,
-        token: token,
-      );
-      _profile = newUser;
-      _phoneCodeSent = false;
+      final newUser = await ref
+          .read(authRepositoryProvider)
+          .verifyPhoneOtp(phoneNumber: state.currentPhoneNumber, token: token);
+      state = AuthState(profile: newUser); // reset UI-flags
       return true;
     } catch (e) {
-      _errorMessage = "Forkert eller udløbet SMS-kode.";
+      state = state.copyWith(
+        isLoading: false,
+        errorMessage: "Forkert eller udløbet SMS-kode.",
+      );
       return false;
-    } finally {
-      _setLoading(false);
     }
   }
 
   // --- EMAIL AUTH FLOW ---
-
-  /// Trin 1: Send login-link/kode til mail
   Future<void> sendEmailOtp(String email) async {
     _setLoading(true);
     try {
-      await _repository.sendEmailOtp(email);
-      _emailCodeSent = true;
+      await ref.read(authRepositoryProvider).sendEmailOtp(email);
+      state = state.copyWith(emailCodeSent: true, isLoading: false);
     } catch (e) {
-      _errorMessage = e.toString();
-    } finally {
-      _setLoading(false);
+      state = state.copyWith(isLoading: false, errorMessage: e.toString());
     }
   }
 
-  /// Trin 2: Verificer e-mail-kode
-  Future<bool> verifyEmailOtp({required String email, required String token}) async {
+  Future<bool> verifyEmailOtp({
+    required String email,
+    required String token,
+  }) async {
     _setLoading(true);
     try {
-      final newUser = await _repository.verifyEmailOtp(email: email, token: token);
-      _profile = newUser;
-      _emailCodeSent = false;
+      final newUser = await ref
+          .read(authRepositoryProvider)
+          .verifyEmailOtp(email: email, token: token);
+      state = AuthState(profile: newUser);
       return true;
     } catch (e) {
-      _errorMessage = "Kunne ikke logge ind. Tjek koden i din e-mail.";
+      state = state.copyWith(
+        isLoading: false,
+        errorMessage: "Kunne ikke logge ind. Tjek koden i din e-mail.",
+      );
       return false;
-    } finally {
-      _setLoading(false);
     }
   }
 
@@ -131,34 +134,10 @@ class AuthNotifier extends ChangeNotifier {
   Future<void> signOut() async {
     _setLoading(true);
     try {
-      await _repository.signOut();
-      _profile = null;
-      _resetFormStates();
+      await ref.read(authRepositoryProvider).signOut();
+      state = AuthState(); // rydder alt
     } catch (e) {
-      _errorMessage = e.toString();
-    } finally {
-      _setLoading(false);
+      state = state.copyWith(isLoading: false, errorMessage: e.toString());
     }
-  }
-
-  // --- HJÆLPEFUNKTIONER ---
-
-  void _setLoading(bool value) {
-    _isLoading = value;
-    if (value) _errorMessage = null; // Nulstil fejlbesked, når vi starter en ny handling
-    notifyListeners();
-  }
-
-  void _resetFormStates() {
-    _phoneCodeSent = false;
-    _emailCodeSent = false;
-    _errorMessage = null;
-    _currentPhoneNumber = '';
-  }
-
-  @override
-  void dispose() {
-    _authStateSubscription?.cancel();
-    super.dispose();
   }
 }

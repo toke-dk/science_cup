@@ -1,4 +1,4 @@
-import 'package:science_cup_app/features/season/data/season.dart';
+import 'package:science_cup_app/features/season/data/models/season.dart';
 import 'package:supabase/supabase.dart';
 
 class SeasonRepository {
@@ -59,10 +59,7 @@ class SeasonRepository {
   // 4. DELETE (Slet Sæson)
   Future<void> deleteSeason(String id) async {
     try {
-      await _supabase
-          .from('seasons')
-          .delete()
-          .eq('id', id);
+      await _supabase.from('seasons').delete().eq('id', id);
     } catch (e) {
       throw Exception('Kunne ikke slette sæson: $e');
     }

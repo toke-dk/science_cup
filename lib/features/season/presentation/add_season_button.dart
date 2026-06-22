@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:science_cup_app/features/auth/data/profile_role.dart';
 import 'package:science_cup_app/features/season/presentation/add_season_modal.dart';
 
 import '../../auth/application/auth_notifier.dart';
 
-class AddSeasonButton extends StatelessWidget {
+class AddSeasonButton extends ConsumerWidget {
   const AddSeasonButton({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     // 1. Læs din AuthNotifier uden at lytte (så knappen ikke genbygger unødigt)
     // Hvis du bruger standard ListenableBuilder, kan du fjerne context.watch/read
-    final authNotifier = context.watch<AuthNotifier>();
+    final authNotifier = ref.watch(authProvider);
     final profile = authNotifier.profile;
 
     // 2. Hvis brugeren ikke er logget ind, ELLER hvis rollen ikke er admin, returnerer vi ingenting

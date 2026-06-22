@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:science_cup_app/features/season/application/season_notifier.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:science_cup_app/features/season/application/season/season_notifier.dart';
 
 import '../../shared/presentation/create_entity_modal.dart';
 
-class AddSeasonModal extends StatelessWidget {
+class AddSeasonModal extends ConsumerWidget {
   const AddSeasonModal({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return CreateEntityModal(
       title: 'Opret sæson',
       fields: [
@@ -26,11 +26,13 @@ class AddSeasonModal extends StatelessWidget {
       ],
       onSubmit: (data) async {
         // data['start'] and data['end'] are DateTime? (stored as UTC)
-        await context.read<SeasonsNotifier>().createSeason(
-          name: data['name'],
-          start: data['start'],
-          end: data['end'],
-        );
+        await ref
+            .read(seasonsProvider.notifier)
+            .createSeason(
+              name: data['name'],
+              start: data['start'],
+              end: data['end'],
+            );
       },
     );
   }
