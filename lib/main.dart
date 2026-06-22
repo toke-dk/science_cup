@@ -5,18 +5,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart' hide Provider;
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:nested/nested.dart';
 import 'package:provider/provider.dart';
+import 'package:science_cup_app/features/group/application/group_notifier.dart';
 import 'package:science_cup_app/features/group/data/group_repository.dart';
-import 'package:science_cup_app/features/group/state/group_notifier.dart';
+import 'package:science_cup_app/features/program/application/program_notifier.dart';
 import 'package:science_cup_app/features/program/data/program_repository.dart';
-import 'package:science_cup_app/features/program/state/program_notifier.dart';
 import 'package:science_cup_app/features/team/data/repository/team_repository.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'core/navigation/app_router.dart';
+import 'features/auth/application/auth_notifier.dart';
 import 'features/auth/data/auth_repository.dart';
-import 'features/auth/state/auth_notifier.dart';
+import 'features/season/application/season_notifier.dart';
 import 'features/season/data/season_repository.dart';
-import 'features/season/state/season_notifier.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

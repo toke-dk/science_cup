@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../state/group_notifier.dart';
 import '../../shared/presentation/create_entity_modal.dart';
+import '../application/group_notifier.dart';
 
 class AddGroupModal extends StatelessWidget {
   const AddGroupModal({super.key});

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart';
-import 'package:science_cup_app/features/season/state/season_notifier.dart';
+import 'package:science_cup_app/features/season/application/season_notifier.dart';
+import 'package:science_cup_app/features/team/application/team_notifier.dart';
 import 'package:science_cup_app/features/team/presentation/add_team_modal.dart';
-import 'package:science_cup_app/features/team/state/team_notifier.dart';
 
 class EditTeamsView extends ConsumerWidget {
   const EditTeamsView({super.key});

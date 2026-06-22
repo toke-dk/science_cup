@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:science_cup_app/core/providers/data_state.dart';
 import 'package:science_cup_app/features/season/presentation/add_season_button.dart';
 
-import '../state/season_notifier.dart';
+import '../application/season_notifier.dart';
 
 class SeasonsView extends StatelessWidget {
   const SeasonsView({super.key});

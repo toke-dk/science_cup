@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:science_cup_app/features/auth/state/auth_notifier.dart';
+import 'package:science_cup_app/features/auth/application/auth_notifier.dart';
 
 class AuthProfileButton extends StatelessWidget {
   const AuthProfileButton({super.key});

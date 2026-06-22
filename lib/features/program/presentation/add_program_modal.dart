@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../shared/presentation/create_entity_modal.dart';
-import '../state/program_notifier.dart';
+import '../application/program_notifier.dart';
 
 class AddProgramModal extends StatelessWidget {
   const AddProgramModal({super.key});

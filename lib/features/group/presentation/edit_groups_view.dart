@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:science_cup_app/core/providers/data_state.dart';
 import 'package:science_cup_app/features/group/presentation/add_group_modal.dart';
 
-import '../state/group_notifier.dart';
+import '../application/group_notifier.dart';
 
 class EditGroupsView extends StatelessWidget {
   const EditGroupsView({super.key});

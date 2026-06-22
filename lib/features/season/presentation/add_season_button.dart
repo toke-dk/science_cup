@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:science_cup_app/features/auth/data/profile_role.dart';
 import 'package:science_cup_app/features/season/presentation/add_season_modal.dart';
 
-import '../../auth/state/auth_notifier.dart';
+import '../../auth/application/auth_notifier.dart';
 
 class AddSeasonButton extends StatelessWidget {
   const AddSeasonButton({super.key});

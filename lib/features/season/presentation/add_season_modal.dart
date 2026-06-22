@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:science_cup_app/features/season/state/season_notifier.dart';
+import 'package:science_cup_app/features/season/application/season_notifier.dart';
 
 import '../../shared/presentation/create_entity_modal.dart';
 
@@ -22,19 +22,15 @@ class AddSeasonModal extends StatelessWidget {
           label: 'Startdato',
           validator: (v) => null,
         ),
-        FieldConfig.date(
-          key: 'end',
-          label: 'Slutdato',
-          validator: (v) => null,
-        ),
+        FieldConfig.date(key: 'end', label: 'Slutdato', validator: (v) => null),
       ],
       onSubmit: (data) async {
         // data['start'] and data['end'] are DateTime? (stored as UTC)
         await context.read<SeasonsNotifier>().createSeason(
-              name: data['name'],
-              start: data['start'],
-              end: data['end'],
-            );
+          name: data['name'],
+          start: data['start'],
+          end: data['end'],
+        );
       },
     );
   }

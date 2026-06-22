@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:science_cup_app/core/providers/data_state.dart';
+import 'package:science_cup_app/features/program/application/program_notifier.dart';
 import 'package:science_cup_app/features/program/presentation/add_program_modal.dart';
-import 'package:science_cup_app/features/program/state/program_notifier.dart';
 
 class ProgramsView extends StatelessWidget {
   const ProgramsView({super.key});

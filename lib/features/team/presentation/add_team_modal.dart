@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart';
 import 'package:science_cup_app/core/providers/data_state.dart';
-import 'package:science_cup_app/features/program/state/program_notifier.dart';
-import 'package:science_cup_app/features/season/state/season_notifier.dart';
-import 'package:science_cup_app/features/team/state/team_notifier.dart';
+import 'package:science_cup_app/features/program/application/program_notifier.dart';
+import 'package:science_cup_app/features/season/application/season_notifier.dart';
+import 'package:science_cup_app/features/team/application/team_notifier.dart';
 
 import '../../shared/presentation/create_entity_modal.dart';
 
