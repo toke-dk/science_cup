@@ -81,7 +81,7 @@ class SeasonPage extends ConsumerWidget {
             ),
             body: RefreshIndicator(
               onRefresh: () async {
-                await ref.refresh(teamProvider(seasonId).future);
+                ref.invalidate(teamProvider(seasonId));
               },
               child: ConstrainedBox(
                 // Udvider siden så den altid fylder hele skærmen, også når indholdet er lidt
