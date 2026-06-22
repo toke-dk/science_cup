@@ -10,7 +10,7 @@ class AddProgramModal extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return CreateEntityModal(
-      title: 'Opret sæson',
+      title: 'Opret studie',
       fields: [
         FieldConfig.text(
           key: 'name',

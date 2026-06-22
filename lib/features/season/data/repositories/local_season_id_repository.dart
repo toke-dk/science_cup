@@ -1,11 +1,11 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-class ActiveSeasonIdRepository {
-  static const _key = 'active_season_id';
+class LocalSeasonIdRepository {
+  static const _key = 'local_season_id';
 
   final SharedPreferences prefs;
 
-  ActiveSeasonIdRepository(this.prefs);
+  LocalSeasonIdRepository(this.prefs);
 
   Future<int?> load() async {
     final id = prefs.getInt(_key);

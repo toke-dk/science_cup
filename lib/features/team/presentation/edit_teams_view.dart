@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:science_cup_app/features/season/application/active_season/active_season_id_notifier.dart';
+import 'package:science_cup_app/features/season/application/active_season/current_season_provider.dart';
 import 'package:science_cup_app/features/team/application/team_notifier.dart';
 import 'package:science_cup_app/features/team/presentation/add_team_modal.dart';
 
@@ -9,7 +9,7 @@ class EditTeamsView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final seasonId = ref.watch(activeSeasonIdProvider).value;
+    final seasonId = ref.watch(currentSeasonProvider)?.id;
     final teamsState = ref.watch(teamProvider(seasonId));
 
     if (seasonId == null) {

@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 import 'package:science_cup_app/features/auth/application/auth_notifier.dart';
 
-class EmailLoginForm extends StatefulWidget {
+class EmailLoginForm extends ConsumerStatefulWidget {
   const EmailLoginForm({super.key});
 
   @override
-  State<EmailLoginForm> createState() => _EmailLoginFormState();
+  ConsumerState<EmailLoginForm> createState() => _EmailLoginFormState();
 }
 
-class _EmailLoginFormState extends State<EmailLoginForm> {
+class _EmailLoginFormState extends ConsumerState<EmailLoginForm> {
   final _emailController = TextEditingController();
   final _codeController = TextEditingController();
   bool _codeSent = false;
@@ -27,9 +27,9 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
           ),
           ElevatedButton(
             onPressed: () async {
-              await context.read<AuthNotifier>().sendEmailOtp(
-                _emailController.text,
-              );
+              await ref
+                  .read(authProvider.notifier)
+                  .sendEmailOtp(_emailController.text);
               setState(() => _codeSent = true);
             },
             child: const Text('Send kode'),
@@ -42,10 +42,12 @@ class _EmailLoginFormState extends State<EmailLoginForm> {
           ),
           ElevatedButton(
             onPressed: () async {
-              final success = await context.read<AuthNotifier>().verifyEmailOtp(
-                email: _emailController.text,
-                token: _codeController.text,
-              );
+              final success = await ref
+                  .read(authProvider.notifier)
+                  .verifyEmailOtp(
+                    email: _emailController.text,
+                    token: _codeController.text,
+                  );
               if (success && context.mounted) {
                 context.pop();
               }

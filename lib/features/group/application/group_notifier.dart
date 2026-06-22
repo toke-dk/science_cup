@@ -1,7 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:science_cup_app/features/group/application/group_repository_provider.dart';
 import 'package:science_cup_app/features/group/data/group.dart';
-import 'package:science_cup_app/features/season/application/effective_active_season/effective_active_season_provider.dart';
+import 'package:science_cup_app/features/season/application/active_season/current_season_provider.dart';
 
 part 'group_notifier.g.dart';
 
@@ -10,7 +10,7 @@ class GroupNotifier extends _$GroupNotifier {
   @override
   Future<List<Group>> build() async {
     // 1. Reaktiv afhængighed af aktivt seasonId
-    final seasonId = ref.watch(effectiveActiveSeasonProvider)?.id;
+    final seasonId = ref.watch(currentSeasonProvider)?.id;
     if (seasonId == null) return [];
 
     // 2. Hent grupper for denne sæson
@@ -20,7 +20,7 @@ class GroupNotifier extends _$GroupNotifier {
 
   // --- CREATE ---
   Future<void> createGroup({required String name}) async {
-    final seasonId = ref.read(effectiveActiveSeasonProvider)?.id;
+    final seasonId = ref.read(currentSeasonProvider)?.id;
     if (seasonId == null) {
       throw Exception('Ingen aktiv sæson valgt');
     }

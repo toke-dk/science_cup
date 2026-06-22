@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:science_cup_app/features/program/application/program_notifier.dart';
-import 'package:science_cup_app/features/season/application/active_season/active_season_id_notifier.dart';
+import 'package:science_cup_app/features/season/application/active_season/current_season_provider.dart';
 import 'package:science_cup_app/features/team/application/team_notifier.dart';
 
 import '../../shared/presentation/create_entity_modal.dart';
@@ -30,7 +30,7 @@ class AddTeamModal extends ConsumerWidget {
             ),
           ],
           onSubmit: (data) async {
-            final seasonId = ref.read(activeSeasonIdProvider).value;
+            final seasonId = ref.read(currentSeasonProvider)?.id;
             if (seasonId == null) {
               ScaffoldMessenger.of(
                 context,
