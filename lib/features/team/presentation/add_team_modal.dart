@@ -23,7 +23,7 @@ class AddTeamModal extends ConsumerWidget {
           Text("Fejl ved indlæsning af programmer: $error"),
       data: (programs) {
         return CreateEntityModal(
-          title: 'Opret gruppe',
+          title: 'Opret Hold',
           fields: [
             SelectFieldConfig(
               key: "program",
@@ -44,6 +44,7 @@ class AddTeamModal extends ConsumerWidget {
                 label: const Text("Nyt studie"),
               ),
             ),
+            DividerFieldConfig(height: 32, thickness: 1),
           ],
           onSubmit: (data) async {
             final seasonId = ref.read(currentSeasonProvider)?.id;

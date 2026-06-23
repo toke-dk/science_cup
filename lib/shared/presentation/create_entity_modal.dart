@@ -70,7 +70,9 @@ class SelectFieldConfig extends FieldConfig {
 
 // Divider (rent visuel)
 class DividerFieldConfig extends FieldConfig {
-  const DividerFieldConfig({super.group});
+  final double height;
+  final double thickness;
+  const DividerFieldConfig({this.height = 16, this.thickness = 1, super.group});
 }
 
 // Custom Widget
@@ -109,6 +111,7 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
   void initState() {
     super.initState();
     for (final f in widget.fields) {
+      // Initialiser state for hvert felt
       switch (f) {
         case TextFieldConfig(key: final key):
           _textControllers[key] = f.controller ?? TextEditingController();
@@ -177,6 +180,7 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
   }
 
   Widget _buildSingleFieldWidget(FieldConfig f, DateFormat dateFormatter) {
+    // Byg widget baseret på typen af FieldConfig
     return switch (f) {
       TextFieldConfig(:final key, :final label, :final validator) =>
         TextFormField(
@@ -239,7 +243,10 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
           onChanged: (v) => setState(() => _selectValues[key] = v),
           validator: validator,
         ),
-      DividerFieldConfig() => const Divider(height: 32, thickness: 1),
+      DividerFieldConfig(:final height, :final thickness) => Divider(
+        height: height,
+        thickness: thickness,
+      ),
       WidgetFieldConfig(:final child) => child,
     };
   }
@@ -290,6 +297,8 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
     setState(() => _isLoading = true);
 
     final data = <String, dynamic>{};
+
+    // Saml data fra alle felter
     for (final f in widget.fields) {
       switch (f) {
         case TextFieldConfig(:final key):
