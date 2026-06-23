@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:science_cup_app/features/contact/application/contact_repository_provider.dart';
 import 'package:science_cup_app/features/contact/data/models/contact.dart';
@@ -27,8 +28,12 @@ class ContactsNotifier extends _$ContactsNotifier {
       phone: phone,
       profileId: profileId,
     );
+    debugPrint('HER }');
 
     await repo.createContact(request);
+    debugPrint('HER HER}');
+
+    if (!ref.mounted) return;
 
     ref.invalidateSelf();
   }

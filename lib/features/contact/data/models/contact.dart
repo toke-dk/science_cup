@@ -10,8 +10,8 @@ abstract class Contact with _$Contact {
   const factory Contact({
     int? id,
     int? profileId,
-    String? fallbackName,
-    String? fallbackPhone,
+    String? name,
+    String? phone,
     DateTime? createdAt,
     final List<Team>? teams,
   }) = _Contact;

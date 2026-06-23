@@ -144,6 +144,7 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
   final Map<String, TimeOfDay?> _timeValues = {};
   final Map<String, dynamic> _selectValues = {};
   bool _isLoading = false;
+  String? _errorMessage;
 
   @override
   void initState() {
@@ -410,18 +411,18 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
     try {
       await widget.onSubmit(data);
       if (mounted) {
+        Navigator.of(context).pop();
+
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(const SnackBar(content: Text('Oprettet succesfuldt!')));
-        Navigator.of(context).pop();
       }
     } catch (e) {
       setState(() => _isLoading = false);
-      if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Fejl: $e')));
-      }
+      debugPrint('Error in onSubmit: $e');
+      setState(() {
+        _errorMessage = 'Fejl ved oprettelse: $e';
+      });
     }
   }
 
@@ -450,6 +451,16 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      if (_errorMessage != null)
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 12.0),
+                          child: Text(
+                            _errorMessage!,
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.error,
+                            ),
+                          ),
+                        ),
                       Text(
                         widget.title,
                         style: Theme.of(context).textTheme.headlineSmall,
