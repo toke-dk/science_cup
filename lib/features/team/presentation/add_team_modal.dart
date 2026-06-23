@@ -32,17 +32,10 @@ class AddTeamModal extends ConsumerWidget {
               optionLabel: (program) => program.name ?? "?",
               validator: (v) => v == null ? 'Vælg studie' : null,
             ),
-            WidgetFieldConfig(
-              child: FilledButton.tonalIcon(
-                onPressed: () {
-                  showModalBottomSheet(
-                    context: context,
-                    builder: (context) => const AddProgramModal(),
-                  );
-                },
-                icon: const Icon(Icons.add),
-                label: const Text("Nyt studie"),
-              ),
+            OpenBottomSheetFieldConfig(
+              builder: (context) => AddProgramModal(),
+              icon: Icon(Icons.add),
+              label: "Nyt studie",
             ),
             DividerFieldConfig(height: 32, thickness: 1),
           ],

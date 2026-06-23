@@ -75,6 +75,19 @@ class DividerFieldConfig extends FieldConfig {
   const DividerFieldConfig({this.height = 16, this.thickness = 1, super.group});
 }
 
+// OpenBottomSheetFieldConfig (for at åbne en anden modal)
+class OpenBottomSheetFieldConfig extends FieldConfig {
+  final Widget Function(BuildContext context) builder;
+  final Widget? icon;
+  final String? label;
+  const OpenBottomSheetFieldConfig({
+    required this.builder,
+    this.icon,
+    this.label,
+    super.group,
+  });
+}
+
 // Custom Widget
 class WidgetFieldConfig extends FieldConfig {
   final Widget child;
@@ -122,6 +135,9 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
         case SelectFieldConfig(key: final key):
           _selectValues[key] = null;
         case DividerFieldConfig():
+          // ingen state
+          break;
+        case OpenBottomSheetFieldConfig():
           // ingen state
           break;
         case WidgetFieldConfig():
@@ -247,6 +263,15 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
         height: height,
         thickness: thickness,
       ),
+      OpenBottomSheetFieldConfig(:final builder, :final icon, :final label) =>
+        FilledButton.tonalIcon(
+          onPressed: () {
+            showModalBottomSheet(context: context, builder: builder);
+          },
+          icon: icon,
+          label: Text(label ?? ""),
+        ),
+
       WidgetFieldConfig(:final child) => child,
     };
   }
@@ -310,6 +335,9 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
         case SelectFieldConfig(:final key):
           data[key] = _selectValues[key];
         case DividerFieldConfig():
+          // ingen værdi
+          break;
+        case OpenBottomSheetFieldConfig():
           // ingen værdi
           break;
         case WidgetFieldConfig():
