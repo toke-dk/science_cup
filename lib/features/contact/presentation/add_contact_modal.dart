@@ -19,7 +19,7 @@ class AddContactModal extends StatelessWidget {
       ],
       onSubmit: (data) async {
         // data['name'], data['email'], data['phone'] er trimmed Strings
-        debugPrint("Opretter kontakt med data: $data");
+        debugPrint("Opretter kontakt med data: ${data["phone"].runtimeType}");
       },
     );
   }
