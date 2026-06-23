@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:science_cup_app/features/program/application/program_notifier.dart';
 import 'package:science_cup_app/features/program/presentation/add_program_modal.dart';
+import 'package:science_cup_app/shared/presentation/modals/show_create_entity_modal_bottom_sheet.dart';
 
 class ProgramsView extends ConsumerWidget {
   const ProgramsView({super.key});
@@ -21,8 +22,7 @@ class ProgramsView extends ConsumerWidget {
                 Spacer(),
                 FilledButton.icon(
                   onPressed: () {
-                    showModalBottomSheet(
-                      isScrollControlled: true,
+                    showCreateEntityModalBottomSheet(
                       context: context,
                       builder: (context) {
                         return AddProgramModal();

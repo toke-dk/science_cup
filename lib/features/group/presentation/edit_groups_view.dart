@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:science_cup_app/features/group/presentation/add_group_modal.dart';
+import 'package:science_cup_app/shared/presentation/modals/show_create_entity_modal_bottom_sheet.dart';
 
 import '../application/group_notifier.dart';
 
@@ -23,8 +24,7 @@ class EditGroupsView extends ConsumerWidget {
               Spacer(),
               FilledButton.icon(
                 onPressed: () {
-                  showModalBottomSheet(
-                    isScrollControlled: true,
+                  showCreateEntityModalBottomSheet(
                     context: context,
                     builder: (context) {
                       return AddGroupModal();

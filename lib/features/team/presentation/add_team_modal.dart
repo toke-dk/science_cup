@@ -6,7 +6,7 @@ import 'package:science_cup_app/features/program/presentation/add_program_modal.
 import 'package:science_cup_app/features/season/application/active_season/current_season_provider.dart';
 import 'package:science_cup_app/features/team/application/team_notifier.dart';
 
-import '../../../shared/presentation/create_entity_modal.dart';
+import '../../../shared/presentation/modals/create_entity_modal.dart';
 
 class AddTeamModal extends ConsumerWidget {
   const AddTeamModal({super.key});

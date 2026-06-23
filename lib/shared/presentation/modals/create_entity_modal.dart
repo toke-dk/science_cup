@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:phone_form_field/phone_form_field.dart';
+import 'package:science_cup_app/shared/presentation/modals/show_create_entity_modal_bottom_sheet.dart';
 
 sealed class FieldConfig {
   final String? group;
@@ -299,11 +300,9 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
       OpenBottomSheetFieldConfig(:final builder, :final icon, :final label) =>
         FilledButton.tonalIcon(
           onPressed: () {
-            showModalBottomSheet(
+            showCreateEntityModalBottomSheet(
               context: context,
               builder: builder,
-              // For at sikre, at modal kan scrolle, når tastaturet er åbent
-              isScrollControlled: true,
             );
           },
           icon: icon,

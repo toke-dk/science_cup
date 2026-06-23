@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../shared/presentation/create_entity_modal.dart';
+import '../../../shared/presentation/modals/create_entity_modal.dart';
 import '../application/program_notifier.dart';
 
 class AddProgramModal extends ConsumerWidget {

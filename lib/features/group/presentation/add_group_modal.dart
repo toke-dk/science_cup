@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../shared/presentation/create_entity_modal.dart';
+import '../../../shared/presentation/modals/create_entity_modal.dart';
 import '../application/group_notifier.dart';
 
 class AddGroupModal extends ConsumerWidget {

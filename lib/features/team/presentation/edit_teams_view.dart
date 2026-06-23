@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:science_cup_app/features/season/application/active_season/current_season_provider.dart';
 import 'package:science_cup_app/features/team/application/team_notifier.dart';
 import 'package:science_cup_app/features/team/presentation/add_team_modal.dart';
+import 'package:science_cup_app/shared/presentation/modals/show_create_entity_modal_bottom_sheet.dart';
 
 class EditTeamsView extends ConsumerWidget {
   const EditTeamsView({super.key});
@@ -28,8 +29,7 @@ class EditTeamsView extends ConsumerWidget {
               Spacer(),
               FilledButton.icon(
                 onPressed: () {
-                  showModalBottomSheet(
-                    isScrollControlled: true,
+                  showCreateEntityModalBottomSheet(
                     context: context,
                     builder: (context) {
                       return AddTeamModal();

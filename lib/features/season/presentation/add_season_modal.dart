@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:science_cup_app/features/season/application/season/season_notifier.dart';
 
-import '../../../shared/presentation/create_entity_modal.dart';
+import '../../../shared/presentation/modals/create_entity_modal.dart';
 
 class AddSeasonModal extends ConsumerWidget {
   const AddSeasonModal({super.key});

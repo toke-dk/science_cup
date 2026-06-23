@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:science_cup_app/features/auth/data/profile_role.dart';
 import 'package:science_cup_app/features/season/presentation/add_season_modal.dart';
+import 'package:science_cup_app/shared/presentation/modals/show_create_entity_modal_bottom_sheet.dart';
 
 import '../../auth/application/auth_notifier.dart';
 
@@ -29,8 +30,7 @@ class AddSeasonButton extends ConsumerWidget {
   }
 
   void _showAddSeasonDialog(BuildContext context) {
-    showModalBottomSheet(
-      isScrollControlled: true,
+    showCreateEntityModalBottomSheet(
       context: context,
       builder: (context) => AddSeasonModal(),
     );
