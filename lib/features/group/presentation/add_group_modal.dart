@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../shared/presentation/create_entity_modal.dart';
+import '../../../shared/presentation/create_entity_modal.dart';
 import '../application/group_notifier.dart';
 
 class AddGroupModal extends ConsumerWidget {
@@ -12,7 +12,7 @@ class AddGroupModal extends ConsumerWidget {
     return CreateEntityModal(
       title: 'Opret gruppe',
       fields: [
-        FieldConfig.text(
+        TextFieldConfig(
           key: 'name',
           label: 'Gruppenavn',
           validator: (v) => v == null || v.isEmpty ? 'Indtast navn' : null,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../shared/presentation/create_entity_modal.dart';
+import '../../../shared/presentation/create_entity_modal.dart';
 import '../application/program_notifier.dart';
 
 class AddProgramModal extends ConsumerWidget {
@@ -12,12 +12,12 @@ class AddProgramModal extends ConsumerWidget {
     return CreateEntityModal(
       title: 'Opret studie',
       fields: [
-        FieldConfig.text(
+        TextFieldConfig(
           key: 'name',
           label: 'Navn på studie',
           validator: (v) => v == null || v.isEmpty ? 'Indtast navn' : null,
         ),
-        FieldConfig.text(key: "nickName", label: "Kaldenavn (valgfri)"),
+        TextFieldConfig(key: "nickName", label: "Kaldenavn (valgfri)"),
       ],
       onSubmit: (data) async {
         final name = data['name'] as String;

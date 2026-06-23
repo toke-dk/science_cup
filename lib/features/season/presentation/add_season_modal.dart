@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:science_cup_app/features/season/application/season/season_notifier.dart';
 
-import '../../shared/presentation/create_entity_modal.dart';
+import '../../../shared/presentation/create_entity_modal.dart';
 
 class AddSeasonModal extends ConsumerWidget {
   const AddSeasonModal({super.key});
@@ -12,17 +12,17 @@ class AddSeasonModal extends ConsumerWidget {
     return CreateEntityModal(
       title: 'Opret sæson',
       fields: [
-        FieldConfig.text(
+        TextFieldConfig(
           key: 'name',
           label: 'Sæsonnavn (f.eks. SCIENCEcup - Forår yyyy)',
           validator: (v) => v == null || v.isEmpty ? 'Indtast navn' : null,
         ),
-        FieldConfig.date(
+        DateFieldConfig(
           key: 'start',
           label: 'Startdato',
           validator: (v) => null,
         ),
-        FieldConfig.date(key: 'end', label: 'Slutdato', validator: (v) => null),
+        DateFieldConfig(key: 'end', label: 'Slutdato', validator: (v) => null),
       ],
       onSubmit: (data) async {
         // data['start'] and data['end'] are DateTime? (stored as UTC)

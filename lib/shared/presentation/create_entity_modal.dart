@@ -1,66 +1,82 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-/// TODO fieldvalue types to add: divider, text, email, phone number
-enum FieldType { text, date, select, time }
+sealed class FieldConfig {
+  final String? group;
+  const FieldConfig({this.group});
+}
 
-class FieldConfig {
+// Tekstfelt
+class TextFieldConfig extends FieldConfig {
   final String key;
   final String label;
-  final FieldType type;
-  final String? Function(dynamic)? validator;
-
-  // Optional controller for text fields (if you want to reuse externally)
+  final String? Function(String?)? validator;
   final TextEditingController? controller;
 
-  // For select fields
-  final List<dynamic>? options;
-  // Builder to convert an option to display text
-  final String Function(dynamic)? optionLabel;
-
-  // Group id: if multiple fields share same non-null group, they'll be
-  // rendered inline in a single Row (useful for date+time).
-  final String? group;
-
-  FieldConfig.text({
+  const TextFieldConfig({
     required this.key,
     required this.label,
     this.validator,
     this.controller,
-    this.group,
-  }) : type = FieldType.text,
-       options = null,
-       optionLabel = null;
+    super.group,
+  });
+}
 
-  FieldConfig.date({
+// Dato
+class DateFieldConfig extends FieldConfig {
+  final String key;
+  final String label;
+  final String? Function(DateTime?)? validator;
+
+  const DateFieldConfig({
     required this.key,
     required this.label,
     this.validator,
-    this.group,
-  }) : type = FieldType.date,
-       controller = null,
-       options = null,
-       optionLabel = null;
+    super.group,
+  });
+}
 
-  FieldConfig.select({
+// Tidspunkt
+class TimeFieldConfig extends FieldConfig {
+  final String key;
+  final String label;
+  final String? Function(TimeOfDay?)? validator;
+
+  const TimeFieldConfig({
+    required this.key,
+    required this.label,
+    this.validator,
+    super.group,
+  });
+}
+
+// Select / dropdown
+class SelectFieldConfig extends FieldConfig {
+  final String key;
+  final String label;
+  final List<dynamic> options;
+  final String Function(dynamic) optionLabel;
+  final String? Function(dynamic)? validator;
+
+  const SelectFieldConfig({
     required this.key,
     required this.label,
     required this.options,
     required this.optionLabel,
     this.validator,
-    this.group,
-  }) : type = FieldType.select,
-       controller = null;
+    super.group,
+  });
+}
 
-  FieldConfig.time({
-    required this.key,
-    required this.label,
-    this.validator,
-    this.group,
-  }) : type = FieldType.time,
-       controller = null,
-       options = null,
-       optionLabel = null;
+// Divider (rent visuel)
+class DividerFieldConfig extends FieldConfig {
+  const DividerFieldConfig({super.group});
+}
+
+// Custom Widget
+class WidgetFieldConfig extends FieldConfig {
+  final Widget child;
+  const WidgetFieldConfig({required this.child, super.group});
 }
 
 typedef SubmitCallback = Future<void> Function(Map<String, dynamic> data);
@@ -93,14 +109,21 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
   void initState() {
     super.initState();
     for (final f in widget.fields) {
-      if (f.type == FieldType.text) {
-        _textControllers[f.key] = f.controller ?? TextEditingController();
-      } else if (f.type == FieldType.date) {
-        _dateValues[f.key] = null;
-      } else if (f.type == FieldType.time) {
-        _timeValues[f.key] = null;
-      } else if (f.type == FieldType.select) {
-        _selectValues[f.key] = null;
+      switch (f) {
+        case TextFieldConfig(key: final key):
+          _textControllers[key] = f.controller ?? TextEditingController();
+        case DateFieldConfig(key: final key):
+          _dateValues[key] = null;
+        case TimeFieldConfig(key: final key):
+          _timeValues[key] = null;
+        case SelectFieldConfig(key: final key):
+          _selectValues[key] = null;
+        case DividerFieldConfig():
+          // ingen state
+          break;
+        case WidgetFieldConfig():
+          // ingen state
+          break;
       }
     }
   }
@@ -113,7 +136,7 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
       final f = fields[i];
       final group = f.group;
       if (group != null) {
-        // collect consecutive fields with same group
+        // saml sammenhængende felter med samme gruppe
         final groupItems = <FieldConfig>[];
         int j = i;
         while (j < fields.length && fields[j].group == group) {
@@ -140,7 +163,7 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
         continue;
       }
 
-      // single full-width field
+      // enkelt fuld-bredde felt
       widgets.add(
         Padding(
           padding: const EdgeInsets.only(bottom: 12.0),
@@ -154,63 +177,71 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
   }
 
   Widget _buildSingleFieldWidget(FieldConfig f, DateFormat dateFormatter) {
-    switch (f.type) {
-      case FieldType.text:
-        return TextFormField(
-          controller: _textControllers[f.key],
+    return switch (f) {
+      TextFieldConfig(:final key, :final label, :final validator) =>
+        TextFormField(
+          controller: _textControllers[key],
           decoration: InputDecoration(
-            labelText: f.label,
+            labelText: label,
             border: const OutlineInputBorder(),
           ),
-          validator: f.validator,
-        );
-      case FieldType.date:
-        final date = _dateValues[f.key];
-        return ListTile(
-          title: Text(f.label),
-          subtitle: Text(
-            date == null ? 'Vælg dato' : dateFormatter.format(date.toLocal()),
-          ),
-          trailing: const Icon(Icons.calendar_today),
-          shape: RoundedRectangleBorder(
-            side: const BorderSide(color: Colors.grey),
-            borderRadius: BorderRadius.circular(4),
-          ),
-          onTap: () => _selectDate(context, f.key),
-        );
-      case FieldType.time:
-        final tod = _timeValues[f.key];
-        return ListTile(
-          title: Text(f.label),
-          subtitle: Text(tod == null ? 'Vælg tid' : tod.format(context)),
-          trailing: const Icon(Icons.access_time),
-          shape: RoundedRectangleBorder(
-            side: const BorderSide(color: Colors.grey),
-            borderRadius: BorderRadius.circular(4),
-          ),
-          onTap: () => _selectTime(context, f.key),
-        );
-      case FieldType.select:
-        final options = f.options ?? <dynamic>[];
-        final labeler = f.optionLabel ?? (o) => o?.toString() ?? '';
-        return DropdownButtonFormField<dynamic>(
-          initialValue: _selectValues[f.key],
+          validator: validator,
+        ),
+      DateFieldConfig(:final key, :final label) => ListTile(
+        title: Text(label),
+        subtitle: Text(
+          _dateValues[key] == null
+              ? 'Vælg dato'
+              : dateFormatter.format(_dateValues[key]!.toLocal()),
+        ),
+        trailing: const Icon(Icons.calendar_today),
+        shape: RoundedRectangleBorder(
+          side: const BorderSide(color: Colors.grey),
+          borderRadius: BorderRadius.circular(4),
+        ),
+        onTap: () => _selectDate(context, key),
+      ),
+      TimeFieldConfig(:final key, :final label) => ListTile(
+        title: Text(label),
+        subtitle: Text(
+          _timeValues[key] == null
+              ? 'Vælg tid'
+              : _timeValues[key]!.format(context),
+        ),
+        trailing: const Icon(Icons.access_time),
+        shape: RoundedRectangleBorder(
+          side: const BorderSide(color: Colors.grey),
+          borderRadius: BorderRadius.circular(4),
+        ),
+        onTap: () => _selectTime(context, key),
+      ),
+      SelectFieldConfig(
+        :final key,
+        :final label,
+        :final options,
+        :final optionLabel,
+        :final validator,
+      ) =>
+        DropdownButtonFormField<dynamic>(
+          initialValue: _selectValues[key],
           decoration: InputDecoration(
-            labelText: f.label,
+            labelText: label,
             border: const OutlineInputBorder(),
           ),
           items: options
               .map(
                 (o) => DropdownMenuItem<dynamic>(
                   value: o,
-                  child: Text(labeler(o)),
+                  child: Text(optionLabel(o)),
                 ),
               )
               .toList(),
-          onChanged: (v) => setState(() => _selectValues[f.key] = v),
-          validator: f.validator,
-        );
-    }
+          onChanged: (v) => setState(() => _selectValues[key] = v),
+          validator: validator,
+        ),
+      DividerFieldConfig() => const Divider(height: 32, thickness: 1),
+      WidgetFieldConfig(:final child) => child,
+    };
   }
 
   @override
@@ -229,7 +260,6 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
       lastDate: DateTime(2100),
       locale: const Locale('da'),
     );
-
     if (picked != null) {
       setState(() {
         _dateValues[key] = DateTime.utc(picked.year, picked.month, picked.day);
@@ -242,7 +272,6 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
       context: context,
       initialTime: TimeOfDay.now(),
     );
-
     if (picked != null) {
       setState(() {
         _timeValues[key] = picked;
@@ -262,14 +291,21 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
 
     final data = <String, dynamic>{};
     for (final f in widget.fields) {
-      if (f.type == FieldType.text) {
-        data[f.key] = _textControllers[f.key]!.text.trim();
-      } else if (f.type == FieldType.date) {
-        data[f.key] = _dateValues[f.key];
-      } else if (f.type == FieldType.time) {
-        data[f.key] = _timeValues[f.key];
-      } else if (f.type == FieldType.select) {
-        data[f.key] = _selectValues[f.key];
+      switch (f) {
+        case TextFieldConfig(:final key):
+          data[key] = _textControllers[key]!.text.trim();
+        case DateFieldConfig(:final key):
+          data[key] = _dateValues[key];
+        case TimeFieldConfig(:final key):
+          data[key] = _timeValues[key];
+        case SelectFieldConfig(:final key):
+          data[key] = _selectValues[key];
+        case DividerFieldConfig():
+          // ingen værdi
+          break;
+        case WidgetFieldConfig():
+          // ingen værdi
+          break;
       }
     }
 
@@ -294,10 +330,9 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
   @override
   Widget build(BuildContext context) {
     final dateFormatter = DateFormat.yMMMd('da_DK');
-
     return _isLoading
-        ? Padding(
-            padding: const EdgeInsets.all(32.0),
+        ? const Padding(
+            padding: EdgeInsets.all(32.0),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [Center(child: CircularProgressIndicator())],
@@ -327,9 +362,7 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
                           Expanded(
                             flex: 1,
                             child: TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
+                              onPressed: () => Navigator.of(context).pop(),
                               style: ElevatedButton.styleFrom(
                                 padding: const EdgeInsets.symmetric(
                                   vertical: 16,
