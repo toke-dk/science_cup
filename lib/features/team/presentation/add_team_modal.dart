@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:science_cup_app/features/contact/presentation/add_contact_modal.dart';
 import 'package:science_cup_app/features/program/application/program_notifier.dart';
 import 'package:science_cup_app/features/program/presentation/add_program_modal.dart';
 import 'package:science_cup_app/features/season/application/active_season/current_season_provider.dart';
@@ -17,7 +18,13 @@ class AddTeamModal extends ConsumerWidget {
     return programState.when(
       loading: () {
         debugPrint("Loading programs for add team modal");
-        return CircularProgressIndicator();
+        return const Padding(
+          padding: EdgeInsets.all(32.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [Center(child: CircularProgressIndicator())],
+          ),
+        );
       },
       error: (error, stacktrace) =>
           Text("Fejl ved indlæsning af programmer: $error"),
@@ -39,6 +46,11 @@ class AddTeamModal extends ConsumerWidget {
             ),
             DividerFieldConfig(height: 32, thickness: 1),
             TextConfig(label: 'Kontakter'),
+            OpenBottomSheetFieldConfig(
+              builder: (context) => AddContactModal(),
+              icon: Icon(Icons.add),
+              label: "Ny kontakt",
+            ),
           ],
           onSubmit: (data) async {
             final seasonId = ref.read(currentSeasonProvider)?.id;

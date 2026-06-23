@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:phone_form_field/phone_form_field.dart';
 
 sealed class FieldConfig {
   final String? group;
@@ -100,6 +101,22 @@ class TextConfig extends FieldConfig {
   const TextConfig({required this.label, super.group});
 }
 
+// For inputting phone numbers
+class PhoneFieldConfig extends FieldConfig {
+  final String key;
+  final String label;
+  final bool? required;
+  final PhoneController? controller;
+
+  const PhoneFieldConfig({
+    required this.key,
+    required this.label,
+    this.required = false,
+    this.controller,
+    super.group,
+  });
+}
+
 typedef SubmitCallback = Future<void> Function(Map<String, dynamic> data);
 
 class CreateEntityModal extends StatefulWidget {
@@ -121,6 +138,7 @@ class CreateEntityModal extends StatefulWidget {
 class _CreateEntityModalState extends State<CreateEntityModal> {
   final _formKey = GlobalKey<FormState>();
   final Map<String, TextEditingController> _textControllers = {};
+  final Map<String, PhoneController> _phoneControllers = {};
   final Map<String, DateTime?> _dateValues = {};
   final Map<String, TimeOfDay?> _timeValues = {};
   final Map<String, dynamic> _selectValues = {};
@@ -134,6 +152,12 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
       switch (f) {
         case TextFieldConfig(key: final key):
           _textControllers[key] = f.controller ?? TextEditingController();
+        case PhoneFieldConfig(key: final key):
+          _phoneControllers[key] =
+              f.controller ??
+              PhoneController(
+                initialValue: PhoneNumber(isoCode: IsoCode.DK, nsn: ''),
+              );
         case DateFieldConfig(key: final key):
           _dateValues[key] = null;
         case TimeFieldConfig(key: final key):
@@ -275,17 +299,36 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
       OpenBottomSheetFieldConfig(:final builder, :final icon, :final label) =>
         FilledButton.tonalIcon(
           onPressed: () {
-            showModalBottomSheet(context: context, builder: builder);
+            showModalBottomSheet(
+              context: context,
+              builder: builder,
+              // For at sikre, at modal kan scrolle, når tastaturet er åbent
+              isScrollControlled: true,
+            );
           },
           icon: icon,
           label: Text(label ?? ""),
         ),
 
       WidgetFieldConfig(:final child) => child,
-      // TODO: Handle this case.
       TextConfig(:final label) => Text(
         label.toUpperCase(),
         style: Theme.of(context).textTheme.bodyLarge,
+      ),
+      PhoneFieldConfig() => PhoneFormField(
+        controller: _phoneControllers[f.key],
+        decoration: InputDecoration(
+          labelText: f.label,
+          border: const OutlineInputBorder(),
+        ),
+        validator: PhoneValidator.compose([
+          if (f.required == true)
+            PhoneValidator.required(
+              context,
+              errorText: 'Indtast telefonnummer',
+            ),
+          PhoneValidator.valid(context, errorText: 'Ugyldigt telefonnummer'),
+        ]),
       ),
     };
   }
@@ -360,6 +403,8 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
         case TextConfig():
           // ingen værdi
           break;
+        case PhoneFieldConfig():
+          data[f.key] = _phoneControllers[f.key]?.value;
       }
     }
 
@@ -392,7 +437,9 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
               children: [Center(child: CircularProgressIndicator())],
             ),
           )
-        : Padding(
+        : AnimatedPadding(
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.easeOut,
             padding: EdgeInsets.only(
               bottom: MediaQuery.of(context).viewInsets.bottom,
             ),
@@ -401,8 +448,8 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
                 padding: const EdgeInsets.all(16.0),
                 child: Form(
                   key: _formKey,
-                  child: ListView(
-                    shrinkWrap: true,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         widget.title,
