@@ -94,6 +94,12 @@ class WidgetFieldConfig extends FieldConfig {
   const WidgetFieldConfig({required this.child, super.group});
 }
 
+// Text widget (as a subtitle for example)
+class TextConfig extends FieldConfig {
+  final String label;
+  const TextConfig({required this.label, super.group});
+}
+
 typedef SubmitCallback = Future<void> Function(Map<String, dynamic> data);
 
 class CreateEntityModal extends StatefulWidget {
@@ -141,6 +147,9 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
           // ingen state
           break;
         case WidgetFieldConfig():
+          // ingen state
+          break;
+        case TextConfig():
           // ingen state
           break;
       }
@@ -273,6 +282,11 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
         ),
 
       WidgetFieldConfig(:final child) => child,
+      // TODO: Handle this case.
+      TextConfig(:final label) => Text(
+        label.toUpperCase(),
+        style: Theme.of(context).textTheme.bodyLarge,
+      ),
     };
   }
 
@@ -341,6 +355,9 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
           // ingen værdi
           break;
         case WidgetFieldConfig():
+          // ingen værdi
+          break;
+        case TextConfig():
           // ingen værdi
           break;
       }

@@ -38,6 +38,7 @@ class AddTeamModal extends ConsumerWidget {
               label: "Nyt studie",
             ),
             DividerFieldConfig(height: 32, thickness: 1),
+            TextConfig(label: 'Kontakter'),
           ],
           onSubmit: (data) async {
             final seasonId = ref.read(currentSeasonProvider)?.id;
