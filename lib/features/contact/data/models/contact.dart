@@ -1,5 +1,4 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:phone_numbers_parser/phone_numbers_parser.dart';
 
 part 'contact.freezed.dart';
 part 'contact.g.dart';
