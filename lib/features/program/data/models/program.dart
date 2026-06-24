@@ -1,7 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'program.freezed.dart';
-
 part 'program.g.dart';
 
 /// A program is a "studieretning" and are responsible for multiple teams. A team can only be in one program, but a program can have multiple teams.

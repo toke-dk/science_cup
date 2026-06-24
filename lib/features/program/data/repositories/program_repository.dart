@@ -1,4 +1,5 @@
-import 'package:science_cup_app/features/program/data/program.dart';
+import 'package:science_cup_app/features/program/data/models/program.dart';
+import 'package:science_cup_app/features/program/data/models/program_write_request.dart';
 import 'package:supabase/supabase.dart';
 
 class ProgramRepository {
@@ -6,7 +7,7 @@ class ProgramRepository {
 
   ProgramRepository({required SupabaseClient supabase}) : _supabase = supabase;
 
-  Future<Program> createProgram(Program program) async {
+  Future<Program> createProgram(ProgramWriteRequest program) async {
     try {
       final jsonToSend = program.toJson();
 
@@ -34,7 +35,8 @@ class ProgramRepository {
       throw Exception('Kunne ikke hente programmer: $e');
     }
   }
-  Future<Program> updateProgram(Program program) async {
+
+  Future<Program> updateProgram(ProgramWriteRequest program) async {
     if (program.id == null) {
       throw Exception('Program ID er påkrævet for at opdatere.');
     }
@@ -52,7 +54,7 @@ class ProgramRepository {
     }
   }
 
-  Future<void> deleteProgram(String id) async {
+  Future<void> deleteProgram(int id) async {
     try {
       await _supabase.from('programs').delete().eq('id', id);
     } catch (e) {

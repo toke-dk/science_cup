@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:science_cup_app/features/program/application/program_notifier.dart';
-import 'package:science_cup_app/features/program/presentation/add_program_modal.dart';
+import 'package:science_cup_app/features/program/presentation/display_program.dart';
+import 'package:science_cup_app/features/program/presentation/save_program_modal.dart';
 import 'package:science_cup_app/shared/presentation/modals/show_create_entity_modal_bottom_sheet.dart';
 
 class ProgramsView extends ConsumerWidget {
@@ -12,7 +13,7 @@ class ProgramsView extends ConsumerWidget {
     final programsState = ref.watch(programProvider);
 
     return programsState.when(
-      loading: () => CircularProgressIndicator(),
+      loading: () => Center(child: CircularProgressIndicator()),
       data: (programs) {
         return Column(
           children: [
@@ -25,7 +26,7 @@ class ProgramsView extends ConsumerWidget {
                     showCreateEntityModalBottomSheet(
                       context: context,
                       builder: (context) {
-                        return AddProgramModal();
+                        return SaveProgramModal();
                       },
                     );
                   },
@@ -34,9 +35,37 @@ class ProgramsView extends ConsumerWidget {
                 ),
               ],
             ),
-            ListView(
-              shrinkWrap: true,
-              children: programs.map((p) => Text(p.name ?? "?")).toList(),
+            Column(
+              children: programs
+                  .map(
+                    (p) => DisplayProgram(
+                      program: p,
+                      onEdit: () {
+                        showCreateEntityModalBottomSheet(
+                          context: context,
+                          builder: (context) {
+                            return SaveProgramModal(initialProgram: p);
+                          },
+                        );
+                      },
+                      onDelete: (confirmed) {
+                        if (!confirmed) return;
+                        if (p.id == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                "Programmet har ikke et ID, og kan derfor ikke slettes. Kontakt support.",
+                              ),
+                            ),
+                          );
+                          return;
+                        }
+
+                        ref.read(programProvider.notifier).deleteProgram(p.id!);
+                      },
+                    ),
+                  )
+                  .toList(),
             ),
           ],
         );

@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:science_cup_app/features/contact/application/contacts_notifier.dart';
 import 'package:science_cup_app/features/contact/presentation/add_contact_modal.dart';
 import 'package:science_cup_app/features/program/application/program_notifier.dart';
-import 'package:science_cup_app/features/program/presentation/add_program_modal.dart';
+import 'package:science_cup_app/features/program/presentation/save_program_modal.dart';
 import 'package:science_cup_app/features/season/application/active_season/current_season_provider.dart';
 import 'package:science_cup_app/features/team/application/team_notifier.dart';
 
@@ -29,7 +29,13 @@ class _AddTeamModalState extends ConsumerState<AddTeamModal> {
     final hasError = programState.hasError || contactsState.hasError;
 
     if (isLoading) {
-      return Center(child: CircularProgressIndicator());
+      return Padding(
+        padding: EdgeInsets.all(32.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [Center(child: CircularProgressIndicator())],
+        ),
+      );
     }
 
     if (hasError) {
@@ -51,7 +57,7 @@ class _AddTeamModalState extends ConsumerState<AddTeamModal> {
           validator: (v) => v == null ? 'Vælg studie' : null,
         ),
         OpenBottomSheetFieldConfig(
-          builder: (context) => AddProgramModal(),
+          builder: (context) => SaveProgramModal(),
           icon: Icon(Icons.add),
           label: "Nyt studie",
         ),
