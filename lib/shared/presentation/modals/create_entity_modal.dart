@@ -461,6 +461,7 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
                 child: Form(
                   key: _formKey,
                   child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       if (_errorMessage != null)
