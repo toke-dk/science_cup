@@ -9,6 +9,8 @@ class ContactRepository {
 
   ContactRepository({required SupabaseClient supabase}) : _supabase = supabase;
 
+  // TODO Contact with teams. (Lav to nye repositories)
+
   /// Opretter en ny kontakt
   Future<Contact> createContact(ContactCreateRequest request) async {
     try {

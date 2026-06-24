@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:science_cup_app/features/contact/presentation/edit_contacts_page.dart';
 import 'package:science_cup_app/features/group/presentation/edit_groups_view.dart';
 import 'package:science_cup_app/features/program/presentation/edit_programs_view.dart';
 import 'package:science_cup_app/features/team/presentation/edit_teams_view.dart';
@@ -32,6 +33,11 @@ class _AdminSeasonViewState extends State<AdminSeasonView> {
       label: Text("Studier"),
       icon: Icon(Icons.school),
     ),
+    ButtonSegment(
+      value: "contacts",
+      label: Text("Kontakter"),
+      icon: Icon(Icons.contact_page_rounded),
+    ),
   ];
 
   late ButtonSegment _selectedAdminSegment = _adminSegments.first;
@@ -61,6 +67,7 @@ class _AdminSeasonViewState extends State<AdminSeasonView> {
           "groups" => EditGroupsView(),
           "teams" => EditTeamsView(),
           "programs" => ProgramsView(),
+          "contacts" => EditContactsView(),
           _ => SizedBox.shrink(),
         },
       ],

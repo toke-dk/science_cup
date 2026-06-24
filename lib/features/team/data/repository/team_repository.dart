@@ -6,6 +6,8 @@ class TeamRepository {
 
   TeamRepository({required SupabaseClient supabase}) : _supabase = supabase;
 
+  // TODO Team with contacts.
+
   Future<Team> createTeam(Team team) async {
     try {
       final jsonToSend = team.toJson();
