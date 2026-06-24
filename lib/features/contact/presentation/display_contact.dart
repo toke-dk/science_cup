@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:science_cup_app/features/contact/data/models/contact.dart';
-import 'package:science_cup_app/shared/presentation/widgets/confirmation_dialog.dart';
+import 'package:science_cup_app/shared/presentation/widgets/confirmation_dialog/confirmation_fields.dart';
+import 'package:science_cup_app/shared/presentation/widgets/edit_delete_menu.dart';
 import 'package:science_cup_app/shared/presentation/widgets/phone_dial_tile.dart';
 
 class DisplayContact extends StatelessWidget {
@@ -35,39 +36,15 @@ class DisplayContact extends StatelessWidget {
             ],
           ),
         ),
-        PopupMenuButton<String>(
-          icon: const Icon(Icons.more_vert),
-          onSelected: (value) async {
-            switch (value) {
-              case 'edit':
-                onEdit?.call();
-              case 'delete':
-                final confirmed = await showDialog<bool>(
-                  context: context,
-                  builder: (context) => ConfirmationDialog(
-                    title: "Slet kontakt",
-                    content:
-                        "Er du sikker på, at du vil slette kontakten, '${contact.name}'?",
-                    confirmButtonText: "Slet",
-                  ),
-                );
-
-                onDelete?.call(confirmed ?? false);
-            }
-          },
-          itemBuilder: (context) => const [
-            PopupMenuItem(
-              value: 'edit',
-              child: ListTile(
-                leading: Icon(Icons.edit),
-                title: Text("Rediger"),
-              ),
-            ),
-            PopupMenuItem(
-              value: 'delete',
-              child: ListTile(leading: Icon(Icons.delete), title: Text("Slet")),
-            ),
-          ],
+        EditDeleteMenu(
+          onEdit: onEdit,
+          onDelete: onDelete,
+          confirmationFields: ConfirmationFields(
+            title: "Slet kontakt",
+            content:
+                "Er du sikker på, at du vil slette kontakten, '${contact.name}'?",
+            confirmButtonText: "Slet",
+          ),
         ),
       ],
     );
