@@ -1,8 +1,7 @@
 import 'package:science_cup_app/features/contact/data/models/contact.dart';
-import 'package:science_cup_app/features/contact/data/models/contact_update_request.dart';
 import 'package:supabase/supabase.dart';
 
-import '../models/contact_create_request.dart';
+import '../models/contact_write_request.dart';
 
 class ContactRepository {
   final SupabaseClient _supabase;
@@ -12,7 +11,7 @@ class ContactRepository {
   // TODO Contact with teams. (Lav to nye repositories)
 
   /// Opretter en ny kontakt
-  Future<Contact> createContact(ContactCreateRequest request) async {
+  Future<Contact> createContact(ContactWriteRequest request) async {
     try {
       final response = await _supabase
           .from('contacts')
@@ -43,12 +42,12 @@ class ContactRepository {
   /// Opdaterer en eksisterende kontakt
   Future<Contact> updateContact(
     int id,
-    ContactUpdateRequest updateRequest,
+    ContactWriteRequest writeRequest,
   ) async {
     try {
       final response = await _supabase
           .from('contacts')
-          .update(updateRequest.toJson())
+          .update(writeRequest.toJson())
           .eq('id', id)
           .select()
           .single();

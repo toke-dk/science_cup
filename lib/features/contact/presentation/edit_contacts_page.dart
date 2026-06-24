@@ -42,7 +42,57 @@ class EditContactsView extends ConsumerWidget {
                 .map(
                   (c) => Padding(
                     padding: const EdgeInsets.only(bottom: 24.0),
-                    child: DisplayContact(contact: c),
+                    child: DisplayContact(
+                      contact: c,
+                      onEdit: () {
+                        showCreateEntityModalBottomSheet(
+                          context: context,
+                          builder: (context) {
+                            return AddContactModal(contact: c);
+                          },
+                        );
+                      },
+                      onDelete: () async {
+                        if (c.id == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                "Kan ikke slette kontakt uden ID. Kontakt support.",
+                              ),
+                            ),
+                          );
+                          return;
+                        }
+
+                        final confirmed = await showDialog<bool>(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: Text("Slet kontakt"),
+                            content: Text(
+                              "Er du sikker på, at du vil slette kontakten '${c.name}'?",
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () =>
+                                    Navigator.of(context).pop(false),
+                                child: Text("Annuller"),
+                              ),
+                              FilledButton(
+                                onPressed: () =>
+                                    Navigator.of(context).pop(true),
+                                child: Text("Slet"),
+                              ),
+                            ],
+                          ),
+                        );
+
+                        if (confirmed == true) {
+                          await ref
+                              .read(contactsProvider.notifier)
+                              .deleteContact(c.id!);
+                        }
+                      },
+                    ),
                   ),
                 )
                 .toList(),

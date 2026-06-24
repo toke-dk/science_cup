@@ -12,12 +12,14 @@ sealed class FieldConfig {
 class TextFieldConfig extends FieldConfig {
   final String key;
   final String label;
+  final String? initialValue;
   final String? Function(String?)? validator;
   final TextEditingController? controller;
 
   const TextFieldConfig({
     required this.key,
     required this.label,
+    this.initialValue,
     this.validator,
     this.controller,
     super.group,
@@ -29,11 +31,13 @@ class DateFieldConfig extends FieldConfig {
   final String key;
   final String label;
   final String? Function(DateTime?)? validator;
+  final DateTime? initialValue;
 
   const DateFieldConfig({
     required this.key,
     required this.label,
     this.validator,
+    this.initialValue,
     super.group,
   });
 }
@@ -43,11 +47,13 @@ class TimeFieldConfig extends FieldConfig {
   final String key;
   final String label;
   final String? Function(TimeOfDay?)? validator;
+  final TimeOfDay? initialValue;
 
   const TimeFieldConfig({
     required this.key,
     required this.label,
     this.validator,
+    this.initialValue,
     super.group,
   });
 }
@@ -59,6 +65,7 @@ class SelectFieldConfig extends FieldConfig {
   final List<dynamic> options;
   final String Function(dynamic) optionLabel;
   final String? Function(dynamic)? validator;
+  final dynamic initialValue;
 
   const SelectFieldConfig({
     required this.key,
@@ -66,6 +73,7 @@ class SelectFieldConfig extends FieldConfig {
     required this.options,
     required this.optionLabel,
     this.validator,
+    this.initialValue,
     super.group,
   });
 }
@@ -108,12 +116,14 @@ class PhoneFieldConfig extends FieldConfig {
   final String label;
   final bool? required;
   final PhoneController? controller;
+  final PhoneNumber? initialValue;
 
   const PhoneFieldConfig({
     required this.key,
     required this.label,
     this.required = false,
     this.controller,
+    this.initialValue,
     super.group,
   });
 }
@@ -153,19 +163,21 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
       // Initialiser state for hvert felt
       switch (f) {
         case TextFieldConfig(key: final key):
-          _textControllers[key] = f.controller ?? TextEditingController();
+          _textControllers[key] =
+              f.controller ?? TextEditingController(text: f.initialValue);
         case PhoneFieldConfig(key: final key):
           _phoneControllers[key] =
               f.controller ??
               PhoneController(
-                initialValue: PhoneNumber(isoCode: IsoCode.DK, nsn: ''),
+                initialValue:
+                    f.initialValue ?? PhoneNumber(isoCode: IsoCode.DK, nsn: ''),
               );
         case DateFieldConfig(key: final key):
-          _dateValues[key] = null;
+          _dateValues[key] = f.initialValue;
         case TimeFieldConfig(key: final key):
-          _timeValues[key] = null;
+          _timeValues[key] = f.initialValue;
         case SelectFieldConfig(key: final key):
-          _selectValues[key] = null;
+          _selectValues[key] = f.initialValue;
         case DividerFieldConfig():
           // ingen state
           break;

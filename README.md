@@ -1,7 +1,19 @@
 # SCIENCEcup - software
+
 Software for the official UCPH football league
 
+# Remote
+
+Hvis du kører supabase remote og laver ændringer i tabellerne der kan du køre
+
+```bash
+supabase db pull
+```
+
+mens du har docker kørende
+
 ## Starting the backend
+
 To start the backend, navigate to the `backend` directory and run the following command while having a docker daemon running:
 
 ```bash
@@ -15,11 +27,13 @@ supabase status
 ```
 
 ## Migrating the database
+
 After making changes to the database schema, you can run the following command in the `backend` directory to apply the migrations:
 
 ```bash
 supabase db diff -f name_your_change
 ```
+
 and a migration file will be created in the `backend/supabase/migrations` directory.
 
 To restore the database to a previous state, you can run the following command in the `backend` directory:
@@ -29,10 +43,13 @@ supabase db reset
 ```
 
 ## Building models with freezed
+
 To build the models with freezed, run the following command in the root directory of the project:
+
 ```bash
 flutter pub run build_runner build --delete-conflicting-outputs
 ```
+
 make sure to have a file with the structure of the model you want to build in the `lib/models` directory and to annotate it with `@freezed` and to have a factory constructor that returns a private class that extends the model class. For example:
 
 ```dart

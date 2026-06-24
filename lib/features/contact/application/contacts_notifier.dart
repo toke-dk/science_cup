@@ -1,9 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:science_cup_app/features/contact/application/contact_repository_provider.dart';
 import 'package:science_cup_app/features/contact/data/models/contact.dart';
-import 'package:science_cup_app/features/contact/data/models/contact_create_request.dart';
-import 'package:science_cup_app/features/contact/data/models/contact_update_request.dart';
+import 'package:science_cup_app/features/contact/data/models/contact_write_request.dart';
 
 part 'contacts_notifier.g.dart';
 
@@ -15,37 +13,29 @@ class ContactsNotifier extends _$ContactsNotifier {
     return repo.getContacts();
   }
 
-  // CREATE
-  Future<void> createContact({
+  // CREATE hvis eksisterer ellers UPDATE
+  Future<void> saveContact({
+    int? contactId,
     required String name,
     required String phone,
     int? profileId,
   }) async {
     final repo = ref.read(contactRepositoryProvider);
-
-    final request = ContactCreateRequest(
+    final request = ContactWriteRequest(
       name: name,
       phone: phone,
       profileId: profileId,
     );
-    debugPrint('HER }');
 
-    await repo.createContact(request);
-    debugPrint('HER HER}');
+    if (contactId != null) {
+      print("Updating contact with id: $contactId");
+      await repo.updateContact(contactId, request);
+    } else {
+      print("Creating new contact");
+      await repo.createContact(request);
+    }
 
     if (!ref.mounted) return;
-
-    ref.invalidateSelf();
-  }
-
-  // UPDATE
-  Future<void> updateContact({
-    required int id,
-    required ContactUpdateRequest request,
-  }) async {
-    final repo = ref.read(contactRepositoryProvider);
-
-    await repo.updateContact(id, request);
 
     ref.invalidateSelf();
   }
