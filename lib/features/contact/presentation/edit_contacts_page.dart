@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:science_cup_app/features/contact/application/contacts_notifier.dart';
 import 'package:science_cup_app/features/contact/presentation/add_contact_modal.dart';
+import 'package:science_cup_app/features/contact/presentation/display_contact.dart';
 import 'package:science_cup_app/shared/presentation/modals/show_create_entity_modal_bottom_sheet.dart';
 
 class EditContactsView extends ConsumerWidget {
@@ -38,7 +39,12 @@ class EditContactsView extends ConsumerWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: contacts
-                .map((c) => ListTile(title: Text(c.name ?? "Ingen navn")))
+                .map(
+                  (c) => Padding(
+                    padding: const EdgeInsets.only(bottom: 24.0),
+                    child: DisplayContact(contact: c),
+                  ),
+                )
                 .toList(),
           ),
         ],
