@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:science_cup_app/features/contact/data/models/contact.dart';
-import 'package:science_cup_app/features/contact/presentation/extensions/contact_phone_ui_extension.dart';
+import 'package:science_cup_app/shared/presentation/widgets/phone_dial_tile.dart';
 
 class DisplayContact extends StatelessWidget {
   const DisplayContact({super.key, required this.contact});
@@ -16,7 +16,7 @@ class DisplayContact extends StatelessWidget {
 
         _LabelIconText(
           icon: Icons.phone,
-          child: contact.displayPhoneWithCopyButton(context),
+          child: PhoneDialTile(rawPhone: contact.phone),
         ),
       ],
     );
