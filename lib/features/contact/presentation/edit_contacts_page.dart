@@ -52,7 +52,9 @@ class EditContactsView extends ConsumerWidget {
                           },
                         );
                       },
-                      onDelete: () async {
+                      onDelete: (confirmed) async {
+                        if (!confirmed) return;
+
                         if (c.id == null) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
@@ -63,28 +65,6 @@ class EditContactsView extends ConsumerWidget {
                           );
                           return;
                         }
-
-                        final confirmed = await showDialog<bool>(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            title: Text("Slet kontakt"),
-                            content: Text(
-                              "Er du sikker på, at du vil slette kontakten '${c.name}'?",
-                            ),
-                            actions: [
-                              TextButton(
-                                onPressed: () =>
-                                    Navigator.of(context).pop(false),
-                                child: Text("Annuller"),
-                              ),
-                              FilledButton(
-                                onPressed: () =>
-                                    Navigator.of(context).pop(true),
-                                child: Text("Slet"),
-                              ),
-                            ],
-                          ),
-                        );
 
                         if (confirmed == true) {
                           await ref

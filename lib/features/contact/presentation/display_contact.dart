@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:science_cup_app/features/contact/data/models/contact.dart';
+import 'package:science_cup_app/shared/presentation/widgets/confirmation_dialog.dart';
 import 'package:science_cup_app/shared/presentation/widgets/phone_dial_tile.dart';
 
 class DisplayContact extends StatelessWidget {
@@ -12,7 +13,7 @@ class DisplayContact extends StatelessWidget {
 
   final Contact contact;
   final Function()? onEdit;
-  final Function()? onDelete;
+  final Function(bool confirmed)? onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -36,12 +37,22 @@ class DisplayContact extends StatelessWidget {
         ),
         PopupMenuButton<String>(
           icon: const Icon(Icons.more_vert),
-          onSelected: (value) {
+          onSelected: (value) async {
             switch (value) {
               case 'edit':
                 onEdit?.call();
               case 'delete':
-                onDelete?.call();
+                final confirmed = await showDialog<bool>(
+                  context: context,
+                  builder: (context) => ConfirmationDialog(
+                    title: "Slet kontakt",
+                    content:
+                        "Er du sikker på, at du vil slette kontakten, '${contact.name}'?",
+                    confirmButtonText: "Slet",
+                  ),
+                );
+
+                onDelete?.call(confirmed ?? false);
             }
           },
           itemBuilder: (context) => const [
