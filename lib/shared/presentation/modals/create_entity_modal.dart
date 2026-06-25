@@ -392,25 +392,66 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
       ),
       // I _buildSingleFieldWidget – ny case:
       MultiSelectFieldConfig f => DropdownSearch<dynamic>.multiSelection(
-        selectedItems: _multiSelectValues[f.key] ?? [],
-        items: f.items, // <-- den wrappede version
-        itemAsString: f.itemAsString, // <-- String Function(dynamic)
-        compareFn: (a, b) => a == b,
         onSelected: (selected) {
           setState(() => _multiSelectValues[f.key] = selected);
         },
+        selectedItems: _multiSelectValues[f.key] ?? [],
+        itemAsString: f.itemAsString, // <-- String Function(dynamic)
+        items: f.items, // <-- den wrappede version
+
+        compareFn: (a, b) => a == b,
+        dropdownBuilder: (_multiSelectValues[f.key]?.isNotEmpty ?? false)
+            ? null
+            : (context, selecteditem) => Text("Vælg ${f.label}"),
+
         popupProps: MultiSelectionPopupProps.modalBottomSheet(
-          showSearchBox: true,
-          showSelectedItems: true,
-          itemBuilder: (context, item, isDisabled, isSelected) => ListTile(
-            title: Text(f.itemLabelString(item)),
-            subtitle: f.itemSubtitleString != null
-                ? Text(f.itemSubtitleString!(item))
-                : null,
-            trailing: isSelected ? const Icon(Icons.check) : null,
+          emptyBuilder: (context, searchEntry) => Container(
+            height: 70,
+            alignment: Alignment.center,
+            child: Text("Ingen elementer fundet"),
           ),
+
+          showSelectedItems: true,
+          validationBuilder: (context, selectedItems) => Container(
+            alignment: Alignment.centerRight,
+            padding: EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              border: Border(
+                top: BorderSide(width: 1, color: Colors.grey.shade300),
+              ),
+            ),
+            child: TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                setState(() => _multiSelectValues[f.key] = selectedItems);
+              },
+              child: Text("GEM"),
+            ),
+          ),
+
+          containerBuilder: (ctx, popupWidget) {
+            return Padding(
+              padding: const EdgeInsets.all(8.0), // Padding hele vejen rundt
+              child: popupWidget,
+            );
+          },
+          searchFieldProps: TextFieldProps(
+            decoration: InputDecoration(
+              labelText: 'Søg',
+              border: OutlineInputBorder(),
+            ),
+          ),
+
+          showSearchBox: true,
+          itemBuilder: (context, item, isDisabled, isSelected) {
+            return ListTile(
+              title: Text(f.itemLabelString(item)),
+              subtitle: f.itemSubtitleString != null
+                  ? Text(f.itemSubtitleString!(item))
+                  : null,
+            );
+          },
         ),
-        validator: f.validator,
       ),
     };
   }
