@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:science_cup_app/features/contact/application/contacts_notifier.dart';
 import 'package:science_cup_app/features/contact/data/models/contact.dart';
+import 'package:science_cup_app/features/contact/presentation/add_contact_modal.dart';
 import 'package:science_cup_app/features/program/application/program_notifier.dart';
 import 'package:science_cup_app/features/program/presentation/save_program_modal.dart';
 import 'package:science_cup_app/features/season/application/active_season/current_season_provider.dart';
 import 'package:science_cup_app/features/team/data/models/team.dart';
+import 'package:science_cup_app/shared/presentation/modals/show_create_entity_modal_bottom_sheet.dart';
 
 import '../../../shared/presentation/modals/create_entity_modal.dart';
 
@@ -55,11 +57,10 @@ class _AddTeamModalState extends ConsumerState<AddTeamModal> {
           initialValue: widget.team?.program,
           optionLabel: (program) => program.name ?? "?",
           validator: (v) => v == null ? 'Vælg studie' : null,
-        ),
-        OpenBottomSheetFieldConfig(
-          builder: (context) => SaveProgramModal(),
-          icon: Icon(Icons.add),
-          label: "Nyt studie",
+          createEntity: () => showCreateEntityModalBottomSheet(
+            context: context,
+            builder: (context) => SaveProgramModal(),
+          ),
         ),
         TextFieldConfig(key: "name", label: "Holdnavn"),
         DividerFieldConfig(height: 32, thickness: 1),
@@ -78,6 +79,10 @@ class _AddTeamModalState extends ConsumerState<AddTeamModal> {
           itemLabelString: (item) => item.name ?? '?',
           itemSubtitleString: (item) => item.phone ?? '',
           initialValues: widget.team?.contacts,
+          createEntity: () => showCreateEntityModalBottomSheet(
+            context: context,
+            builder: (context) => AddContactModal(),
+          ),
         ),
       ],
       onSubmit: (data) async {

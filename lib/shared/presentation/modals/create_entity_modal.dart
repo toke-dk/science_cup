@@ -6,7 +6,9 @@ import 'package:science_cup_app/shared/presentation/modals/show_create_entity_mo
 
 sealed class FieldConfig {
   final String? group;
-  const FieldConfig({this.group});
+  // Til at tilføje studie/kontakt eller lignenden
+  final Function()? createEntity;
+  const FieldConfig({this.group, this.createEntity});
 }
 
 // Tekstfelt
@@ -76,6 +78,7 @@ class SelectFieldConfig extends FieldConfig {
     this.validator,
     this.initialValue,
     super.group,
+    super.createEntity,
   });
 }
 
@@ -86,7 +89,6 @@ class DividerFieldConfig extends FieldConfig {
   const DividerFieldConfig({this.height = 16, this.thickness = 1, super.group});
 }
 
-// OpenBottomSheetFieldConfig (for at åbne en anden modal)
 class OpenBottomSheetFieldConfig extends FieldConfig {
   final Widget Function(BuildContext context) builder;
   final Widget? icon;
@@ -167,6 +169,7 @@ class MultiSelectFieldConfig<T> extends FieldConfig {
     this.initialValues,
     this.validator,
     super.group,
+    super.createEntity,
   }) : _items = items,
        _itemAsStringTyped = itemAsString,
        _itemLabelStringTyped = itemLabelString,
@@ -281,7 +284,17 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
       widgets.add(
         Padding(
           padding: const EdgeInsets.only(bottom: 12.0),
-          child: _buildSingleFieldWidget(f, dateFormatter),
+          child: Row(
+            children: [
+              Expanded(child: _buildSingleFieldWidget(f, dateFormatter)),
+              f.createEntity == null
+                  ? const SizedBox.shrink()
+                  : IconButton(
+                      onPressed: f.createEntity,
+                      icon: Icon(Icons.add),
+                    ),
+            ],
+          ),
         ),
       );
       i += 1;
