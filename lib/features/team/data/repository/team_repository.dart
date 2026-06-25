@@ -1,4 +1,5 @@
 import 'package:science_cup_app/features/team/data/models/team.dart';
+import 'package:science_cup_app/features/team/data/models/write_team_request.dart';
 import 'package:supabase/supabase.dart';
 
 class TeamRepository {
@@ -8,9 +9,9 @@ class TeamRepository {
 
   // TODO Team with contacts.
 
-  Future<Team> createTeam(Team team) async {
+  Future<Team> createTeam(WriteTeamRequest request) async {
     try {
-      final jsonToSend = team.toJson();
+      final jsonToSend = request.toJson();
 
       final response = await _supabase
           .from('teams')
@@ -38,15 +39,15 @@ class TeamRepository {
     }
   }
 
-  Future<Team> updateTeam(Team team) async {
-    if (team.id == null) {
+  Future<Team> updateTeam(WriteTeamRequest request) async {
+    if (request.id == null) {
       throw Exception('Team ID er påkrævet for at opdatere.');
     }
     try {
       final response = await _supabase
           .from('teams')
-          .update(team.toJson())
-          .eq('id', team.id!) // <-- Matcher på UUID
+          .update(request.toJson())
+          .eq('id', request.id!) // <-- Matcher på UUID
           .select()
           .single();
 

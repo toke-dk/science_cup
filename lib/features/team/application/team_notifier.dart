@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:science_cup_app/features/team/application/team_repository_provider.dart';
 import 'package:science_cup_app/features/team/data/models/team.dart';
+import 'package:science_cup_app/features/team/data/models/write_team_request.dart';
 import 'package:science_cup_app/features/team/data/repository/team_repository.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -23,35 +24,55 @@ class TeamNotifier extends _$TeamNotifier {
   TeamRepository get _repository =>
       TeamRepository(supabase: Supabase.instance.client);
 
-  Future<void> createTeam({required String name}) async {
-    // Da activeSeasonId allerede er kendt i build(), kan vi bruge det
+  Future<void> saveTeam({
+    int? id,
+    String? name,
+    int? programId,
+    List<int>? contactIds,
+  }) async {
     if (activeSeasonId == null) {
-      state = AsyncError('Ingen aktiv sæson valgt', StackTrace.current);
+      state = AsyncError('Sæson er ikke valgt', StackTrace.current);
       return;
     }
-
-    state = const AsyncValue.loading();
-
-    // Brug AsyncValue.guard til at håndtere try-catch automatisk
-    state = await AsyncValue.guard(() async {
-      final repository = ref.read(teamRepositoryProvider);
-      await repository.createTeam(Team(name: name, seasonId: activeSeasonId!));
-
-      // Når vi invaliderer, kaldes build() igen, og UI opdateres automatisk
-      ref.invalidateSelf();
-
-      // Vi returnerer den nye liste (eller lader build gøre arbejdet)
-      return future;
-    });
-  }
-
-  Future<void> updateTeam({required Team updatedTeam}) async {
+    final request = WriteTeamRequest(
+      seasonId: activeSeasonId!,
+      id: id,
+      name: name,
+      programId: programId,
+    );
+    Team? result;
     try {
-      await _repository.updateTeam(updatedTeam);
+      if (id == null) {
+        result = await _repository.createTeam(request);
+      } else {
+        result = await _repository.updateTeam(request);
+      }
+      if (result.id != null) {
+        // Hvis vi har et resultat, opdater state
+        state = AsyncData([...state.value ?? [], result]);
+      }
+
+      await createContactsForTeam(result.id!, contactIds ?? []);
 
       ref.invalidateSelf();
     } catch (e, stackTrace) {
       state = AsyncError('Kunne ikke opdatere hold: $e', stackTrace);
+    }
+  }
+
+  Future<void> createContactsForTeam(int teamId, List<int> contactIds) async {
+    for (final contactId in contactIds) {
+      try {
+        await _repository.addContactToTeam(
+          teamId: teamId,
+          contactId: contactId,
+        );
+      } catch (e, stackTrace) {
+        state = AsyncError(
+          'Kunne ikke tilføje kontakt til hold: $e',
+          stackTrace,
+        );
+      }
     }
   }
 
