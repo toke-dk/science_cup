@@ -6,7 +6,6 @@ import 'package:science_cup_app/features/contact/data/models/contact.dart';
 import 'package:science_cup_app/features/program/application/program_notifier.dart';
 import 'package:science_cup_app/features/program/presentation/save_program_modal.dart';
 import 'package:science_cup_app/features/season/application/active_season/current_season_provider.dart';
-import 'package:science_cup_app/features/team/application/team_notifier.dart';
 
 import '../../../shared/presentation/modals/create_entity_modal.dart';
 
@@ -18,7 +17,7 @@ class AddTeamModal extends ConsumerStatefulWidget {
 }
 
 class _AddTeamModalState extends ConsumerState<AddTeamModal> {
-  int amountOfContactsToAdd = 0;
+  List<Contact> _selectedContacts = [];
 
   @override
   Widget build(BuildContext context) {
@@ -66,11 +65,43 @@ class _AddTeamModalState extends ConsumerState<AddTeamModal> {
         TextConfig(label: 'Kontakter'),
         WidgetFieldConfig(
           child: DropdownSearch<Contact>.multiSelection(
+            selectedItems: _selectedContacts,
+            itemAsString: (item) => item.name ?? "?",
             items: (filter, s) => contacts
-                .where((e) => e.name?.contains(filter) ?? false)
+                .where(
+                  (e) =>
+                      e.name?.toLowerCase().contains(filter.toLowerCase()) ??
+                      false,
+                )
                 .toList(),
             compareFn: (item, selectedItem) => item.id == selectedItem.id,
+            onSelected: (items) => print("selected: $items"),
             popupProps: MultiSelectionPopupProps.modalBottomSheet(
+              emptyBuilder: (context, searchEntry) => Container(
+                height: 70,
+                alignment: Alignment.center,
+                child: Text("Ingen kontakter fundet"),
+              ),
+              showSelectedItems: true,
+              validationBuilder: (context, selectedItems) => Container(
+                alignment: Alignment.centerRight,
+                padding: EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  border: Border(
+                    top: BorderSide(width: 1, color: Colors.grey.shade300),
+                  ),
+                ),
+                child: TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    setState(() {
+                      _selectedContacts = selectedItems;
+                    });
+                  },
+                  child: Text("GEM"),
+                ),
+              ),
+
               containerBuilder: (ctx, popupWidget) {
                 return Padding(
                   padding: const EdgeInsets.all(
@@ -79,10 +110,6 @@ class _AddTeamModalState extends ConsumerState<AddTeamModal> {
                   child: popupWidget,
                 );
               },
-              applyButtonProps: ButtonProps(
-                text: 'Tilføj',
-                icon: Icon(Icons.add),
-              ),
               searchFieldProps: TextFieldProps(
                 decoration: InputDecoration(
                   labelText: 'Søg kontakter',
@@ -97,15 +124,6 @@ class _AddTeamModalState extends ConsumerState<AddTeamModal> {
                   subtitle: Text(item.phone ?? "?"),
                 );
               },
-              suggestionsProps: SuggestionsProps(
-                showSuggestions: true,
-                items: (us) {
-                  return us
-                      .where((e) => e.name?.contains("Mrs") ?? false)
-                      .toList();
-                },
-                itemProps: SuggestedItemProps(),
-              ),
             ),
           ),
         ),
@@ -118,7 +136,10 @@ class _AddTeamModalState extends ConsumerState<AddTeamModal> {
           ).showSnackBar(SnackBar(content: Text("Ingen sæson valgt")));
           return;
         }
-        ref.read(teamProvider(seasonId).notifier).createTeam(name: "Nyt Hold");
+
+        debugPrint(data["program"].runtimeType.toString());
+
+        //ref.read(teamProvider(seasonId).notifier).createTeam(name: "Nyt Hold");
       },
     );
   }

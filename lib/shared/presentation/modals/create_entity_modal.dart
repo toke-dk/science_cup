@@ -483,32 +483,23 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
                       const SizedBox(height: 20),
                       Row(
                         children: [
-                          Expanded(
-                            flex: 1,
-                            child: TextButton(
-                              onPressed: () => Navigator.of(context).pop(),
-                              style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 16,
-                                ),
-                              ),
-                              child: const Text('Annuler'),
+                          Spacer(),
+                          TextButton(
+                            onPressed: () => Navigator.of(context).pop(),
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(vertical: 16),
                             ),
+                            child: const Text('Annuller'),
                           ),
                           const SizedBox(width: 10),
-                          Expanded(
-                            flex: 3,
-                            child: FilledButton(
-                              onPressed: _submitForm,
-                              style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 16,
-                                ),
-                              ),
-                              child: const Text(
-                                'Gem',
-                                style: TextStyle(fontSize: 16),
-                              ),
+                          FilledButton(
+                            onPressed: _submitForm,
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                            ),
+                            child: const Text(
+                              'Gem',
+                              style: TextStyle(fontSize: 16),
                             ),
                           ),
                         ],
