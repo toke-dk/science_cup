@@ -7,7 +7,6 @@ import 'package:science_cup_app/features/program/application/program_notifier.da
 import 'package:science_cup_app/features/program/presentation/save_program_modal.dart';
 import 'package:science_cup_app/features/season/application/active_season/current_season_provider.dart';
 import 'package:science_cup_app/features/team/data/models/team.dart';
-import 'package:science_cup_app/shared/presentation/modals/show_create_entity_modal_bottom_sheet.dart';
 
 import '../../../shared/presentation/modals/create_entity_modal.dart';
 
@@ -57,10 +56,7 @@ class _AddTeamModalState extends ConsumerState<AddTeamModal> {
           initialValue: widget.team?.program,
           optionLabel: (program) => program.name ?? "?",
           validator: (v) => v == null ? 'Vælg studie' : null,
-          createEntity: () => showCreateEntityModalBottomSheet(
-            context: context,
-            builder: (context) => SaveProgramModal(),
-          ),
+          createEntityWidget: SaveProgramModal(),
         ),
         TextFieldConfig(key: "name", label: "Holdnavn"),
         DividerFieldConfig(height: 32, thickness: 1),
@@ -79,10 +75,7 @@ class _AddTeamModalState extends ConsumerState<AddTeamModal> {
           itemLabelString: (item) => item.name ?? '?',
           itemSubtitleString: (item) => item.phone ?? '',
           initialValues: widget.team?.contacts,
-          createEntity: () => showCreateEntityModalBottomSheet(
-            context: context,
-            builder: (context) => AddContactModal(),
-          ),
+          createEntityWidget: AddContactModal(),
         ),
       ],
       onSubmit: (data) async {

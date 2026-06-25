@@ -2,12 +2,13 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:phone_form_field/phone_form_field.dart';
+import 'package:science_cup_app/shared/presentation/modals/show_create_entity_modal_bottom_sheet.dart';
 
 sealed class FieldConfig {
   final String? group;
   // Til at tilføje studie/kontakt eller lignenden
-  final Function()? createEntity;
-  const FieldConfig({this.group, this.createEntity});
+  final Widget? createEntityWidget;
+  const FieldConfig({this.group, this.createEntityWidget});
 }
 
 // Tekstfelt
@@ -77,7 +78,7 @@ class SelectFieldConfig extends FieldConfig {
     this.validator,
     this.initialValue,
     super.group,
-    super.createEntity,
+    super.createEntityWidget,
   });
 }
 
@@ -156,7 +157,7 @@ class MultiSelectFieldConfig<T> extends FieldConfig {
     this.initialValues,
     this.validator,
     super.group,
-    super.createEntity,
+    super.createEntityWidget,
   }) : _items = items,
        _itemAsStringTyped = itemAsString,
        _itemLabelStringTyped = itemLabelString,
@@ -271,10 +272,13 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
           child: Row(
             children: [
               Expanded(child: _buildSingleFieldWidget(f, dateFormatter)),
-              f.createEntity == null
+              f.createEntityWidget == null
                   ? const SizedBox.shrink()
                   : IconButton(
-                      onPressed: f.createEntity,
+                      onPressed: () => showCreateEntityModalBottomSheet(
+                        context: context,
+                        builder: (context) => f.createEntityWidget!,
+                      ),
                       icon: Icon(Icons.add),
                     ),
             ],
