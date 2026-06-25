@@ -2,7 +2,6 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:phone_form_field/phone_form_field.dart';
-import 'package:science_cup_app/shared/presentation/modals/show_create_entity_modal_bottom_sheet.dart';
 
 sealed class FieldConfig {
   final String? group;
@@ -87,18 +86,6 @@ class DividerFieldConfig extends FieldConfig {
   final double height;
   final double thickness;
   const DividerFieldConfig({this.height = 16, this.thickness = 1, super.group});
-}
-
-class OpenBottomSheetFieldConfig extends FieldConfig {
-  final Widget Function(BuildContext context) builder;
-  final Widget? icon;
-  final String? label;
-  const OpenBottomSheetFieldConfig({
-    required this.builder,
-    this.icon,
-    this.label,
-    super.group,
-  });
 }
 
 // Custom Widget
@@ -228,9 +215,6 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
         case SelectFieldConfig(key: final key):
           _selectValues[key] = f.initialValue;
         case DividerFieldConfig():
-          // ingen state
-          break;
-        case OpenBottomSheetFieldConfig():
           // ingen state
           break;
         case WidgetFieldConfig():
@@ -371,17 +355,6 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
         height: height,
         thickness: thickness,
       ),
-      OpenBottomSheetFieldConfig(:final builder, :final icon, :final label) =>
-        FilledButton.tonalIcon(
-          onPressed: () {
-            showCreateEntityModalBottomSheet(
-              context: context,
-              builder: builder,
-            );
-          },
-          icon: icon,
-          label: Text(label ?? ""),
-        ),
 
       WidgetFieldConfig(:final child) => child,
       TextConfig(:final label) => Text(
@@ -530,9 +503,7 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
         case DividerFieldConfig():
           // ingen værdi
           break;
-        case OpenBottomSheetFieldConfig():
-          // ingen værdi
-          break;
+
         case WidgetFieldConfig():
           // ingen værdi
           break;
