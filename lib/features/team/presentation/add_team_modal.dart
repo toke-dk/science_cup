@@ -1,24 +1,24 @@
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:science_cup_app/features/contact/application/contacts_notifier.dart';
 import 'package:science_cup_app/features/contact/data/models/contact.dart';
 import 'package:science_cup_app/features/program/application/program_notifier.dart';
+import 'package:science_cup_app/features/program/data/models/program.dart';
 import 'package:science_cup_app/features/program/presentation/save_program_modal.dart';
 import 'package:science_cup_app/features/season/application/active_season/current_season_provider.dart';
+import 'package:science_cup_app/features/team/data/models/team.dart';
 
 import '../../../shared/presentation/modals/create_entity_modal.dart';
 
 class AddTeamModal extends ConsumerStatefulWidget {
-  const AddTeamModal({super.key});
+  const AddTeamModal({super.key, this.team});
+  final Team? team;
 
   @override
   ConsumerState<AddTeamModal> createState() => _AddTeamModalState();
 }
 
 class _AddTeamModalState extends ConsumerState<AddTeamModal> {
-  List<Contact> _selectedContacts = [];
-
   @override
   Widget build(BuildContext context) {
     final programState = ref.watch(programProvider);
@@ -53,6 +53,7 @@ class _AddTeamModalState extends ConsumerState<AddTeamModal> {
           key: "program",
           label: "Studie",
           options: programs,
+          initialValue: widget.team?.program,
           optionLabel: (program) => program.name ?? "?",
           validator: (v) => v == null ? 'Vælg studie' : null,
         ),
@@ -63,69 +64,20 @@ class _AddTeamModalState extends ConsumerState<AddTeamModal> {
         ),
         DividerFieldConfig(height: 32, thickness: 1),
         TextConfig(label: 'Kontakter'),
-        WidgetFieldConfig(
-          child: DropdownSearch<Contact>.multiSelection(
-            selectedItems: _selectedContacts,
-            itemAsString: (item) => item.name ?? "?",
-            items: (filter, s) => contacts
-                .where(
-                  (e) =>
-                      e.name?.toLowerCase().contains(filter.toLowerCase()) ??
-                      false,
-                )
-                .toList(),
-            compareFn: (item, selectedItem) => item.id == selectedItem.id,
-            onSelected: (items) => print("selected: $items"),
-            popupProps: MultiSelectionPopupProps.modalBottomSheet(
-              emptyBuilder: (context, searchEntry) => Container(
-                height: 70,
-                alignment: Alignment.center,
-                child: Text("Ingen kontakter fundet"),
-              ),
-              showSelectedItems: true,
-              validationBuilder: (context, selectedItems) => Container(
-                alignment: Alignment.centerRight,
-                padding: EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  border: Border(
-                    top: BorderSide(width: 1, color: Colors.grey.shade300),
-                  ),
-                ),
-                child: TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    setState(() {
-                      _selectedContacts = selectedItems;
-                    });
-                  },
-                  child: Text("GEM"),
-                ),
-              ),
-
-              containerBuilder: (ctx, popupWidget) {
-                return Padding(
-                  padding: const EdgeInsets.all(
-                    8.0,
-                  ), // Padding hele vejen rundt
-                  child: popupWidget,
-                );
-              },
-              searchFieldProps: TextFieldProps(
-                decoration: InputDecoration(
-                  labelText: 'Søg kontakter',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-
-              showSearchBox: true,
-              itemBuilder: (context, item, isDisabled, isSelected) {
-                return ListTile(
-                  title: Text(item.name ?? "?"),
-                  subtitle: Text(item.phone ?? "?"),
-                );
-              },
-            ),
-          ),
+        MultiSelectFieldConfig<Contact>(
+          key: 'contacts',
+          label: 'Kontakter',
+          items: (filter) => contacts
+              .where(
+                (c) =>
+                    c.name?.toLowerCase().contains(filter.toLowerCase()) ??
+                    false,
+              )
+              .toList(),
+          itemAsString: (item) => item.name ?? '?',
+          itemLabelString: (item) => item.name ?? '?',
+          itemSubtitleString: (item) => item.phone ?? '',
+          initialValues: widget.team?.contacts,
         ),
       ],
       onSubmit: (data) async {
@@ -137,7 +89,7 @@ class _AddTeamModalState extends ConsumerState<AddTeamModal> {
           return;
         }
 
-        debugPrint(data["program"].runtimeType.toString());
+        debugPrint((data["program"] as Program).name);
 
         //ref.read(teamProvider(seasonId).notifier).createTeam(name: "Nyt Hold");
       },

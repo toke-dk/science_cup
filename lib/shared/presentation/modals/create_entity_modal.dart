@@ -1,3 +1,4 @@
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:phone_form_field/phone_form_field.dart';
@@ -128,6 +129,50 @@ class PhoneFieldConfig extends FieldConfig {
   });
 }
 
+class MultiSelectFieldConfig<T> extends FieldConfig {
+  final String key;
+  final String label;
+
+  /// Intern type‑sikker funktion.
+  final List<T> Function(String filter) _items;
+
+  /// Dynamisk wrapper til `DropdownSearch`.
+  List<dynamic> Function(String filter, dynamic _) get items =>
+      (filter, _) => _items(filter).cast<dynamic>();
+
+  final String Function(T) _itemAsStringTyped;
+  final String Function(T) _itemLabelStringTyped;
+  final String Function(T)? _itemSubtitleStringTyped;
+
+  /// Dynamisk wrappere der cast’er input til `T`.
+  String Function(dynamic) get itemAsString =>
+      (dynamic x) => _itemAsStringTyped(x as T);
+  String Function(dynamic) get itemLabelString =>
+      (dynamic x) => _itemLabelStringTyped(x as T);
+  String Function(dynamic)? get itemSubtitleString =>
+      _itemSubtitleStringTyped != null
+      ? (dynamic x) => _itemSubtitleStringTyped(x as T)
+      : null;
+
+  final List<T>? initialValues;
+  final String? Function(List<T>?)? validator;
+
+  const MultiSelectFieldConfig({
+    required this.key,
+    required this.label,
+    required List<T> Function(String filter) items,
+    required String Function(T) itemAsString,
+    required String Function(T) itemLabelString,
+    String Function(T)? itemSubtitleString,
+    this.initialValues,
+    this.validator,
+    super.group,
+  }) : _items = items,
+       _itemAsStringTyped = itemAsString,
+       _itemLabelStringTyped = itemLabelString,
+       _itemSubtitleStringTyped = itemSubtitleString;
+}
+
 typedef SubmitCallback = Future<void> Function(Map<String, dynamic> data);
 
 class CreateEntityModal extends StatefulWidget {
@@ -153,6 +198,7 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
   final Map<String, DateTime?> _dateValues = {};
   final Map<String, TimeOfDay?> _timeValues = {};
   final Map<String, dynamic> _selectValues = {};
+  final Map<String, List<dynamic>> _multiSelectValues = {};
   bool _isLoading = false;
   String? _errorMessage;
 
@@ -190,6 +236,8 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
         case TextConfig():
           // ingen state
           break;
+        case MultiSelectFieldConfig(key: final key):
+          _multiSelectValues[key] = f.initialValues ?? [];
       }
     }
   }
@@ -342,6 +390,28 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
           PhoneValidator.valid(context, errorText: 'Ugyldigt telefonnummer'),
         ]),
       ),
+      // I _buildSingleFieldWidget – ny case:
+      MultiSelectFieldConfig f => DropdownSearch<dynamic>.multiSelection(
+        selectedItems: _multiSelectValues[f.key] ?? [],
+        items: f.items, // <-- den wrappede version
+        itemAsString: f.itemAsString, // <-- String Function(dynamic)
+        compareFn: (a, b) => a == b,
+        onSelected: (selected) {
+          setState(() => _multiSelectValues[f.key] = selected);
+        },
+        popupProps: MultiSelectionPopupProps.modalBottomSheet(
+          showSearchBox: true,
+          showSelectedItems: true,
+          itemBuilder: (context, item, isDisabled, isSelected) => ListTile(
+            title: Text(f.itemLabelString(item)),
+            subtitle: f.itemSubtitleString != null
+                ? Text(f.itemSubtitleString!(item))
+                : null,
+            trailing: isSelected ? const Icon(Icons.check) : null,
+          ),
+        ),
+        validator: f.validator,
+      ),
     };
   }
 
@@ -417,6 +487,8 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
           break;
         case PhoneFieldConfig():
           data[f.key] = _phoneControllers[f.key]?.value;
+        case MultiSelectFieldConfig(:final key):
+          data[key] = _multiSelectValues[key];
       }
     }
 
