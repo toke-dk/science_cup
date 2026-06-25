@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:science_cup_app/features/contact/application/contacts_notifier.dart';
 import 'package:science_cup_app/features/contact/data/models/contact.dart';
 import 'package:science_cup_app/features/program/application/program_notifier.dart';
-import 'package:science_cup_app/features/program/data/models/program.dart';
 import 'package:science_cup_app/features/program/presentation/save_program_modal.dart';
 import 'package:science_cup_app/features/season/application/active_season/current_season_provider.dart';
 import 'package:science_cup_app/features/team/data/models/team.dart';
@@ -47,7 +46,7 @@ class _AddTeamModalState extends ConsumerState<AddTeamModal> {
     final programs = programState.value!;
     final contacts = contactsState.value!;
     return CreateEntityModal(
-      title: 'Opret Hold',
+      title: '${widget.team == null ? 'Opret' : 'Rediger'} Hold',
       fields: [
         SelectFieldConfig(
           key: "program",
@@ -62,6 +61,7 @@ class _AddTeamModalState extends ConsumerState<AddTeamModal> {
           icon: Icon(Icons.add),
           label: "Nyt studie",
         ),
+        TextFieldConfig(key: "name", label: "Holdnavn"),
         DividerFieldConfig(height: 32, thickness: 1),
         TextConfig(label: 'Kontakter'),
         MultiSelectFieldConfig<Contact>(
@@ -89,9 +89,7 @@ class _AddTeamModalState extends ConsumerState<AddTeamModal> {
           return;
         }
 
-        debugPrint((data["program"] as Program).name);
-
-        //ref.read(teamProvider(seasonId).notifier).createTeam(name: "Nyt Hold");
+        // ref.read(teamProvider(seasonId).notifier).saveTeam(name: "Nyt Hold");
       },
     );
   }
