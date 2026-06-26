@@ -76,7 +76,7 @@ class TeamNotifier extends _$TeamNotifier {
     }
   }
 
-  Future<void> deleteTeam(String id) async {
+  Future<void> deleteTeam(int id) async {
     try {
       await _repository.deleteTeam(id);
 

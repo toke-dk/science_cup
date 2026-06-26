@@ -4,6 +4,8 @@ import 'package:science_cup_app/features/season/application/active_season/curren
 import 'package:science_cup_app/features/team/application/team_notifier.dart';
 import 'package:science_cup_app/features/team/presentation/add_team_modal.dart';
 import 'package:science_cup_app/shared/presentation/modals/show_create_entity_modal_bottom_sheet.dart';
+import 'package:science_cup_app/shared/presentation/widgets/confirmation_dialog/confirmation_fields.dart';
+import 'package:science_cup_app/shared/presentation/widgets/edit_delete_menu.dart';
 
 class EditTeamsView extends ConsumerWidget {
   const EditTeamsView({super.key});
@@ -41,10 +43,44 @@ class EditTeamsView extends ConsumerWidget {
               ),
             ],
           ),
-          ListView(
-            shrinkWrap: true,
+          Column(
             children: groups
-                .map((g) => ListTile(title: Text(g.name ?? "Ingen navn")))
+                .map(
+                  (indexProgram) => ListTile(
+                    title: Text(indexProgram.name ?? "Ingen navn"),
+                    subtitle: Text(
+                      indexProgram.program?.name ?? "Ingen program",
+                    ),
+                    trailing: EditDeleteMenu(
+                      onEdit: () {
+                        showCreateEntityModalBottomSheet(
+                          context: context,
+                          builder: (context) {
+                            return AddTeamModal(team: indexProgram);
+                          },
+                        );
+                      },
+                      confirmationFields: ConfirmationFields(
+                        title: "Sletning af hold",
+                        content: "Du er ved at slette et hold",
+                        confirmButtonText: "Slet",
+                      ),
+                      onDelete: (confirmed) async {
+                        if (!confirmed) return;
+                        if (indexProgram.id == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Holdet har ikke et ID")),
+                          );
+                          return;
+                        }
+
+                        ref
+                            .read(teamProvider(seasonId).notifier)
+                            .deleteTeam(indexProgram.id!);
+                      },
+                    ),
+                  ),
+                )
                 .toList(),
           ),
         ],

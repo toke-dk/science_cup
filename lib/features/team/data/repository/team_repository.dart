@@ -29,7 +29,7 @@ class TeamRepository {
     try {
       final List<Map<String, dynamic>> response = await _supabase
           .from('teams')
-          .select()
+          .select('*, program:programs(*)')
           .eq("season_id", seasonId)
           .order('name', ascending: true);
 
@@ -57,7 +57,7 @@ class TeamRepository {
     }
   }
 
-  Future<void> deleteTeam(String id) async {
+  Future<void> deleteTeam(int id) async {
     try {
       await _supabase.from('teams').delete().eq('id', id);
     } catch (e) {
