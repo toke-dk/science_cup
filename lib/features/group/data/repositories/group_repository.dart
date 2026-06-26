@@ -1,4 +1,4 @@
-import 'package:science_cup_app/features/group/data/group.dart';
+import 'package:science_cup_app/features/group/data/models/group.dart';
 import 'package:supabase/supabase.dart';
 
 class GroupRepository {

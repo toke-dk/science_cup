@@ -47,7 +47,7 @@ supabase db reset
 To build the models with freezed, run the following command in the root directory of the project:
 
 ```bash
-flutter pub run build_runner build --delete-conflicting-outputs
+dart run build_runner watch
 ```
 
 make sure to have a file with the structure of the model you want to build in the `lib/models` directory and to annotate it with `@freezed` and to have a factory constructor that returns a private class that extends the model class. For example:

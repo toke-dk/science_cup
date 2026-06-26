@@ -1,6 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:science_cup_app/features/group/application/group_repository_provider.dart';
-import 'package:science_cup_app/features/group/data/group.dart';
+import 'package:science_cup_app/features/group/data/models/group.dart';
 import 'package:science_cup_app/features/season/application/active_season/current_season_provider.dart';
 
 part 'group_notifier.g.dart';

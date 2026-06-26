@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:science_cup_app/features/group/data/group.dart';
+import 'package:science_cup_app/features/group/data/models/group.dart';
 import 'package:science_cup_app/features/season/application/active_season/current_season_provider.dart';
 import 'package:science_cup_app/features/season/application/season/season_notifier.dart';
 import 'package:science_cup_app/features/season/data/models/season.dart';
@@ -70,7 +70,7 @@ class _AddGroupModalState extends ConsumerState<AddGroupModal> {
               label: 'Hold',
               items: (filter) => teamsAsync.value ?? <Team>[],
               itemAsString: (t) => t.name ?? '?',
-              // disabledBuilder: (t) => t.name?.contains("t") ?? false,
+              disabledBuilder: (t) => t.group != null,
             ),
           ],
           onSubmit: (data) async {

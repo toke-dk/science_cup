@@ -47,7 +47,12 @@ class EditTeamsView extends ConsumerWidget {
             children: groups
                 .map(
                   (indexProgram) => ListTile(
-                    title: Text(indexProgram.name ?? "Ingen navn"),
+                    title: Text(
+                      (indexProgram.name ?? "Ingen navn") +
+                          (indexProgram.group?.name != null
+                              ? " (${indexProgram.group!.name})"
+                              : ""),
+                    ),
                     subtitle: Text(
                       indexProgram.program?.name ?? "Ingen program",
                     ),

@@ -29,7 +29,7 @@ class TeamRepository {
     try {
       final List<Map<String, dynamic>> response = await _supabase
           .from('teams')
-          .select('*, program:programs(*)')
+          .select('*, program:programs(*), group:groups(*)')
           .eq("season_id", seasonId)
           .order('name', ascending: true);
 
@@ -97,4 +97,14 @@ class TeamRepository {
         .eq('team_id', teamId)
         .eq('contact_id', contactId);
   }
+
+  //  Future<void> assignGroupToTeams({
+  //    required int groupId,
+  //    required List<int> teamIds,
+  //  }) async {
+  //    await _supabase
+  //        .from('teams')
+  //        .update({'group_id': groupId})
+  //        .inFilter('id', teamIds);
+  //  }
 }
