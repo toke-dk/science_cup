@@ -62,24 +62,46 @@ class TimeFieldConfig extends FieldConfig {
 }
 
 // Select / dropdown
-class SelectFieldConfig extends FieldConfig {
+class SelectFieldConfig<T> extends FieldConfig {
   final String key;
   final String label;
-  final List<dynamic> options;
-  final String Function(dynamic) optionLabel;
-  final String? Function(dynamic)? validator;
-  final dynamic initialValue;
+
+  // --- Interne typed funktioner ---
+  final List<T> _options;
+  final String Function(T) _optionLabel;
+  final String? Function(T?)? _validator;
+  final void Function(T)? _onFieldSelected;
+  final T? _initialValue;
+
+  // --- Dynamiske gettere (efter MultiSelect-mønster) ---
+  List<dynamic> get options => _options.cast<dynamic>();
+
+  String Function(dynamic) get optionLabel =>
+      (dynamic x) => _optionLabel(x as T);
+
+  String? Function(dynamic)? get validator =>
+      _validator != null ? (dynamic x) => _validator(x as T?) : null;
+
+  void Function(dynamic)? get onFieldSelected =>
+      _onFieldSelected != null ? (dynamic x) => _onFieldSelected(x as T) : null;
+
+  dynamic get initialValue => _initialValue as dynamic;
 
   const SelectFieldConfig({
     required this.key,
     required this.label,
-    required this.options,
-    required this.optionLabel,
-    this.validator,
-    this.initialValue,
+    required List<T> options,
+    required String Function(T) optionLabel,
+    String? Function(T?)? validator,
+    void Function(T)? onFieldSelected,
+    T? initialValue,
     super.group,
     super.createEntityWidget,
-  });
+  }) : _options = options,
+       _optionLabel = optionLabel,
+       _validator = validator,
+       _onFieldSelected = onFieldSelected,
+       _initialValue = initialValue;
 }
 
 // Divider (rent visuel)
@@ -131,14 +153,12 @@ class MultiSelectFieldConfig<T> extends FieldConfig {
       (filter, _) => _items(filter).cast<dynamic>();
 
   final String Function(T) _itemAsStringTyped;
-  final String Function(T) _itemLabelStringTyped;
   final String Function(T)? _itemSubtitleStringTyped;
 
   /// Dynamisk wrappere der cast’er input til `T`.
   String Function(dynamic) get itemAsString =>
       (dynamic x) => _itemAsStringTyped(x as T);
-  String Function(dynamic) get itemLabelString =>
-      (dynamic x) => _itemLabelStringTyped(x as T);
+
   String Function(dynamic)? get itemSubtitleString =>
       _itemSubtitleStringTyped != null
       ? (dynamic x) => _itemSubtitleStringTyped(x as T)
@@ -152,7 +172,6 @@ class MultiSelectFieldConfig<T> extends FieldConfig {
     required this.label,
     required List<T> Function(String filter) items,
     required String Function(T) itemAsString,
-    required String Function(T) itemLabelString,
     String Function(T)? itemSubtitleString,
     this.initialValues,
     this.validator,
@@ -160,7 +179,6 @@ class MultiSelectFieldConfig<T> extends FieldConfig {
     super.createEntityWidget,
   }) : _items = items,
        _itemAsStringTyped = itemAsString,
-       _itemLabelStringTyped = itemLabelString,
        _itemSubtitleStringTyped = itemSubtitleString;
 }
 
@@ -337,6 +355,7 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
         :final options,
         :final optionLabel,
         :final validator,
+        :final onFieldSelected,
       ) =>
         DropdownButtonFormField<dynamic>(
           initialValue: _selectValues[key],
@@ -352,7 +371,10 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
                 ),
               )
               .toList(),
-          onChanged: (v) => setState(() => _selectValues[key] = v),
+          onChanged: (v) {
+            if (onFieldSelected != null) onFieldSelected(v);
+            setState(() => _selectValues[key] = v);
+          },
           validator: validator,
         ),
       DividerFieldConfig(:final height, :final thickness) => Divider(
@@ -435,7 +457,7 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
           showSearchBox: true,
           itemBuilder: (context, item, isDisabled, isSelected) {
             return ListTile(
-              title: Text(f.itemLabelString(item)),
+              title: Text(f.itemAsString(item)),
               subtitle: f.itemSubtitleString != null
                   ? Text(f.itemSubtitleString!(item))
                   : null,

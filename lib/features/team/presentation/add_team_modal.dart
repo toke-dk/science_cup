@@ -97,7 +97,6 @@ class _AddTeamModalState extends ConsumerState<AddTeamModal> {
               )
               .toList(),
           itemAsString: (item) => item.name ?? '?',
-          itemLabelString: (item) => item.name ?? '?',
           itemSubtitleString: (item) => item.phone ?? '',
           initialValues: widget.team?.contacts,
           createEntityWidget: AddContactModal(),
