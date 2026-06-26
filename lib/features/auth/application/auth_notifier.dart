@@ -106,6 +106,7 @@ class AuthNotifier extends _$AuthNotifier {
       await ref.read(authRepositoryProvider).sendEmailOtp(email);
       state = state.copyWith(emailCodeSent: true, isLoading: false);
     } catch (e) {
+      print('Error sending email OTP: $e');
       state = state.copyWith(isLoading: false, errorMessage: e.toString());
     }
   }

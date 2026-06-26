@@ -8,11 +8,9 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Log ind')),
-      body: const Padding(
-        padding: EdgeInsets.all(24.0),
-        child: Center(
-          child: EmailLoginForm(),
-        ),
+      body: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Center(child: EmailLoginForm()),
       ),
     );
   }

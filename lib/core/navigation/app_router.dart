@@ -12,9 +12,6 @@ part 'app_router.g.dart';
 
 @riverpod
 GoRouter appRouter(Ref ref) {
-  // Lyt til auth-state for at kunne kontrollere adgang
-  final authState = ref.watch(authProvider);
-
   return GoRouter(
     initialLocation: '/',
     routes: [
@@ -43,6 +40,8 @@ GoRouter appRouter(Ref ref) {
       GoRoute(
         path: '/seasons/:id/:tab',
         redirect: (context, state) {
+          final authState = ref.read(authProvider);
+
           final id = state.pathParameters['id']!;
           final tabPath = state.pathParameters['tab'];
           final activeTab = SeasonTabs.fromPath(tabPath);
@@ -51,7 +50,7 @@ GoRouter appRouter(Ref ref) {
           final profileRole = authState.profileRole;
 
           if (!SeasonTabs.canAccessTab(activeTab, profileRole)) {
-            return '/seasons/$id/${SeasonTabs.defaultTab.path}';
+            return '/seasons/:$id/:${SeasonTabs.defaultTab.path}';
           }
 
           return null; // Tillad navigation
