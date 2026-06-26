@@ -8,7 +8,6 @@ import 'package:science_cup_app/features/team/application/team_notifier.dart';
 import 'package:science_cup_app/features/team/data/models/team.dart';
 
 import '../../../shared/presentation/modals/create_entity_modal.dart';
-import '../application/group_notifier.dart';
 
 class AddGroupModal extends ConsumerStatefulWidget {
   const AddGroupModal({super.key, this.group});
@@ -65,21 +64,13 @@ class _AddGroupModalState extends ConsumerState<AddGroupModal> {
               label: 'Gruppenavn',
               validator: (v) => v == null || v.isEmpty ? 'Indtast navn' : null,
             ),
-            MultiSelectFieldConfig<Team>(
-              key: 'teams',
-              label: 'Hold',
-              items: (filter) => teamsAsync.value ?? <Team>[],
-              itemAsString: (t) => t.name ?? '?',
-              disabledBuilder: (t) => t.group != null,
-            ),
           ],
           onSubmit: (data) async {
             final name = data['name'] as String;
             final season = data['season'] as Season;
-            final teams = data['teams'] as List<Team>;
             return;
             // TODO:
-            await ref.read(groupProvider.notifier).createGroup(name: name);
+            // await ref.read(groupProvider.notifier).createGroup(name: name);
           },
         );
       },

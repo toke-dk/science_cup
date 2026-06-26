@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:science_cup_app/features/group/presentation/add_group_modal.dart';
+import 'package:science_cup_app/features/group/presentation/admin_group_display.dart';
+import 'package:science_cup_app/features/season/application/active_season/current_season_provider.dart';
 import 'package:science_cup_app/shared/presentation/modals/show_create_entity_modal_bottom_sheet.dart';
 
 import '../application/group_notifier.dart';
@@ -10,7 +12,9 @@ class EditGroupsView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final groupsState = ref.watch(groupProvider);
+    final groupsState = ref.watch(
+      groupProvider(ref.watch(currentSeasonProvider)?.id),
+    );
 
     return groupsState.when(
       loading: () => const Center(child: CircularProgressIndicator()),
@@ -39,7 +43,7 @@ class EditGroupsView extends ConsumerWidget {
           ListView(
             shrinkWrap: true,
             children: groups
-                .map((g) => ListTile(title: Text(g.name ?? "Ingen navn")))
+                .map((g) => AdminGroupDisplay(group: g, teams: []))
                 .toList(),
           ),
         ],

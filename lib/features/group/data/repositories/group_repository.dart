@@ -1,4 +1,5 @@
 import 'package:science_cup_app/features/group/data/models/group.dart';
+import 'package:science_cup_app/features/group/data/models/group_with_teams.dart';
 import 'package:supabase/supabase.dart';
 
 class GroupRepository {
@@ -59,6 +60,20 @@ class GroupRepository {
       await _supabase.from('groups').delete().eq('id', id);
     } catch (e) {
       throw Exception('Kunne ikke slette gruppe: $e');
+    }
+  }
+
+  Future<List<GroupWithTeams>> getGroupsWithTeamsForSeason(int seasonId) async {
+    try {
+      final List<Map<String, dynamic>> response = await _supabase
+          .from('groups')
+          .select('*, teams(*)') // <-- Hent grupper og deres teams
+          .eq("season_id", seasonId)
+          .order('name', ascending: true);
+
+      return response.map((json) => GroupWithTeams.fromJson(json)).toList();
+    } catch (e) {
+      throw Exception('Kunne ikke hente grupper med teams: $e');
     }
   }
 }

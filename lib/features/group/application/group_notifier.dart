@@ -8,9 +8,7 @@ part 'group_notifier.g.dart';
 @riverpod
 class GroupNotifier extends _$GroupNotifier {
   @override
-  Future<List<Group>> build() async {
-    // 1. Reaktiv afhængighed af aktivt seasonId
-    final seasonId = ref.watch(currentSeasonProvider)?.id;
+  Future<List<Group>> build(int? seasonId) async {
     if (seasonId == null) return [];
 
     // 2. Hent grupper for denne sæson
