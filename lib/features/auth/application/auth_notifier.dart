@@ -12,34 +12,30 @@ part 'auth_notifier.g.dart';
 
 @riverpod
 class AuthNotifier extends _$AuthNotifier {
+  late final AuthRepository _repo;
   StreamSubscription<supabase.AuthState>? _authStateSubscription;
 
   @override
   AuthState build() {
-    // Start initial loading
-    final repo = ref.read(authRepositoryProvider);
-    final initialState = AuthState(isLoading: true);
+    _repo = ref.read(authRepositoryProvider);
 
-    // Udfør asynkron initialisering
-    _initialize(repo);
+    // Lyt permanent på auth‑ændringer (login/logout/token refresh)
+    _startListeningToAuthChanges();
 
-    // Ryd op når provideren lukkes
+    // Tjek den aktuelle session ved opstart (første load)
+    _checkInitialSession();
+
     ref.onDispose(() {
       _authStateSubscription?.cancel();
     });
 
-    return initialState;
+    // Vis loader indtil _checkInitialSession eller listener har opdateret state
+    return const AuthState(isLoading: true);
   }
 
-  Future<void> _initialize(AuthRepository repo) async {
-    try {
-      final profile = await repo.getLoggedInProfile();
-      state = state.copyWith(profile: profile, isLoading: false);
-    } catch (e) {
-      state = state.copyWith(isLoading: false, errorMessage: e.toString());
-    }
+  // --- PRIVATE HJÆLPERE ---
 
-    // Lyt på auth‑ændringer fra Supabase i baggrunden
+  void _startListeningToAuthChanges() {
     _authStateSubscription = supabase
         .Supabase
         .instance
@@ -47,31 +43,61 @@ class AuthNotifier extends _$AuthNotifier {
         .auth
         .onAuthStateChange
         .listen((event) async {
+          // Logget helt ud → nulstil alt
           if (event.session == null) {
-            // Bruger logget ud
-            state = AuthState(); // reset alt
-          } else if (state.profile == null) {
-            // Session opstået eksternt – hent profil
-            try {
-              final profile = await ref
-                  .read(authRepositoryProvider)
-                  .getLoggedInProfile();
-              state = state.copyWith(profile: profile);
-            } catch (_) {}
+            state = const AuthState();
+            return;
+          }
+
+          // Ved login, token‑refresh eller initial session → hent profil hvis den ikke er der
+          if (event.event == supabase.AuthChangeEvent.signedIn ||
+              event.event == supabase.AuthChangeEvent.tokenRefreshed ||
+              event.event == supabase.AuthChangeEvent.initialSession) {
+            // Undgå unødvendige kald hvis profilen allerede er hentet
+            if (state.profile == null) {
+              try {
+                final profile = await _repo.getLoggedInProfile();
+                state = state.copyWith(profile: profile, isLoading: false);
+              } catch (_) {
+                state = state.copyWith(
+                  isLoading: false,
+                  errorMessage: 'Kunne ikke hente profil.',
+                );
+              }
+            }
           }
         });
   }
 
-  // --- HJÆLPEMETODER ---
+  Future<void> _checkInitialSession() async {
+    try {
+      final session = supabase.Supabase.instance.client.auth.currentSession;
+      if (session != null) {
+        final profile = await _repo.getLoggedInProfile();
+        state = state.copyWith(profile: profile, isLoading: false);
+      } else {
+        // Ingen session – klar til at vise login‑knap
+        state = state.copyWith(isLoading: false);
+      }
+    } catch (e) {
+      state = state.copyWith(isLoading: false, errorMessage: e.toString());
+    }
+  }
+
+  /// Sæt loading og ryd samtidig eventuelle fejl
   void _setLoading(bool value) {
-    state = state.copyWith(isLoading: value, clearError: value);
+    state = state.copyWith(
+      isLoading: value,
+      errorMessage: value ? null : state.errorMessage,
+    );
   }
 
   // --- PHONE AUTH FLOW ---
+
   Future<void> startPhoneAuth(String phoneNumber) async {
     _setLoading(true);
     try {
-      await ref.read(authRepositoryProvider).sendOtpToPhone(phoneNumber);
+      await _repo.sendOtpToPhone(phoneNumber);
       state = state.copyWith(
         phoneCodeSent: true,
         currentPhoneNumber: phoneNumber,
@@ -85,28 +111,29 @@ class AuthNotifier extends _$AuthNotifier {
   Future<bool> verifyPhoneCode(String token) async {
     _setLoading(true);
     try {
-      final newUser = await ref
-          .read(authRepositoryProvider)
-          .verifyPhoneOtp(phoneNumber: state.currentPhoneNumber, token: token);
-      state = AuthState(profile: newUser); // reset UI-flags
+      final newUser = await _repo.verifyPhoneOtp(
+        phoneNumber: state.currentPhoneNumber,
+        token: token,
+      );
+      state = AuthState(profile: newUser);
       return true;
     } catch (e) {
       state = state.copyWith(
         isLoading: false,
-        errorMessage: "Forkert eller udløbet SMS-kode.",
+        errorMessage: 'Forkert eller udløbet SMS‑kode.',
       );
       return false;
     }
   }
 
   // --- EMAIL AUTH FLOW ---
+
   Future<void> sendEmailOtp(String email) async {
     _setLoading(true);
     try {
-      await ref.read(authRepositoryProvider).sendEmailOtp(email);
+      await _repo.sendEmailOtp(email);
       state = state.copyWith(emailCodeSent: true, isLoading: false);
     } catch (e) {
-      print('Error sending email OTP: $e');
       state = state.copyWith(isLoading: false, errorMessage: e.toString());
     }
   }
@@ -117,26 +144,25 @@ class AuthNotifier extends _$AuthNotifier {
   }) async {
     _setLoading(true);
     try {
-      final newUser = await ref
-          .read(authRepositoryProvider)
-          .verifyEmailOtp(email: email, token: token);
+      final newUser = await _repo.verifyEmailOtp(email: email, token: token);
       state = AuthState(profile: newUser);
       return true;
     } catch (e) {
       state = state.copyWith(
         isLoading: false,
-        errorMessage: "Kunne ikke logge ind. Tjek koden i din e-mail.",
+        errorMessage: 'Kunne ikke logge ind. Tjek koden i din e‑mail.',
       );
       return false;
     }
   }
 
   // --- LOG UD ---
+
   Future<void> signOut() async {
     _setLoading(true);
     try {
-      await ref.read(authRepositoryProvider).signOut();
-      state = AuthState(); // rydder alt
+      await _repo.signOut();
+      state = const AuthState();
     } catch (e) {
       state = state.copyWith(isLoading: false, errorMessage: e.toString());
     }
