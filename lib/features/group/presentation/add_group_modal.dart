@@ -70,6 +70,7 @@ class _AddGroupModalState extends ConsumerState<AddGroupModal> {
               label: 'Hold',
               items: (filter) => teamsAsync.value ?? <Team>[],
               itemAsString: (t) => t.name ?? '?',
+              // disabledBuilder: (t) => t.name?.contains("t") ?? false,
             ),
           ],
           onSubmit: (data) async {

@@ -154,14 +154,17 @@ class MultiSelectFieldConfig<T> extends FieldConfig {
 
   final String Function(T) _itemAsStringTyped;
   final String Function(T)? _itemSubtitleStringTyped;
+  final bool Function(T)? _disabledBuilderTyped;
 
   /// Dynamisk wrappere der cast’er input til `T`.
   String Function(dynamic) get itemAsString =>
       (dynamic x) => _itemAsStringTyped(x as T);
-
   String Function(dynamic)? get itemSubtitleString =>
       _itemSubtitleStringTyped != null
       ? (dynamic x) => _itemSubtitleStringTyped(x as T)
+      : null;
+  bool Function(dynamic)? get disabledBuilder => _disabledBuilderTyped != null
+      ? (dynamic x) => _disabledBuilderTyped(x as T)
       : null;
 
   final List<T>? initialValues;
@@ -173,13 +176,15 @@ class MultiSelectFieldConfig<T> extends FieldConfig {
     required List<T> Function(String filter) items,
     required String Function(T) itemAsString,
     String Function(T)? itemSubtitleString,
+    bool Function(T)? disabledBuilder,
     this.initialValues,
     this.validator,
     super.group,
     super.createEntityWidget,
   }) : _items = items,
        _itemAsStringTyped = itemAsString,
-       _itemSubtitleStringTyped = itemSubtitleString;
+       _itemSubtitleStringTyped = itemSubtitleString,
+       _disabledBuilderTyped = disabledBuilder;
 }
 
 typedef SubmitCallback = Future<void> Function(Map<String, dynamic> data);
@@ -455,8 +460,10 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
           ),
 
           showSearchBox: true,
+          disabledItemFn: f.disabledBuilder,
           itemBuilder: (context, item, isDisabled, isSelected) {
             return ListTile(
+              enabled: !isDisabled,
               title: Text(f.itemAsString(item)),
               subtitle: f.itemSubtitleString != null
                   ? Text(f.itemSubtitleString!(item))
