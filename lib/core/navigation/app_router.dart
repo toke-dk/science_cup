@@ -50,7 +50,7 @@ GoRouter appRouter(Ref ref) {
           final profileRole = authState.profileRole;
 
           if (!SeasonTabs.canAccessTab(activeTab, profileRole)) {
-            return '/seasons/:$id/:${SeasonTabs.defaultTab.path}';
+            return '/seasons/$id/${SeasonTabs.defaultTab.path}';
           }
 
           return null; // Tillad navigation

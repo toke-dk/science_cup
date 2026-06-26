@@ -1,5 +1,7 @@
 import 'package:science_cup_app/features/group/data/models/group.dart';
+import 'package:science_cup_app/features/group/data/models/group_board_state.dart';
 import 'package:science_cup_app/features/group/data/models/group_with_teams.dart';
+import 'package:science_cup_app/features/team/data/models/team.dart';
 import 'package:supabase/supabase.dart';
 
 class GroupRepository {
@@ -63,17 +65,64 @@ class GroupRepository {
     }
   }
 
-  Future<List<GroupWithTeams>> getGroupsWithTeamsForSeason(int seasonId) async {
+  Future<GroupBoardState> getGroupBoard(int seasonId) async {
     try {
-      final List<Map<String, dynamic>> response = await _supabase
+      // 1. Groups + teams
+      final groupsResponse = await _supabase
           .from('groups')
-          .select('*, teams(*)') // <-- Hent grupper og deres teams
-          .eq("season_id", seasonId)
+          .select('*, teams(*)')
+          .eq('season_id', seasonId)
           .order('name', ascending: true);
 
-      return response.map((json) => GroupWithTeams.fromJson(json)).toList();
+      // 2. Unassigned teams
+      final unassignedResponse = await _supabase
+          .from('teams')
+          .select('*')
+          .eq('season_id', seasonId)
+          .isFilter('group_id', null);
+
+      // 3. Map groups
+      final groups = groupsResponse.map<GroupWithTeams>((json) {
+        return GroupWithTeams(
+          group: Group.fromJson(json),
+          teams: (json['teams'] as List<dynamic>)
+              .map((t) => Team.fromJson(t))
+              .toList(),
+        );
+      }).toList();
+
+      // 4. Map unassigned
+      final unassignedTeams = unassignedResponse
+          .map((t) => Team.fromJson(t))
+          .toList();
+
+      // 5. Return samlet state
+      return GroupBoardState(
+        groupsWithTeams: groups,
+        unassignedTeams: unassignedTeams,
+      );
     } catch (e) {
-      throw Exception('Kunne ikke hente grupper med teams: $e');
+      throw Exception('Kunne ikke hente group board: $e');
+    }
+  }
+
+  Future<void> updateGroupTeams(int groupId, List<int> allTeamIds) async {
+    try {
+      // 1. reset (source of truth)
+      await _supabase
+          .from('teams')
+          .update({'group_id': null})
+          .eq('group_id', groupId);
+
+      // 2. apply new state
+      if (allTeamIds.isNotEmpty) {
+        await _supabase
+            .from('teams')
+            .update({'group_id': groupId})
+            .inFilter('id', allTeamIds);
+      }
+    } catch (e) {
+      throw Exception('Kunne ikke opdatere gruppe teams: $e');
     }
   }
 }

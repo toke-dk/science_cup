@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:science_cup_app/features/group/application/group_notifier.dart';
 import 'package:science_cup_app/features/group/data/models/group.dart';
 import 'package:science_cup_app/features/season/application/active_season/current_season_provider.dart';
 import 'package:science_cup_app/features/season/application/season/season_notifier.dart';
@@ -68,9 +69,10 @@ class _AddGroupModalState extends ConsumerState<AddGroupModal> {
           onSubmit: (data) async {
             final name = data['name'] as String;
             final season = data['season'] as Season;
-            return;
-            // TODO:
-            // await ref.read(groupProvider.notifier).createGroup(name: name);
+
+            await ref
+                .read(groupProvider(season.id).notifier)
+                .createGroup(name: name);
           },
         );
       },
