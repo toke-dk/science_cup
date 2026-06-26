@@ -5,8 +5,8 @@ import 'package:science_cup_app/features/program/data/models/program.dart';
 import '../../../shared/presentation/modals/create_entity_modal.dart';
 import '../application/program_notifier.dart';
 
-class SaveProgramModal extends ConsumerWidget {
-  const SaveProgramModal({super.key, this.initialProgram});
+class AddProgramModal extends ConsumerWidget {
+  const AddProgramModal({super.key, this.initialProgram});
 
   final Program? initialProgram;
 
