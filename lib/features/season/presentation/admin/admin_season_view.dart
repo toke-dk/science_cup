@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:science_cup_app/features/contact/presentation/edit_contacts_page.dart';
+import 'package:science_cup_app/features/game/presentation/edit_games_view.dart';
 import 'package:science_cup_app/features/group/presentation/edit_groups_view.dart';
 import 'package:science_cup_app/features/program/presentation/edit_programs_view.dart';
 import 'package:science_cup_app/features/team/presentation/edit_teams_view.dart';
@@ -63,7 +64,7 @@ class _AdminSeasonViewState extends State<AdminSeasonView> {
           ),
         ),
         switch (_selectedAdminSegment.value) {
-          "games" => Text("KampSegment"),
+          "games" => EditGamesView(),
           "groups" => EditGroupsView(),
           "teams" => EditTeamsView(),
           "programs" => ProgramsView(),
