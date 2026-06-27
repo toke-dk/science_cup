@@ -5,8 +5,6 @@ import 'package:science_cup_app/features/group/data/models/group.dart';
 import 'package:science_cup_app/features/season/application/active_season/current_season_provider.dart';
 import 'package:science_cup_app/features/season/application/season/season_notifier.dart';
 import 'package:science_cup_app/features/season/data/models/season.dart';
-import 'package:science_cup_app/features/team/application/team_notifier.dart';
-import 'package:science_cup_app/features/team/data/models/team.dart';
 
 import '../../../shared/presentation/modals/create_entity_modal.dart';
 
@@ -31,9 +29,6 @@ class _AddGroupModalState extends ConsumerState<AddGroupModal> {
   @override
   Widget build(BuildContext context) {
     final seasonsAsync = ref.watch(seasonsProvider);
-    final teamsAsync = _selectedSeason != null
-        ? ref.watch(teamProvider(_selectedSeason!.id))
-        : const AsyncValue.data(<Team>[]);
 
     return seasonsAsync.when(
       loading: () => const Center(child: CircularProgressIndicator()),
