@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:science_cup_app/features/game/data/models/game.dart';
+import 'package:science_cup_app/features/game/data/enums/game_enums.dart';
 
 part 'write_game_request.freezed.dart';
 part 'write_game_request.g.dart';
@@ -32,8 +32,8 @@ abstract class WriteGameRequest with _$WriteGameRequest {
     int? awayScore,
 
     // Clock
-    int? clockBaseMinutes,
-    DateTime? clockStartedAt,
+    // int? clockBaseMinutes,
+    // DateTime? clockStartedAt,
 
     // Other
     bool? refereeAbsent,

@@ -65,6 +65,7 @@ class TimeFieldConfig extends FieldConfig {
 class SelectFieldConfig<T> extends FieldConfig {
   final String key;
   final String label;
+  final bool isClearable;
 
   // --- Interne typed funktioner ---
   final List<T> _options;
@@ -90,6 +91,7 @@ class SelectFieldConfig<T> extends FieldConfig {
   const SelectFieldConfig({
     required this.key,
     required this.label,
+    this.isClearable = false,
     required List<T> options,
     required String Function(T) optionLabel,
     String? Function(T?)? validator,
@@ -109,6 +111,10 @@ class DividerFieldConfig extends FieldConfig {
   final double height;
   final double thickness;
   const DividerFieldConfig({this.height = 16, this.thickness = 1, super.group});
+}
+
+class EmptyFieldConfig extends FieldConfig {
+  const EmptyFieldConfig({super.group});
 }
 
 // Custom Widget
@@ -249,6 +255,9 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
           break;
         case MultiSelectFieldConfig(key: final key):
           _multiSelectValues[key] = f.initialValues ?? [];
+        case EmptyFieldConfig():
+          // TODO: Handle this case.
+          break;
       }
     }
   }
@@ -361,12 +370,24 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
         :final optionLabel,
         :final validator,
         :final onFieldSelected,
+        :final isClearable,
       ) =>
         DropdownButtonFormField<dynamic>(
           initialValue: _selectValues[key],
           decoration: InputDecoration(
             labelText: label,
             border: const OutlineInputBorder(),
+            suffixIcon: isClearable == true && _selectValues[key] != null
+                ? IconButton(
+                    icon: const Icon(Icons.clear),
+                    onPressed: () {
+                      setState(() {
+                        _selectValues[key] = null;
+                      });
+                      if (onFieldSelected != null) onFieldSelected(null);
+                    },
+                  )
+                : null,
           ),
           items: options
               .map(
@@ -472,6 +493,8 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
           },
         ),
       ),
+      // TODO: Handle this case.
+      EmptyFieldConfig() => const SizedBox.shrink(),
     };
   }
 
@@ -547,6 +570,8 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
           data[f.key] = _phoneControllers[f.key]?.value;
         case MultiSelectFieldConfig(:final key):
           data[key] = _multiSelectValues[key];
+        case EmptyFieldConfig():
+          break;
       }
     }
 

@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:science_cup_app/features/game/data/enums/game_enums.dart';
 import 'package:science_cup_app/features/group/data/models/group.dart';
 import 'package:science_cup_app/features/team/data/models/team.dart';
 
@@ -6,12 +7,6 @@ import '../../../season/data/models/season.dart';
 
 part 'game.freezed.dart';
 part 'game.g.dart';
-
-enum GameStatus { pending, ready, playing, completed }
-
-enum GameSlot { home, away }
-
-enum GameResolution { walkover, retired }
 
 @freezed
 abstract class Game with _$Game {
@@ -49,4 +44,13 @@ abstract class Game with _$Game {
   }) = _Game;
 
   factory Game.fromJson(Map<String, dynamic> json) => _$GameFromJson(json);
+
+  GameStageType? get gameStageType {
+    if (group != null) {
+      return GameStageType.group;
+    } else if (roundNumber != null) {
+      return GameStageType.round;
+    }
+    return null; // Hvis ingen af betingelserne er opfyldt
+  }
 }
