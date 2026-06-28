@@ -40,7 +40,7 @@ class _AddGameModalState extends ConsumerState<AddGameModal> {
           title: widget.game == null ? 'Opret kamp' : 'Rediger kamp',
           fields: [
             SelectFieldConfig<GameStageType>(
-              key: 'gameStageType',
+              key: '_gameStageType', // Bruges ikke til opretning af kamp
               label: 'Kamp type',
               initialValue: _selectedGameStageType,
               options: GameStageType.values,
@@ -56,9 +56,36 @@ class _AddGameModalState extends ConsumerState<AddGameModal> {
                 : const [],
           ],
           onSubmit: (data) async {
-            final groupId = data['groupId'] as int;
-            final teamAId = data['teamAId'] as int;
-            final teamBId = data['teamBId'] as int;
+            final groupId = _selectedGroup?.id;
+            final homeTeamId = _selectedHomeTeam?.id;
+            final awayTeamId = _selectedAwayTeam?.id;
+
+            final startDate = data['startDate'] as DateTime?;
+            final startTime = data['startTime'] as TimeOfDay?;
+            final refereeTeamId = (data['refferee'] as Team?)?.id;
+
+            DateTime? combinedStartDateTime;
+            if (startDate != null && startTime != null) {
+              combinedStartDateTime = DateTime(
+                startDate.year,
+                startDate.month,
+                startDate.day,
+                startTime.hour,
+                startTime.minute,
+              );
+            }
+
+            await ref
+                .read(saveGameProvider(seasonId).notifier)
+                .saveGame(
+                  id: widget.game?.id,
+                  seasonId: seasonId,
+                  groupId: groupId,
+                  homeTeamId: homeTeamId,
+                  awayTeamId: awayTeamId,
+                  startDate: combinedStartDateTime,
+                  refereeTeamId: refereeTeamId,
+                );
           },
         );
       },

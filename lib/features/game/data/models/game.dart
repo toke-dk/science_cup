@@ -15,7 +15,7 @@ abstract class Game with _$Game {
 
   @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
   const factory Game({
-    String? id, // <--- Ændret til String for Supabase UUID kompatibilitet
+    int? id, // <--- Ændret til String for Supabase UUID kompatibilitet
     // --- 1. Kontekst & Relationer ---
     Season? season,
     Group? group, // Er NULL hvis det er en slutspilskamp!
