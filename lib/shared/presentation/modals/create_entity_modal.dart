@@ -35,10 +35,12 @@ class DateFieldConfig extends FieldConfig {
   final String label;
   final String? Function(DateTime?)? validator;
   final DateTime? initialValue;
+  final bool isClearable;
 
   const DateFieldConfig({
     required this.key,
     required this.label,
+    this.isClearable = false,
     this.validator,
     this.initialValue,
     super.group,
@@ -51,10 +53,12 @@ class TimeFieldConfig extends FieldConfig {
   final String label;
   final String? Function(TimeOfDay?)? validator;
   final TimeOfDay? initialValue;
+  final bool isClearable;
 
   const TimeFieldConfig({
     required this.key,
     required this.label,
+    this.isClearable = false,
     this.validator,
     this.initialValue,
     super.group,
@@ -335,13 +339,23 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
           ),
           validator: validator,
         ),
-      DateFieldConfig(:final key, :final label) => ListTile(
-        title: Text(label),
-        subtitle: Text(
+      DateFieldConfig(:final key, :final label, :final isClearable) => ListTile(
+        leading: isClearable == true && _dateValues[key] != null
+            ? IconButton(
+                icon: const Icon(Icons.clear),
+                onPressed: () {
+                  setState(() {
+                    _dateValues[key] = null;
+                  });
+                },
+              )
+            : null,
+        title: Text(
           _dateValues[key] == null
               ? 'Vælg dato'
               : dateFormatter.format(_dateValues[key]!.toLocal()),
         ),
+        subtitle: Text(label),
         trailing: const Icon(Icons.calendar_today),
         shape: RoundedRectangleBorder(
           side: const BorderSide(color: Colors.grey),
@@ -349,20 +363,37 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
         ),
         onTap: () => _selectDate(context, key),
       ),
-      TimeFieldConfig(:final key, :final label) => ListTile(
-        title: Text(label),
-        subtitle: Text(
-          _timeValues[key] == null
-              ? 'Vælg tid'
-              : _timeValues[key]!.format(context),
+      TimeFieldConfig(
+        :final key,
+        :final label,
+        :final isClearable,
+        :final initialValue,
+      ) =>
+        ListTile(
+          leading: isClearable == true && _timeValues[key] != null
+              ? IconButton(
+                  icon: const Icon(Icons.clear),
+                  onPressed: () {
+                    setState(() {
+                      _timeValues[key] = null;
+                    });
+                  },
+                )
+              : null,
+          title: Text(
+            _timeValues[key] == null
+                ? 'Vælg tid'
+                : _timeValues[key]!.format(context),
+          ),
+          subtitle: Text(label),
+          trailing: const Icon(Icons.access_time),
+          shape: RoundedRectangleBorder(
+            side: const BorderSide(color: Colors.grey),
+            borderRadius: BorderRadius.circular(4),
+          ),
+          onTap: () =>
+              _selectTime(context, key, _timeValues[key] ?? initialValue),
         ),
-        trailing: const Icon(Icons.access_time),
-        shape: RoundedRectangleBorder(
-          side: const BorderSide(color: Colors.grey),
-          borderRadius: BorderRadius.circular(4),
-        ),
-        onTap: () => _selectTime(context, key),
-      ),
       SelectFieldConfig(
         :final key,
         :final label,
@@ -521,10 +552,14 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
     }
   }
 
-  Future<void> _selectTime(BuildContext context, String key) async {
+  Future<void> _selectTime(
+    BuildContext context,
+    String key,
+    TimeOfDay? initialValue,
+  ) async {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
-      initialTime: TimeOfDay.now(),
+      initialTime: initialValue ?? TimeOfDay.now(),
     );
     if (picked != null) {
       setState(() {
