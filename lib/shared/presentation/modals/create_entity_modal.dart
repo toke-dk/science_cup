@@ -70,6 +70,7 @@ class SelectFieldConfig<T> extends FieldConfig {
   final String key;
   final String label;
   final bool isClearable;
+  final Widget? prefixIcon;
 
   // --- Interne typed funktioner ---
   final List<T> _options;
@@ -95,6 +96,7 @@ class SelectFieldConfig<T> extends FieldConfig {
   const SelectFieldConfig({
     required this.key,
     required this.label,
+    this.prefixIcon,
     this.isClearable = false,
     required List<T> options,
     required String Function(T) optionLabel,
@@ -340,7 +342,7 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
           validator: validator,
         ),
       DateFieldConfig(:final key, :final label, :final isClearable) => ListTile(
-        leading: isClearable == true && _dateValues[key] != null
+        trailing: isClearable == true && _dateValues[key] != null
             ? IconButton(
                 icon: const Icon(Icons.clear),
                 onPressed: () {
@@ -352,11 +354,10 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
             : null,
         title: Text(
           _dateValues[key] == null
-              ? 'Vælg dato'
+              ? label
               : dateFormatter.format(_dateValues[key]!.toLocal()),
         ),
-        subtitle: Text(label),
-        trailing: const Icon(Icons.calendar_today),
+        leading: const Icon(Icons.calendar_today),
         shape: RoundedRectangleBorder(
           side: const BorderSide(color: Colors.grey),
           borderRadius: BorderRadius.circular(4),
@@ -370,7 +371,7 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
         :final initialValue,
       ) =>
         ListTile(
-          leading: isClearable == true && _timeValues[key] != null
+          trailing: isClearable == true && _timeValues[key] != null
               ? IconButton(
                   icon: const Icon(Icons.clear),
                   onPressed: () {
@@ -382,11 +383,10 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
               : null,
           title: Text(
             _timeValues[key] == null
-                ? 'Vælg tid'
+                ? label
                 : _timeValues[key]!.format(context),
           ),
-          subtitle: Text(label),
-          trailing: const Icon(Icons.access_time),
+          leading: const Icon(Icons.access_time),
           shape: RoundedRectangleBorder(
             side: const BorderSide(color: Colors.grey),
             borderRadius: BorderRadius.circular(4),
@@ -402,10 +402,12 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
         :final validator,
         :final onFieldSelected,
         :final isClearable,
+        :final prefixIcon,
       ) =>
         DropdownButtonFormField<dynamic>(
           initialValue: _selectValues[key],
           decoration: InputDecoration(
+            prefixIcon: prefixIcon,
             labelText: label,
             border: const OutlineInputBorder(),
             suffixIcon: isClearable == true && _selectValues[key] != null

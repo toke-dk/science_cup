@@ -1,0 +1,169 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:science_cup_app/features/game/application/save_game_notifier.dart';
+import 'package:science_cup_app/features/game/data/enums/game_enums.dart';
+import 'package:science_cup_app/features/game/data/models/game.dart';
+import 'package:science_cup_app/features/game/data/models/save_game_view_state.dart';
+import 'package:science_cup_app/features/group/data/models/group.dart';
+import 'package:science_cup_app/features/season/application/active_season/current_season_provider.dart';
+import 'package:science_cup_app/features/team/data/models/team.dart';
+import 'package:science_cup_app/shared/presentation/modals/create_entity_modal.dart';
+
+class AddGameModal extends ConsumerStatefulWidget {
+  const AddGameModal({super.key, this.game});
+
+  final Game? game;
+
+  @override
+  ConsumerState<AddGameModal> createState() => _AddGameModalState();
+}
+
+class _AddGameModalState extends ConsumerState<AddGameModal> {
+  late GameStageType _selectedGameStageType =
+      widget.game?.gameStageType ?? GameStageType.group;
+
+  late Group? _selectedGroup = widget.game?.group;
+  late Team? _selectedHomeTeam = widget.game?.homeTeam;
+  late Team? _selectedAwayTeam = widget.game?.awayTeam;
+
+  @override
+  Widget build(BuildContext context) {
+    final seasonId = ref.watch(currentSeasonProvider)?.id;
+    if (seasonId == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    final saveGameDataState = ref.watch(saveGameProvider(seasonId));
+
+    return saveGameDataState.when(
+      data: (saveGameData) {
+        return CreateEntityModal(
+          title: widget.game == null ? 'Opret kamp' : 'Rediger kamp',
+          fields: [
+            SelectFieldConfig<GameStageType>(
+              key: 'gameStageType',
+              label: 'Kamp type',
+              initialValue: _selectedGameStageType,
+              options: GameStageType.values,
+              optionLabel: (option) => option.displayName,
+              onFieldSelected: (value) {
+                setState(() {
+                  _selectedGameStageType = value;
+                });
+              },
+            ),
+            ..._selectedGameStageType == GameStageType.group
+                ? _buildFieldsForGroupType(saveGameData)
+                : const [],
+          ],
+          onSubmit: (data) async {
+            final groupId = data['groupId'] as int;
+            final teamAId = data['teamAId'] as int;
+            final teamBId = data['teamBId'] as int;
+          },
+        );
+      },
+      loading: () => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            alignment: Alignment.center,
+            padding: EdgeInsets.all(16),
+            child: CircularProgressIndicator(),
+          ),
+        ],
+      ),
+      error: (error, stackTrace) =>
+          Center(child: Text('Fejl ved indlæsning af kampdata: $error')),
+    );
+  }
+
+  List<FieldConfig> _buildFieldsForGroupType(SaveGameData saveGameData) {
+    final groupOptions = saveGameData.groups;
+    final teamOptions = saveGameData.teams;
+
+    return [
+      SelectFieldConfig<Group>(
+        key: "group",
+        label: "Gruppe",
+        options: groupOptions,
+        optionLabel: (option) => option.name ?? "Ingen navn",
+        onFieldSelected: (value) {
+          setState(() {
+            _selectedGroup = value;
+          });
+        },
+      ),
+      _selectedGroup == null
+          ? const EmptyFieldConfig()
+          : SelectFieldConfig<Team?>(
+              key: "homeTeam_${_selectedGroup?.id}",
+              label: "Hjemmehold",
+              isClearable: true,
+              initialValue: _selectedHomeTeam,
+              options: teamOptions
+                  .where(
+                    (team) =>
+                        team.group?.id == _selectedGroup?.id &&
+                        team.id != _selectedAwayTeam?.id,
+                  )
+                  .toList(),
+              optionLabel: (option) =>
+                  option == null ? "Vælg hold" : option.name ?? "Intet navn",
+              onFieldSelected: (value) {
+                setState(() {
+                  _selectedHomeTeam = value;
+                });
+              },
+            ),
+      _selectedGroup == null
+          ? const EmptyFieldConfig()
+          : SelectFieldConfig<Team?>(
+              key: "awayTeam_${_selectedGroup?.id}",
+              label: "Udehold",
+              isClearable: true,
+              initialValue: _selectedAwayTeam,
+              options: teamOptions
+                  .where(
+                    (team) =>
+                        team.group?.id == _selectedGroup?.id &&
+                        team.id != _selectedHomeTeam?.id,
+                  )
+                  .toList(),
+              optionLabel: (option) =>
+                  option == null ? "Vælg hold" : option.name ?? "Intet navn",
+              onFieldSelected: (value) {
+                setState(() {
+                  _selectedAwayTeam = value;
+                });
+              },
+            ),
+      _selectedGroup == null
+          ? const EmptyFieldConfig()
+          : DateFieldConfig(
+              isClearable: true,
+              key: "startDate",
+              label: "Dato",
+              initialValue: widget.game?.startDate,
+            ),
+      _selectedGroup == null
+          ? const EmptyFieldConfig()
+          : TimeFieldConfig(
+              isClearable: true,
+              key: "startTime",
+              label: "Tid",
+              initialValue: widget.game?.startDate == null
+                  ? TimeOfDay(hour: 15, minute: 0)
+                  : TimeOfDay.fromDateTime(widget.game!.startDate!),
+            ),
+      _selectedGroup == null
+          ? const EmptyFieldConfig()
+          : SelectFieldConfig<Team?>(
+              key: 'refferee',
+              label: 'Dommer',
+              prefixIcon: const Icon(Icons.person),
+              options: teamOptions,
+              optionLabel: (Team? option) => option?.name ?? 'Ingen dommer',
+            ),
+    ];
+  }
+}
