@@ -275,6 +275,9 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
     while (i < fields.length) {
       final f = fields[i];
       final group = f.group;
+
+      final bottomPadding = f is EmptyFieldConfig ? 0.0 : 12.0;
+
       if (group != null) {
         // saml sammenhængende felter med samme gruppe
         final groupItems = <FieldConfig>[];
@@ -286,7 +289,7 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
 
         widgets.add(
           Padding(
-            padding: const EdgeInsets.only(bottom: 12.0),
+            padding: EdgeInsets.only(bottom: bottomPadding),
             child: Row(
               children: groupItems.map((gf) {
                 return Expanded(
@@ -306,7 +309,7 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
       // enkelt fuld-bredde felt
       widgets.add(
         Padding(
-          padding: const EdgeInsets.only(bottom: 12.0),
+          padding: EdgeInsets.only(bottom: bottomPadding),
           child: Row(
             children: [
               Expanded(child: _buildSingleFieldWidget(f, dateFormatter)),
