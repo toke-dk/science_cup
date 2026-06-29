@@ -10,7 +10,6 @@ class GameNotifier extends _$GameNotifier {
   Future<List<GameSummary>> build(int seasonId) async {
     final gameRepo = ref.read(gameRepositoryProvider);
     final result = await gameRepo.getGamesForSeason(seasonId);
-    print("GameNotifier.build: $result");
     return result;
   }
 }

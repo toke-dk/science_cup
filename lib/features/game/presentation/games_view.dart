@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:science_cup_app/features/game/application/game_notifier.dart';
 import 'package:science_cup_app/features/game/data/models/game_summary.dart';
+import 'package:science_cup_app/features/game/presentation/display_game.dart';
 import 'package:science_cup_app/features/season/application/active_season/current_season_provider.dart';
 
 class GamesView extends ConsumerWidget {
@@ -18,24 +19,13 @@ class GamesView extends ConsumerWidget {
 
     return gamesState.when(
       data: (List<GameSummary> games) {
-        print("Games: $games");
         if (games.isEmpty) {
           return const Center(child: Text("Ingen kampe fundet"));
         }
         return Column(
           children: games.map((game) {
             print("Game: $game");
-            return Row(
-              children: List.generate(2, (index) {
-                final team = index == 0 ? game.homeTeam : game.awayTeam;
-                if (team == null) {
-                  return const SizedBox.shrink();
-                }
-                return Row(
-                  children: [Text("${team.name ?? "Ukendt holdnavn"} ")],
-                );
-              }),
-            );
+            return DisplayGame(game: game);
           }).toList(),
         );
       },
