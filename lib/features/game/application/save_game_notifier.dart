@@ -48,15 +48,9 @@ class SaveGameNotifier extends _$SaveGameNotifier {
       id: id,
       refereeTeamId: refereeTeamId,
       roundNumber: roundNumber,
-      matchNumber: matchNumber,
       nextGameId: nextGameId,
       nextGameSlot: nextGameSlot,
       winnerTeamId: winnerTeamId,
-      status: status,
-      homeScore: homeScore,
-      awayScore: awayScore,
-      refereeAbsent: refereeAbsent,
-      comment: comment,
       startDate: startDate,
     );
     final gameRepo = ref.read(gameRepositoryProvider);

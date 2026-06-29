@@ -28,11 +28,11 @@ class _AddGameModalState extends ConsumerState<AddGameModal> {
 
   @override
   Widget build(BuildContext context) {
-    final seasonId = ref.watch(currentSeasonProvider)?.id;
-    if (seasonId == null) {
+    final currentSeasonId = ref.watch(currentSeasonProvider)?.id;
+    if (currentSeasonId == null) {
       return const Center(child: CircularProgressIndicator());
     }
-    final saveGameDataState = ref.watch(saveGameProvider(seasonId));
+    final saveGameDataState = ref.watch(saveGameProvider(currentSeasonId));
 
     return saveGameDataState.when(
       data: (saveGameData) {
@@ -76,10 +76,10 @@ class _AddGameModalState extends ConsumerState<AddGameModal> {
             }
 
             await ref
-                .read(saveGameProvider(seasonId).notifier)
+                .read(saveGameProvider(currentSeasonId).notifier)
                 .saveGame(
                   id: widget.game?.id,
-                  seasonId: seasonId,
+                  seasonId: currentSeasonId,
                   groupId: groupId,
                   homeTeamId: homeTeamId,
                   awayTeamId: awayTeamId,

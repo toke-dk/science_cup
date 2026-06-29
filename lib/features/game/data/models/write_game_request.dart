@@ -4,6 +4,7 @@ import 'package:science_cup_app/features/game/data/enums/game_enums.dart';
 part 'write_game_request.freezed.dart';
 part 'write_game_request.g.dart';
 
+// For creating or updating a game, including its relationships, schedule, and knockout information.
 @freezed
 abstract class WriteGameRequest with _$WriteGameRequest {
   @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
@@ -19,25 +20,9 @@ abstract class WriteGameRequest with _$WriteGameRequest {
 
     // Knockout
     int? roundNumber,
-    int? matchNumber,
     int? nextGameId,
     GameSlot? nextGameSlot,
     int? winnerTeamId,
-
-    // Status
-    GameStatus? status,
-
-    // Result
-    int? homeScore,
-    int? awayScore,
-
-    // Clock
-    // int? clockBaseMinutes,
-    // DateTime? clockStartedAt,
-
-    // Other
-    bool? refereeAbsent,
-    String? comment,
 
     // Schedule
     DateTime? startDate,
