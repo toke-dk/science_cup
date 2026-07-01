@@ -58,6 +58,7 @@ class _AddGroupModalState extends ConsumerState<AddGroupModal> {
             TextFieldConfig(
               key: 'name',
               label: 'Gruppenavn',
+              initialValue: widget.group?.name,
               validator: (v) => v == null || v.isEmpty ? 'Indtast navn' : null,
             ),
           ],
@@ -67,7 +68,7 @@ class _AddGroupModalState extends ConsumerState<AddGroupModal> {
 
             await ref
                 .read(groupProvider(season.id).notifier)
-                .createGroup(name: name);
+                .saveGroup(name: name, id: widget.group?.id);
           },
         );
       },

@@ -1,7 +1,11 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:science_cup_app/features/group/data/models/group_with_teams.dart';
+import 'package:science_cup_app/features/group/presentation/add_group_modal.dart';
 import 'package:science_cup_app/features/team/data/models/team.dart';
+import 'package:science_cup_app/shared/presentation/modals/show_create_entity_modal_bottom_sheet.dart';
+import 'package:science_cup_app/shared/presentation/widgets/confirmation_dialog/confirmation_fields.dart';
+import 'package:science_cup_app/shared/presentation/widgets/edit_delete_menu.dart';
 
 class DisplayGroupWithTeam extends StatelessWidget {
   const DisplayGroupWithTeam({
@@ -26,6 +30,24 @@ class DisplayGroupWithTeam extends StatelessWidget {
               children: [
                 Row(
                   children: [
+                    EditDeleteMenu(
+                      onEdit: () {
+                        showCreateEntityModalBottomSheet(
+                          context: context,
+                          builder: (context) {
+                            return AddGroupModal(group: groupWithTeam.group);
+                          },
+                        );
+                      },
+                      confirmationFields: ConfirmationFields(
+                        title: "Slet gruppe",
+                        content:
+                            'Er du sikker på, at du vil slette gruppen ${groupWithTeam.group?.name}?',
+                        confirmButtonText: 'Slet',
+                      ),
+
+                      onDelete: (isConfirmed) {},
+                    ),
                     Text(groupWithTeam.group?.name ?? 'Uden navn'),
                     DropdownSearch<Team>.multiSelection(
                       mode: Mode.custom,
