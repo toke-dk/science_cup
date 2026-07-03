@@ -90,11 +90,12 @@ class DisplayGroupWithTeam extends StatelessWidget {
                                 ),
                               ),
                               child: TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
+                                onPressed: () async {
                                   if (onTeamsChanged != null) {
                                     onTeamsChanged!(selectedItems);
                                   }
+                                  if (!context.mounted) return;
+                                  Navigator.of(context).pop();
                                 },
                                 child: Text("GEM"),
                               ),

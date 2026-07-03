@@ -12,12 +12,12 @@ class EditGroupsView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    if (ref.watch(currentSeasonProvider)?.id == null) {
+    final seasonId = ref.watch(currentSeasonProvider)?.id;
+
+    if (seasonId == null) {
       return const Center(child: Text("Ingen sæson valgt"));
     }
-    final groupsState = ref.watch(
-      groupBoardStateProvider(ref.watch(currentSeasonProvider)!.id!),
-    );
+    final groupsState = ref.watch(groupBoardStateProvider(seasonId));
 
     return groupsState.when(
       loading: () => const Center(child: CircularProgressIndicator()),
@@ -43,8 +43,7 @@ class EditGroupsView extends ConsumerWidget {
               ),
             ],
           ),
-          ListView(
-            shrinkWrap: true,
+          Column(
             children: groupBoardState.groupsWithTeams
                 .map(
                   (g) => DisplayGroupWithTeam(
@@ -56,11 +55,7 @@ class EditGroupsView extends ConsumerWidget {
                         "Selected teams for group ${g.group?.name}: ${selectedTeams.map((t) => t.name).join(", ")}",
                       );
                       await ref
-                          .read(
-                            groupBoardStateProvider(
-                              ref.watch(currentSeasonProvider)!.id!,
-                            ).notifier,
-                          )
+                          .read(groupBoardStateProvider(seasonId).notifier)
                           .updateGroupTeams(
                             g.group!.id!,
                             selectedTeams.map((t) => t.id!).toList(),

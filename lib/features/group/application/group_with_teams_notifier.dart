@@ -8,8 +8,10 @@ part 'group_with_teams_notifier.g.dart';
 class GroupBoardStateNotifier extends _$GroupBoardStateNotifier {
   @override
   Future<GroupBoardState> build(int seasonId) async {
+    print('Building GroupBoardStateNotifier for seasonId: $seasonId');
     // 2. Hent grupper for denne sæson
     final repository = ref.read(groupRepositoryProvider);
+
     return repository.getGroupBoard(seasonId);
   }
 

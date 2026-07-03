@@ -64,10 +64,16 @@ class _AddGroupModalState extends ConsumerState<AddGroupModal> {
           ],
           onSubmit: (data) async {
             final name = data['name'] as String;
-            final season = data['season'] as Season;
+            final season = data['season'] as Season?;
+            if (season?.id == null) {
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text('Vælg en sæson')));
+              return;
+            }
 
             await ref
-                .read(groupProvider(season.id).notifier)
+                .read(groupProvider(season!.id!).notifier)
                 .saveGroup(name: name, id: widget.group?.id);
           },
         );
