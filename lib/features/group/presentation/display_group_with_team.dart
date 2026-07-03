@@ -1,5 +1,7 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:science_cup_app/features/group/application/group_notifier.dart';
 import 'package:science_cup_app/features/group/data/models/group_with_teams.dart';
 import 'package:science_cup_app/features/group/presentation/add_group_modal.dart';
 import 'package:science_cup_app/features/team/data/models/team.dart';
@@ -7,7 +9,7 @@ import 'package:science_cup_app/shared/presentation/modals/show_create_entity_mo
 import 'package:science_cup_app/shared/presentation/widgets/confirmation_dialog/confirmation_fields.dart';
 import 'package:science_cup_app/shared/presentation/widgets/edit_delete_menu.dart';
 
-class DisplayGroupWithTeam extends StatelessWidget {
+class DisplayGroupWithTeam extends ConsumerWidget {
   const DisplayGroupWithTeam({
     super.key,
     required this.groupWithTeam,
@@ -22,7 +24,7 @@ class DisplayGroupWithTeam extends StatelessWidget {
   final Function(List<Team>)? onTeamsChanged;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return groupWithTeam.group == null
         ? const SizedBox.shrink()
         : Card(
@@ -46,7 +48,17 @@ class DisplayGroupWithTeam extends StatelessWidget {
                         confirmButtonText: 'Slet',
                       ),
 
-                      onDelete: (isConfirmed) {},
+                      onDelete: (isConfirmed) {
+                        if (!isConfirmed) return;
+
+                        ref
+                            .read(
+                              groupProvider(
+                                groupWithTeam.group!.seasonId!,
+                              ).notifier,
+                            )
+                            .deleteGroup(groupWithTeam.group!.id!);
+                      },
                     ),
                     Text(groupWithTeam.group?.name ?? 'Uden navn'),
                     DropdownSearch<Team>.multiSelection(

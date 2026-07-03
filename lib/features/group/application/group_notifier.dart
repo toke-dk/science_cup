@@ -48,7 +48,7 @@ class GroupNotifier extends _$GroupNotifier {
   }
 
   // --- DELETE ---
-  Future<void> deleteGroup(String id) async {
+  Future<void> deleteGroup(int id) async {
     final repository = ref.read(groupRepositoryProvider);
     await repository.deleteGroup(id);
     ref.invalidateSelf();

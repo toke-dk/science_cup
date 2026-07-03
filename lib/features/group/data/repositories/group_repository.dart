@@ -57,7 +57,7 @@ class GroupRepository {
     }
   }
 
-  Future<void> deleteGroup(String id) async {
+  Future<void> deleteGroup(int id) async {
     try {
       await _supabase.from('groups').delete().eq('id', id);
     } catch (e) {
