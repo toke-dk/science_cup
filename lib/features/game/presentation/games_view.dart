@@ -24,7 +24,6 @@ class GamesView extends ConsumerWidget {
         }
         return Column(
           children: games.map((game) {
-            print("Game: $game");
             return DisplayGame(game: game);
           }).toList(),
         );

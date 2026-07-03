@@ -1,1 +1,1 @@
-enum ProfileRole {admin, groupContact}
+enum ProfileRole { admin, groupContact, guest }

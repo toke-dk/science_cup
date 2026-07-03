@@ -1,27 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:science_cup_app/features/auth/application/auth_notifier.dart';
 import 'package:science_cup_app/features/game/data/models/game_summary.dart';
 
-class DisplayGame extends StatelessWidget {
+class DisplayGame extends ConsumerWidget {
   const DisplayGame({super.key, required this.game});
 
   final GameSummary game;
 
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildTeamRow(String? teamName) {
     return Row(
       children: [
-        game.group != null
-            ? Text("Gr. ${game.group!.name ?? "?"}")
-            : const SizedBox.shrink(),
-        Row(
-          children: List.generate(2, (index) {
-            final team = index == 0 ? game.homeTeam : game.awayTeam;
-            if (team == null) {
-              return const SizedBox.shrink();
-            }
-            return Row(children: [Text("${team.name ?? "Ukendt holdnavn"} ")]);
-          }),
-        ),
+        Text(teamName ?? "?"),
+        // const SizedBox(width: 8.0),
+        // TeamIcon(teamName: teamName ?? "?"),
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final canReportResult = ref.watch(
+      authProvider.select((state) => state.profile?.canReportScore ?? false),
+    );
+    return Row(
+      children: [
+        _buildTeamRow(game.homeTeam?.name),
+        const SizedBox(width: 16.0),
+        const Text("-"),
+        const SizedBox(width: 16.0),
+        _buildTeamRow(game.awayTeam?.name),
+        Spacer(),
+        if (canReportResult)
+          IconButton(
+            icon: const Icon(Icons.assignment_add),
+            onPressed: () {
+              // Handle edit action
+            },
+          ),
       ],
     );
   }

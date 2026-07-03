@@ -6,6 +6,8 @@ part 'profile.g.dart';
 
 @freezed
 abstract class Profile with _$Profile {
+  const Profile._(); // Private constructor for Freezed
+
   @JsonSerializable(fieldRename: FieldRename.snake, includeIfNull: false)
   const factory Profile({
     String? id,
@@ -16,5 +18,8 @@ abstract class Profile with _$Profile {
     DateTime? createdAt,
   }) = _Profile;
 
-  factory Profile.fromJson(Map<String, dynamic> json) => _$ProfileFromJson(json);
+  factory Profile.fromJson(Map<String, dynamic> json) =>
+      _$ProfileFromJson(json);
+
+  bool get canReportScore => role == ProfileRole.admin;
 }
