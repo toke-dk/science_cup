@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:science_cup_app/features/group/application/group_with_teams_notifier.dart';
 import 'package:science_cup_app/features/team/application/team_repository_provider.dart';
 import 'package:science_cup_app/features/team/data/models/team.dart';
 import 'package:science_cup_app/features/team/data/models/write_team_request.dart';
@@ -54,6 +55,7 @@ class TeamNotifier extends _$TeamNotifier {
 
       await createContactsForTeam(result.id!, contactIds ?? []);
 
+      ref.invalidate(groupBoardStateProvider(activeSeasonId!));
       ref.invalidateSelf();
     } catch (e, stackTrace) {
       state = AsyncError('Kunne ikke opdatere hold: $e', stackTrace);
@@ -80,6 +82,7 @@ class TeamNotifier extends _$TeamNotifier {
     try {
       await _repository.deleteTeam(id);
 
+      ref.invalidate(groupBoardStateProvider(activeSeasonId!));
       ref.invalidateSelf();
     } catch (e, stackTrace) {
       state = AsyncError('Kunne ikke slette hold: $e', stackTrace);

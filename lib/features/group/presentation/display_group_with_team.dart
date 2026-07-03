@@ -60,7 +60,7 @@ class DisplayGroupWithTeam extends ConsumerWidget {
                             .deleteGroup(groupWithTeam.group!.id!);
                       },
                     ),
-                    Text(groupWithTeam.group?.name ?? 'Uden navn'),
+                    Text("Gruppe ${groupWithTeam.group?.name ?? 'Uden navn'}"),
                     DropdownSearch<Team>.multiSelection(
                       mode: Mode.custom,
                       onSelected: onTeamsChanged,

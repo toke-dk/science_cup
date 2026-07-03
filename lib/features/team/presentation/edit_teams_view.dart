@@ -48,14 +48,12 @@ class EditTeamsView extends ConsumerWidget {
                 .map(
                   (indexProgram) => ListTile(
                     title: Text(
-                      (indexProgram.name ?? "Ingen navn") +
+                      (indexProgram.program?.name ?? "Ingen program") +
                           (indexProgram.group?.name != null
                               ? " (${indexProgram.group!.name})"
                               : ""),
                     ),
-                    subtitle: Text(
-                      indexProgram.program?.name ?? "Ingen program",
-                    ),
+                    subtitle: Text((indexProgram.name ?? "Ingen navn")),
                     trailing: EditDeleteMenu(
                       onEdit: () {
                         showCreateEntityModalBottomSheet(

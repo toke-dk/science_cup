@@ -7,6 +7,7 @@ import 'package:science_cup_app/features/game/data/models/save_game_view_state.d
 import 'package:science_cup_app/features/group/data/models/group.dart';
 import 'package:science_cup_app/features/season/application/active_season/current_season_provider.dart';
 import 'package:science_cup_app/features/team/data/models/team.dart';
+import 'package:science_cup_app/features/team/presentation/add_team_modal.dart';
 import 'package:science_cup_app/shared/presentation/modals/create_entity_modal.dart';
 
 class AddGameModal extends ConsumerStatefulWidget {
@@ -190,6 +191,7 @@ class _AddGameModalState extends ConsumerState<AddGameModal> {
               prefixIcon: const Icon(Icons.person),
               options: teamOptions,
               optionLabel: (Team? option) => option?.name ?? 'Ingen dommer',
+              createEntityWidget: AddTeamModal(),
             ),
     ];
   }
