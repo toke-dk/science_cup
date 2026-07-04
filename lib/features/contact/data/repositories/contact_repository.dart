@@ -66,4 +66,18 @@ class ContactRepository {
       throw Exception('Kunne ikke slette kontakt: $e');
     }
   }
+
+  Future<List<int>> getAccessibleTeamIds(String profileId) async {
+    try {
+      // Supabase filtrerer automatisk via relationen her
+      final response = await _supabase
+          .from('team_contacts')
+          .select('team_id, contacts!inner(profile_id)')
+          .eq('contacts.profile_id', profileId);
+
+      return (response as List).map((item) => item['team_id'] as int).toList();
+    } catch (e) {
+      return [];
+    }
+  }
 }
