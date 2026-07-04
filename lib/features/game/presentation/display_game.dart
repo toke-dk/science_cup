@@ -21,25 +21,23 @@ class DisplayGame extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userPermissions = ref.watch(userPermissionsProvider).value;
-    return userPermissions == null
-        ? Text("Permissions er null")
-        : Row(
-            children: [
-              _buildTeamRow(game.homeTeam?.name),
-              const SizedBox(width: 16.0),
-              const Text("-"),
-              const SizedBox(width: 16.0),
-              _buildTeamRow(game.awayTeam?.name),
-              Spacer(),
-              if (game.homeTeam?.id != null &&
-                  userPermissions.canReportResults(game.homeTeam!.id))
-                IconButton(
-                  icon: const Icon(Icons.assignment_add),
-                  onPressed: () {
-                    // Handle edit action
-                  },
-                ),
-            ],
-          );
+    return Row(
+      children: [
+        _buildTeamRow(game.homeTeam?.name),
+        const SizedBox(width: 16.0),
+        const Text("-"),
+        const SizedBox(width: 16.0),
+        _buildTeamRow(game.awayTeam?.name),
+        Spacer(),
+        if (game.homeTeam?.id != null &&
+            userPermissions?.canReportResults(game.homeTeam!.id) == true)
+          IconButton(
+            icon: const Icon(Icons.assignment_add),
+            onPressed: () {
+              // Handle edit action
+            },
+          ),
+      ],
+    );
   }
 }
