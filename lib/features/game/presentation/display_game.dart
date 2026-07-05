@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:science_cup_app/features/game/data/models/game_summary.dart';
+import 'package:science_cup_app/features/game/presentation/add_game_score_modal.dart';
 import 'package:science_cup_app/features/permissions/application/user_permissions_notifier.dart';
+import 'package:science_cup_app/shared/presentation/modals/show_create_entity_modal_bottom_sheet.dart';
 
 class DisplayGame extends ConsumerWidget {
   const DisplayGame({super.key, required this.game});
@@ -34,7 +36,10 @@ class DisplayGame extends ConsumerWidget {
           IconButton(
             icon: const Icon(Icons.assignment_add),
             onPressed: () {
-              // Handle edit action
+              showCreateEntityModalBottomSheet(
+                context: context,
+                builder: (context) => AddGameScoreModal(game: game),
+              );
             },
           ),
       ],
