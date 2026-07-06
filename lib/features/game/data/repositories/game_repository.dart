@@ -65,4 +65,24 @@ class GameRepository {
       throw Exception('Kunne ikke opdatere kamp: $e');
     }
   }
+
+  Future<void> reportGameResult({
+    required int gameId,
+    required int homeScore,
+    required int awayScore,
+  }) async {
+    try {
+      await _supabase
+          .from('games')
+          .update({
+            'home_score': homeScore,
+            'away_score': awayScore,
+            'status':
+                'completed', // Assuming you want to mark the game as completed
+          })
+          .eq('id', gameId);
+    } catch (e) {
+      throw Exception('Kunne ikke indberette resultat: $e');
+    }
+  }
 }

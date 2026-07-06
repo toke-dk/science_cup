@@ -10,12 +10,14 @@ class DisplayGame extends ConsumerWidget {
 
   final GameSummary game;
 
-  Widget _buildTeamRow(String? teamName) {
+  Widget _buildTeamRow(String? teamName, {int? score}) {
     return Row(
       children: [
         Text(teamName ?? "?"),
-        // const SizedBox(width: 8.0),
-        // TeamIcon(teamName: teamName ?? "?"),
+        //const SizedBox(width: 8.0),
+        //TeamIcon(teamName: teamName ?? "?"),
+        const SizedBox(width: 8.0),
+        score == null ? const SizedBox.shrink() : Text(score.toString()),
       ],
     );
   }
@@ -25,11 +27,11 @@ class DisplayGame extends ConsumerWidget {
     final userPermissions = ref.watch(userPermissionsProvider).value;
     return Row(
       children: [
-        _buildTeamRow(game.homeTeam?.name),
+        _buildTeamRow(game.homeTeam?.name, score: game.homeScore),
         const SizedBox(width: 16.0),
         const Text("-"),
         const SizedBox(width: 16.0),
-        _buildTeamRow(game.awayTeam?.name),
+        _buildTeamRow(game.awayTeam?.name, score: game.awayScore),
         Spacer(),
         if (game.homeTeam?.id != null &&
             userPermissions?.canReportResults(game.homeTeam!.id) == true)
