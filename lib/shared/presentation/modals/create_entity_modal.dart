@@ -1,5 +1,6 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:phone_form_field/phone_form_field.dart';
 import 'package:science_cup_app/shared/presentation/modals/show_create_entity_modal_bottom_sheet.dart';
@@ -18,6 +19,7 @@ class TextFieldConfig extends FieldConfig {
   final String? initialValue;
   final String? Function(String?)? validator;
   final TextEditingController? controller;
+  final bool? onlyNumbers;
 
   const TextFieldConfig({
     required this.key,
@@ -26,6 +28,7 @@ class TextFieldConfig extends FieldConfig {
     this.validator,
     this.controller,
     super.group,
+    this.onlyNumbers,
   });
 }
 
@@ -335,15 +338,60 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
   Widget _buildSingleFieldWidget(FieldConfig f, DateFormat dateFormatter) {
     // Byg widget baseret på typen af FieldConfig
     return switch (f) {
-      TextFieldConfig(:final key, :final label, :final validator) =>
-        TextFormField(
-          controller: _textControllers[key],
-          decoration: InputDecoration(
-            labelText: label,
-            border: const OutlineInputBorder(),
-          ),
-          validator: validator,
-        ),
+      TextFieldConfig(
+        :final key,
+        :final label,
+        :final validator,
+        :final onlyNumbers,
+      ) =>
+        onlyNumbers == true
+            ? TextFormField(
+                controller: _textControllers[key],
+                validator: validator,
+                keyboardType: TextInputType.number,
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                  LengthLimitingTextInputFormatter(2), // Max 2 digits
+                ],
+                textAlign: TextAlign.start,
+                decoration: InputDecoration(
+                  labelText: label,
+                  border: const OutlineInputBorder(),
+                  prefixIcon: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          final value =
+                              int.tryParse(_textControllers[key]!.text) ?? 0;
+                          _textControllers[key]!.text = (value + 1).toString();
+                        },
+                        child: const Icon(Icons.keyboard_arrow_up, size: 18),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          final value =
+                              int.tryParse(_textControllers[key]!.text) ?? 0;
+                          if (value > 0) {
+                            _textControllers[key]!.text = (value - 1)
+                                .toString();
+                          }
+                        },
+                        child: const Icon(Icons.keyboard_arrow_down, size: 18),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            : TextFormField(
+                controller: _textControllers[key],
+                decoration: InputDecoration(
+                  labelText: label,
+                  border: const OutlineInputBorder(),
+                ),
+                validator: validator,
+              ),
+
       DateFieldConfig(:final key, :final label, :final isClearable) => ListTile(
         trailing: isClearable == true && _dateValues[key] != null
             ? IconButton(

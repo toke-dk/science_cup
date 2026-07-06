@@ -15,10 +15,12 @@ class AddGameScoreModal extends StatelessWidget {
         TextFieldConfig(
           label: "Score: ${game.homeTeam?.name ?? "Hjemmehold"}",
           key: 'home_score',
+          onlyNumbers: true,
         ),
         TextFieldConfig(
           label: "Score: ${game.awayTeam?.name ?? "Udehold"}",
           key: 'away_score',
+          onlyNumbers: true,
         ),
       ],
       onSubmit: (data) async {},
