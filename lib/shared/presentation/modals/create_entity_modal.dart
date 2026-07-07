@@ -33,17 +33,22 @@ class TextFieldConfig extends FieldConfig {
 }
 
 // Dato
+// Dato
 class DateFieldConfig extends FieldConfig {
   final String key;
   final String label;
   final String? Function(DateTime?)? validator;
   final DateTime? initialValue;
   final bool isClearable;
+  final bool isLoading;
+  final void Function(DateTime?)? onSubmit;
 
   const DateFieldConfig({
     required this.key,
     required this.label,
     this.isClearable = false,
+    this.isLoading = false,
+    this.onSubmit,
     this.validator,
     this.initialValue,
     super.group,
@@ -57,11 +62,15 @@ class TimeFieldConfig extends FieldConfig {
   final String? Function(TimeOfDay?)? validator;
   final TimeOfDay? initialValue;
   final bool isClearable;
+  final bool isLoading;
+  final void Function(TimeOfDay?)? onSubmit;
 
   const TimeFieldConfig({
     required this.key,
     required this.label,
     this.isClearable = false,
+    this.isLoading = false,
+    this.onSubmit,
     this.validator,
     this.initialValue,
     super.group,
@@ -392,43 +401,73 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
                 validator: validator,
               ),
 
-      DateFieldConfig(:final key, :final label, :final isClearable) => ListTile(
-        trailing: isClearable == true && _dateValues[key] != null
-            ? IconButton(
-                icon: const Icon(Icons.clear),
-                onPressed: () {
-                  setState(() {
-                    _dateValues[key] = null;
-                  });
-                },
-              )
-            : null,
-        title: Text(
-          _dateValues[key] == null
-              ? label
-              : dateFormatter.format(_dateValues[key]!.toLocal()),
+      DateFieldConfig(
+        :final key,
+        :final label,
+        :final isClearable,
+        :final isLoading,
+        :final onSubmit,
+      ) =>
+        ListTile(
+          enabled: !isLoading,
+          trailing: isLoading
+              ? const SizedBox(
+                  width: 24,
+                  height: 24,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                )
+              : isClearable && _dateValues[key] != null
+              ? IconButton(
+                  icon: const Icon(Icons.clear),
+                  onPressed: () {
+                    setState(() {
+                      _dateValues[key] = null;
+                    });
+                    onSubmit?.call(null); // informer om at feltet er ryddet
+                  },
+                )
+              : null,
+          title: Text(
+            _dateValues[key] == null
+                ? label
+                : dateFormatter.format(_dateValues[key]!.toLocal()),
+            style: isLoading
+                ? TextStyle(color: Theme.of(context).hintColor)
+                : null,
+          ),
+          leading: const Icon(Icons.calendar_today),
+          shape: RoundedRectangleBorder(
+            side: const BorderSide(color: Colors.grey),
+            borderRadius: BorderRadius.circular(4),
+          ),
+          onTap: isLoading
+              ? null
+              : () => _selectDate(context, key, onSubmit: onSubmit),
         ),
-        leading: const Icon(Icons.calendar_today),
-        shape: RoundedRectangleBorder(
-          side: const BorderSide(color: Colors.grey),
-          borderRadius: BorderRadius.circular(4),
-        ),
-        onTap: () => _selectDate(context, key),
-      ),
       TimeFieldConfig(
         :final key,
         :final label,
         :final isClearable,
         :final initialValue,
+        :final isLoading,
+        :final onSubmit,
       ) =>
         ListTile(
-          trailing: isClearable == true && _timeValues[key] != null
+          enabled: !isLoading,
+          trailing: isLoading
+              ? const SizedBox(
+                  width: 24,
+                  height: 24,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                )
+              : isClearable && _timeValues[key] != null
               ? IconButton(
                   icon: const Icon(Icons.clear),
                   onPressed: () {
                     setState(() {
                       _timeValues[key] = null;
                     });
+                    onSubmit?.call(null);
                   },
                 )
               : null,
@@ -436,14 +475,23 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
             _timeValues[key] == null
                 ? label
                 : _timeValues[key]!.format(context),
+            style: isLoading
+                ? TextStyle(color: Theme.of(context).hintColor)
+                : null,
           ),
           leading: const Icon(Icons.access_time),
           shape: RoundedRectangleBorder(
             side: const BorderSide(color: Colors.grey),
             borderRadius: BorderRadius.circular(4),
           ),
-          onTap: () =>
-              _selectTime(context, key, _timeValues[key] ?? initialValue),
+          onTap: isLoading
+              ? null
+              : () => _selectTime(
+                  context,
+                  key,
+                  initialValue ?? _timeValues[key],
+                  onSubmit: onSubmit,
+                ),
         ),
       SelectFieldConfig(
         :final key,
@@ -590,7 +638,11 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
     super.dispose();
   }
 
-  Future<void> _selectDate(BuildContext context, String key) async {
+  Future<void> _selectDate(
+    BuildContext context,
+    String key, {
+    Function(DateTime?)? onSubmit,
+  }) async {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
@@ -600,6 +652,7 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
     );
     if (picked != null) {
       setState(() {
+        onSubmit?.call(picked);
         _dateValues[key] = DateTime.utc(picked.year, picked.month, picked.day);
       });
     }
@@ -608,14 +661,16 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
   Future<void> _selectTime(
     BuildContext context,
     String key,
-    TimeOfDay? initialValue,
-  ) async {
+    TimeOfDay? initialValue, {
+    Function(TimeOfDay?)? onSubmit,
+  }) async {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
       initialTime: initialValue ?? TimeOfDay.now(),
     );
     if (picked != null) {
       setState(() {
+        onSubmit?.call(picked);
         _timeValues[key] = picked;
       });
     }

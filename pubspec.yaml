@@ -55,6 +55,7 @@ dependencies:
   phone_numbers_parser: ^9.0.23
   url_launcher: ^6.3.2
   dropdown_search: ^7.0.0
+  collection: ^1.19.1
 
 dev_dependencies:
   flutter_test:
