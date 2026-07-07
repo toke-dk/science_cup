@@ -107,4 +107,28 @@ class GameRepository {
       throw Exception('Kunne ikke indberette resultat: $e');
     }
   }
+
+  Future<List<Game>> getGamesForGroup(int groupId) async {
+    final response = await _supabase
+        .from('games')
+        .select('''
+        id,
+        status,
+        home_score,
+        away_score,
+        start_date,
+        round_number,
+
+        home_team:home_team_id(id, name),
+        away_team:away_team_id(id, name),
+        referee_team:referee_team_id(id, name),
+        group:group_id(id, name)
+      ''')
+        .eq('group_id', groupId)
+        .order('start_date');
+
+    return (response as List<dynamic>)
+        .map((gameJson) => Game.fromJson(gameJson))
+        .toList();
+  }
 }

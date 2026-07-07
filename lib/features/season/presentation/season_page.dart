@@ -6,6 +6,7 @@ import 'package:science_cup_app/core/navigation/season_tabs.dart';
 import 'package:science_cup_app/core/presentation/widgets/auth_profile_button.dart';
 import 'package:science_cup_app/features/season/data/models/season.dart';
 import 'package:science_cup_app/features/season/presentation/admin/admin_season_view.dart';
+import 'package:science_cup_app/features/standings/presentation/all_standings_view.dart';
 import 'package:science_cup_app/features/team/application/team_notifier.dart';
 
 import '../../auth/application/auth_notifier.dart';
@@ -125,9 +126,7 @@ class SeasonPage extends ConsumerWidget {
                         const SizedBox(height: 16),
                         switch (activeTab) {
                           SeasonTabs.games => const GamesView(),
-                          SeasonTabs.standings => const Center(
-                            child: Text('Stilling kommer snart!'),
-                          ),
+                          SeasonTabs.standings => const AllStandingsView(),
                           SeasonTabs.admin => const AdminSeasonView(),
                         },
                       ],
