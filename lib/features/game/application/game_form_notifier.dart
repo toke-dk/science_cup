@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart'; // for TimeOfDay
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:science_cup_app/features/game/application/game_notifier.dart';
 import 'package:science_cup_app/features/game/application/game_repository_provider.dart';
+import 'package:science_cup_app/features/game/application/games_notifier.dart';
 import 'package:science_cup_app/features/game/data/enums/game_enums.dart';
 import 'package:science_cup_app/features/game/data/models/game.dart';
 import 'package:science_cup_app/features/game/data/models/write_game_request.dart';
@@ -147,6 +147,6 @@ class GameFormNotifier extends _$GameFormNotifier {
     }
 
     state = state.copyWith(isSubmitting: false);
-    ref.invalidate(gameProvider(state.seasonId));
+    ref.invalidate(gamesProvider(state.seasonId));
   }
 }

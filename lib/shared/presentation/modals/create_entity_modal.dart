@@ -20,6 +20,7 @@ class TextFieldConfig extends FieldConfig {
   final String? Function(String?)? validator;
   final TextEditingController? controller;
   final bool? onlyNumbers;
+  final Function(String)? onChanged;
 
   const TextFieldConfig({
     required this.key,
@@ -29,6 +30,7 @@ class TextFieldConfig extends FieldConfig {
     this.controller,
     super.group,
     this.onlyNumbers,
+    this.onChanged,
   });
 }
 
@@ -217,12 +219,14 @@ class CreateEntityModal extends StatefulWidget {
   final String title;
   final List<FieldConfig> fields;
   final SubmitCallback onSubmit;
+  final bool isLoading;
 
   const CreateEntityModal({
     super.key,
     required this.title,
     required this.fields,
     required this.onSubmit,
+    this.isLoading = false,
   });
 
   @override
@@ -356,6 +360,7 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
         onlyNumbers == true
             ? TextFormField(
                 controller: _textControllers[key],
+                onChanged: f.onChanged,
                 validator: validator,
                 keyboardType: TextInputType.number,
                 inputFormatters: [
@@ -374,6 +379,7 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
                           final value =
                               int.tryParse(_textControllers[key]!.text) ?? 0;
                           _textControllers[key]!.text = (value + 1).toString();
+                          f.onChanged?.call(_textControllers[key]!.text);
                         },
                         child: const Icon(Icons.keyboard_arrow_up, size: 18),
                       ),
@@ -384,6 +390,7 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
                           if (value > 0) {
                             _textControllers[key]!.text = (value - 1)
                                 .toString();
+                            f.onChanged?.call(_textControllers[key]!.text);
                           }
                         },
                         child: const Icon(Icons.keyboard_arrow_down, size: 18),
@@ -393,6 +400,7 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
                 ),
               )
             : TextFormField(
+                onChanged: f.onChanged,
                 controller: _textControllers[key],
                 decoration: InputDecoration(
                   labelText: label,
@@ -739,7 +747,7 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
   @override
   Widget build(BuildContext context) {
     final dateFormatter = DateFormat.yMMMd('da_DK');
-    return _isLoading
+    return _isLoading || widget.isLoading
         ? const Padding(
             padding: EdgeInsets.all(32.0),
             child: Column(
@@ -777,6 +785,7 @@ class _CreateEntityModalState extends State<CreateEntityModal> {
                         style: Theme.of(context).textTheme.headlineSmall,
                       ),
                       const SizedBox(height: 20),
+
                       ..._buildFieldWidgets(dateFormatter),
                       const SizedBox(height: 20),
                       Row(

@@ -8,6 +8,28 @@ class GameRepository {
 
   GameRepository({required SupabaseClient supabase}) : _supabase = supabase;
 
+  Future<Game> getGame(int gameId) async {
+    final response = await _supabase
+        .from('games')
+        .select('''
+        id,
+        status,
+        home_score,
+        away_score,
+        start_date,
+        round_number,
+
+        home_team:home_team_id(id, name),
+        away_team:away_team_id(id, name),
+        referee_team:referee_team_id(id, name),
+        group:group_id(id, name)
+      ''')
+        .eq('id', gameId)
+        .single();
+
+    return Game.fromJson(response);
+  }
+
   Future<List<GameSummary>> getGamesForSeason(int seasonId) async {
     final response = await _supabase
         .from('games')
@@ -68,8 +90,8 @@ class GameRepository {
 
   Future<void> reportGameResult({
     required int gameId,
-    required int homeScore,
-    required int awayScore,
+    required int? homeScore,
+    required int? awayScore,
   }) async {
     try {
       await _supabase

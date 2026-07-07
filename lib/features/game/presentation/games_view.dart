@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:science_cup_app/features/game/application/game_notifier.dart';
+import 'package:science_cup_app/features/game/application/games_notifier.dart';
 import 'package:science_cup_app/features/game/data/models/game_summary.dart';
 import 'package:science_cup_app/features/game/presentation/display_game.dart';
 import 'package:science_cup_app/features/season/application/active_season/current_season_provider.dart';
@@ -15,7 +15,7 @@ class GamesView extends ConsumerWidget {
       return const Center(child: Text("Ingen aktiv sæson valgt"));
     }
 
-    final gamesState = ref.watch(gameProvider(currentSeasonId));
+    final gamesState = ref.watch(gamesProvider(currentSeasonId));
 
     return gamesState.when(
       data: (List<GameSummary> games) {

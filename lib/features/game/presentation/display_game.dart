@@ -40,7 +40,7 @@ class DisplayGame extends ConsumerWidget {
             onPressed: () {
               showCreateEntityModalBottomSheet(
                 context: context,
-                builder: (context) => AddGameScoreModal(game: game),
+                builder: (context) => AddGameResultModal(game: game),
               );
             },
           ),
