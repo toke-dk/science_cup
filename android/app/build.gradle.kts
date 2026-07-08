@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.science_cup_app"
+    namespace = "dk.sciencecup.app"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -21,7 +21,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.science_cup_app"
+        applicationId = "dk.sciencecup.app"
         // You can update the following values to game your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion

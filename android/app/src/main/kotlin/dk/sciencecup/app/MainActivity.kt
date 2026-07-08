@@ -1,4 +1,4 @@
-package com.example.science_cup_app
+package dk.sciencecup.app
 
 import io.flutter.embedding.android.FlutterActivity
 
